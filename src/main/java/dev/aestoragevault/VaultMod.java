@@ -28,6 +28,7 @@ import dev.aestoragevault.world.TileAccess;
 import dev.aestoragevault.world.TileController;
 import dev.aestoragevault.world.TileOutput;
 import dev.aestoragevault.world.VaultBlock;
+import dev.aestoragevault.world.VaultCasingBlock;
 import dev.aestoragevault.world.VaultItemBlock;
 import dev.structureterminal.Tags;
 
@@ -41,7 +42,7 @@ public final class VaultMod {
 
     public static final String ID = "aestoragevault";
     public static final Logger LOG = LogManager.getLogger(ID);
-    public static Block CONTROLLER, ACCESS, OUTPUT;
+    public static Block CONTROLLER, ACCESS, OUTPUT, RESONANCE_CASING;
     @Mod.Instance(ID)
     public static VaultMod INSTANCE;
     @SidedProxy(clientSide = "dev.aestoragevault.ui.ClientProxy", serverSide = "dev.aestoragevault.ui.CommonProxy")
@@ -53,9 +54,11 @@ public final class VaultMod {
         CONTROLLER = new VaultBlock(1);
         ACCESS = new VaultBlock(2);
         OUTPUT = new VaultBlock(3);
+        RESONANCE_CASING = new VaultCasingBlock();
         GameRegistry.registerBlock(CONTROLLER, VaultItemBlock.class, "controller");
         GameRegistry.registerBlock(ACCESS, VaultItemBlock.class, "access");
         GameRegistry.registerBlock(OUTPUT, VaultItemBlock.class, "output");
+        GameRegistry.registerBlock(RESONANCE_CASING, VaultItemBlock.class, "resonance_casing");
         GameRegistry.registerTileEntity(TileController.class, ID + ":controller");
         GameRegistry.registerTileEntity(TileAccess.class, ID + ":access");
         GameRegistry.registerTileEntity(TileOutput.class, ID + ":output");
@@ -79,6 +82,17 @@ public final class VaultMod {
             .maybeStack(1)
             .orNull();
         if (drive == null) throw new IllegalStateException("AE drive missing for vault recipes");
+        GameRegistry.addRecipe(
+            new ItemStack(RESONANCE_CASING),
+            "DCD",
+            "CSC",
+            "DCD",
+            'D',
+            drive,
+            'C',
+            gregtech.api.enums.ItemList.Casing_LuV.get(1),
+            'S',
+            gregtech.api.enums.ItemList.Casing_Coil_Superconductor.get(1));
         gregtech.api.enums.GTValues.RA.stdBuilder()
             .itemInputs(
                 gregtech.api.enums.ItemList.Hull_LuV.get(1),
@@ -122,9 +136,8 @@ public final class VaultMod {
         appeng.api.config.Upgrades.ORE_FILTER.registerItem(new ItemStack(OUTPUT), 1);
     }
 
-    public static boolean isLuVCasing(net.minecraft.world.IBlockAccess world, int x, int y, int z) {
-        return world.getBlock(x, y, z) == gregtech.api.GregTechAPI.sBlockCasings1
-            && world.getBlockMetadata(x, y, z) == 6;
+    public static boolean isResonanceCasing(net.minecraft.world.IBlockAccess world, int x, int y, int z) {
+        return world.getBlock(x, y, z) == RESONANCE_CASING && world.getBlockMetadata(x, y, z) == 0;
     }
 
     /** The retired casing is intentionally removed, not silently mapped to a wrong GT metadata variant. */

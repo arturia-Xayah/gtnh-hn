@@ -1,0 +1,77 @@
+{
+  "pack_version": "2.9.1",
+  "passed": true,
+  "client_launched": false,
+  "fixture_sha256": "193e687824ab9226e5c435fc489af5fa1c878ad927c17d2da91d5c591a1c91dd",
+  "runs": [
+    {
+      "suite": "vault",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 82,
+      "report": "vault/vault-tests.json"
+    },
+    {
+      "suite": "vault",
+      "stage": 2,
+      "exit": 0,
+      "passed": true,
+      "cases": 7,
+      "report": "vault/vault-tests-restart.json"
+    },
+    {
+      "suite": "vault_io",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 14,
+      "report": "vault_io/vault-io-tests.json"
+    },
+    {
+      "suite": "vault_io",
+      "stage": 2,
+      "exit": 0,
+      "passed": true,
+      "cases": 2,
+      "report": "vault_io/vault-io-tests-restart.json"
+    }
+  ],
+  "stage": "unreleased working tree; release version not assigned",
+  "base_commit": "df504de",
+  "unit": {
+    "tests": 183,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "production_class_comparison": {
+    "compared_classes": 339,
+    "differences": [],
+    "production_has_test_fixtures": false,
+    "fixture_sha256": "193e687824ab9226e5c435fc489af5fa1c878ad927c17d2da91d5c591a1c91dd",
+    "production_sha256": "49e4c5d760ae73e13dbd8a40779854a2586babc471ff824e46c9f25c3975f913"
+  },
+  "backend_check_groups": 105,
+  "release": {
+    "version": "0.4.1",
+    "asset": "gtnh-hn-0.4.1-GTNH-2.9.1.jar",
+    "sha256": "a7e0808720c7e5ec254dfea9121583a25b32cb66b8d7d1578737d3fe7c105e43",
+    "unit": {
+      "tests": 183,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "classes_matching_fixture_except_version_literal": 339,
+    "classes_with_version_literal_change": [
+      "dev/aeoptimizer/OrderOptimizer.class",
+      "dev/aestoragevault/VaultMod.class",
+      "dev/plasmaforgepower/PlasmaForgePower.class",
+      "dev/structureterminal/StructureTerminal.class",
+      "dev/structureterminal/client/update/UpdateClient.class",
+      "dev/structureterminal/client/update/UpdateScreen.class",
+      "dev/structureterminal/Tags.class"
+    ]
+  }
+}

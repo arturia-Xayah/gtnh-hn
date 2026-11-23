@@ -47,7 +47,7 @@ public final class VaultConstructable implements IMultiblockInfoContainer<TileCo
                 "return",
                 new String[][] { { "CCC", "CKC", "IAO" }, { "CCC", "C-C", "CCC" }, { "CCC", "CCC", "CCC" } })
             .addElement('K', controllerElement())
-            .addElement('C', shell(ofBlock(GregTechAPI.sBlockCasings1, 6), 0))
+            .addElement('C', shell(casing(), 0))
             .addElement('A', shell(ofBlock(VaultMod.ACCESS, 0), 1))
             .addElement('E', shell(ofBlock(VaultMod.OUTPUT, 0), 1))
             .addElement('I', shell(bus(false), 2))
@@ -139,7 +139,7 @@ public final class VaultConstructable implements IMultiblockInfoContainer<TileCo
     }
 
     private static boolean component(World w, int x, int y, int z) {
-        if (VaultMod.isLuVCasing(w, x, y, z)) return true;
+        if (VaultMod.isResonanceCasing(w, x, y, z)) return true;
         TileEntity tile = w.getTileEntity(x, y, z);
         if (tile instanceof TileAccess) return true;
         if (!(tile instanceof IGregTechTileEntity)) return false;
@@ -180,7 +180,7 @@ public final class VaultConstructable implements IMultiblockInfoContainer<TileCo
     }
 
     private static <T> IStructureElement<T> casing() {
-        return ofBlock(GregTechAPI.sBlockCasings1, 6);
+        return ofBlock(VaultMod.RESONANCE_CASING, 0);
     }
 
     private static boolean hasRole(TileController t, int role) {

@@ -6,7 +6,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('compileJava', JavaCompile) { options.release = 8 }
 tasks.named('compileTestJava', JavaCompile) { options.release = 8 }
 tasks.named('compileInjectedTagsJava', JavaCompile) { options.release = 8 }
-version = '0.4.0'
+version = '0.4.1'
 
 
 ext.modVersion = version
@@ -93,7 +93,7 @@ tasks.register('verifyDistribution') {
             for (String required : ['dev/plasmaforgepower/PlasmaForgePower.class', 'dev/plasmaforgepower/LateMixins.class',
                  'mixins.plasmaforgepower.late.json', 'dev/plasmaforgepower/mixin/FusionPowerMixin.class',
                  'dev/plasmaforgepower/mixin/CompactFusionRecipeMixin.class', 'dev/aestoragevault/VaultMod.class',
-                 'dev/aestoragevault/core/VaultStore.class', 'dev/aestoragevault/world/TileAccess.class',
+                 'dev/aestoragevault/core/VaultStore.class', 'dev/aestoragevault/world/TileAccess.class', 'dev/aestoragevault/world/VaultCasingBlock.class',
                  'assets/plasmaforgepower/lang/zh_CN.lang', 'assets/aestoragevault/lang/zh_CN.lang', 'mixins.aestoragevault.late.json', 'dev/aestoragevault/LateMixins.class', 'assets/aestoragevault/textures/blocks/formed_shell_smooth.png', 'assets/aestoragevault/textures/blocks/controller_overlay.png', 'assets/aestoragevault/textures/blocks/access_overlay.png']) {
                 if (!zip.getEntry(required)) throw new GradleException('Missing modernization module: ' + required)
             }

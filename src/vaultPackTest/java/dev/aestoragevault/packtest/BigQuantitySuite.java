@@ -164,7 +164,7 @@ public final class BigQuantitySuite {
             for (int index = 0; index < 2; index++) {
                 int z = 8 + index * 4;
                 for (int x = 7; x <= 9; x++) for (int y = 79; y <= 81; y++) for (int depth = z; depth <= z + 2; depth++)
-                    world.setBlock(x, y, depth, GregTechAPI.sBlockCasings1, 6, 3);
+                    world.setBlock(x, y, depth, VaultMod.RESONANCE_CASING, 0, 3);
                 world.setBlockToAir(8, 80, z + 1);
                 world.setBlock(8, 80, z, VaultMod.CONTROLLER, 2, 3);
                 world.setBlock(7, 80, z + 1, VaultMod.ACCESS, 0, 3);

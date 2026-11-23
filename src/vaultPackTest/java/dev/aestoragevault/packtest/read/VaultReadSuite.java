@@ -214,7 +214,7 @@ public final class VaultReadSuite {
         for (int n = 0; n < 4; n++) {
             int z = 8 + n * 4;
             for (int x = 7; x <= 9; x++) for (int y = 79; y <= 81; y++)
-                for (int d = z; d <= z + 2; d++) world.setBlock(x, y, d, GregTechAPI.sBlockCasings1, 6, 3);
+                for (int d = z; d <= z + 2; d++) world.setBlock(x, y, d, VaultMod.RESONANCE_CASING, 0, 3);
             world.setBlockToAir(8, 80, z + 1);
             world.setBlock(8, 80, z, VaultMod.CONTROLLER, 2, 3);
             world.setBlock(7, 80, z + 1, VaultMod.ACCESS, 0, 3);

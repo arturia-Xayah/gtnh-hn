@@ -8,6 +8,7 @@
 
 - [Structure](#structure)
 - [Appearance](#appearance)
+- [Casing recipe](#casing-recipe)
 - [Importing cells and components](#importing-cells-and-components)
 - [Capacity contributions](#capacity-contributions)
 - [Returning capacity sources](#returning-capacity-sources)
@@ -24,11 +25,24 @@ Pool storage-cell capacity in one multiblock and manage items and fluids togethe
 
 ## Structure
 
-Build a hollow 3×3×3 shell: outward-facing controller at the center of any face, 23 native LuV machine casings, one ordinary GT input bus and one Storage Link Hatch or Export Bus, air in the center. The bus and interface may occupy any remaining shell cell, including top/bottom, edges and corners. Neither may be shared between vaults; conflicts prevent both structures from forming and recover after separation. Buses reserved by a registered native GT multiblock are rejected too. No cores. All three custom blocks use LuV assembler recipes (30,720 EU/t), with LuV hulls/circuits and components; there is no workbench fallback. Connect the interface to powered AE: one channel, 2 AE/t. ME virtual buses are excluded. Structure Terminal building and NEI multiblock previews are supported. Preview size 1/2/3 shows the link, active-export and cell-return configurations.
+Build a hollow 3×3×3 shell: outward-facing controller at the center of any face, 23 ME Resonance Casings, one ordinary GT input bus and one Storage Link Hatch or Export Bus, air in the center. The bus and interface may occupy any remaining shell cell, including top/bottom, edges and corners. Neither may be shared between vaults; conflicts prevent both structures from forming and recover after separation. Buses reserved by a registered native GT multiblock are rejected too. No cores. The controller and both ME ports use LuV assembler recipes (30,720 EU/t), with LuV hulls/circuits and components; there is no workbench fallback. Connect the interface to powered AE: one channel, 2 AE/t. ME virtual buses are excluded. Structure Terminal building and NEI multiblock previews are supported. Preview size 1/2/3 shows the link, active-export and cell-return configurations.
 
 ## Appearance
 
-Forming replaces the whole shell appearance with a smooth blue/white/violet skin. Each complete face shares one continuous texture without repeated block borders. Native screen and ME/pipe port overlays remain visible, with resource-pack support. Controller and connector/port indicators stay visible; native blocks, bus tier, dye and saved texture are never rewritten. Retired custom casing blocks and items are no longer registered or retained on upgrade. Use native LuV machine casings; controller and stored inventory are unaffected by this removal. The inventory-format upgrade limitation above still applies.
+Unformed casings share the controller's white/cyan/violet material. The casing has no inventory, AE node or ticking tile entity.
+
+Forming replaces the whole shell appearance with a smooth blue/white/violet skin. Each complete face shares one continuous texture without repeated block borders. Native screen and ME/pipe port overlays remain visible, with resource-pack support. Controller and connector/port indicators stay visible; native blocks, bus tier, dye and saved texture are never rewritten. After upgrading from 0.4.0, replace the native LuV shell with ME Resonance Casings and recheck the structure. Keep the original controller; its capacity and inventory binding are retained. The inventory-format upgrade limitation above still applies.
+
+## Casing recipe
+
+Craft **1 ME Resonance Casing** with this shaped workbench recipe:
+
+| ME Drive | LuV Machine Casing | ME Drive |
+| --- | --- | --- |
+| LuV Machine Casing | Superconducting Coil Block | LuV Machine Casing |
+| ME Drive | LuV Machine Casing | ME Drive |
+
+Use Machine Casings, not LuV Machine Hulls.
 
 ## Importing cells and components
 

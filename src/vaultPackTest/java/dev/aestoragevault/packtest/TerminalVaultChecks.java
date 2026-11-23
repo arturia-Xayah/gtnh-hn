@@ -46,55 +46,59 @@ final class TerminalVaultChecks {
                 ExtendedFacing.of(ForgeDirection.getOrientation(face)));
             t.checkStructure();
             check(t.formed, "preview not formed face=" + face + " variant=" + variant);
-            nativeSkin(world, t);
+            syncedSkin(world, t);
             VaultStructure.Shape shape = VaultStructure.inspect(t);
+            int casings = 0;
+            for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++) for (int dz = -1; dz <= 1; dz++) {
+                int wx = shape.centerX + dx, wy = shape.centerY + dy, wz = shape.centerZ + dz;
+                if (!VaultMod.isResonanceCasing(world, wx, wy, wz)) continue;
+                casings++;
+                check(world.getTileEntity(wx, wy, wz) == null, "passive casing created a tile entity");
+            }
+            check(casings == (variant == 3 ? 22 : 23), "wrong dedicated casing count " + casings);
             check((shape.output != null) == (variant == 3), "preview optional output");
             check((shape.access instanceof dev.aestoragevault.world.TileOutput) == (variant == 2), "preview ME port");
         }
         clear(world, 24, 145, 24);
     }
 
-    private static void nativeSkin(WorldServer world, TileController owner) {
+    private static void syncedSkin(WorldServer world, TileController owner) {
         VaultStructure.Shape shape = VaultStructure.inspect(owner);
         dev.aestoragevault.client.VaultCasingSkin skin = new dev.aestoragevault.client.VaultCasingSkin();
-        // Exercise native RenderOverlay registration without launching a client or initializing GL.
+        // Exercise client footprint synchronization without launching a client or initializing GL.
         boolean remote = world.isRemote;
         world.isRemote = true;
         try {
             skin.update(owner, false);
-            int faces = 0;
+            int cells = 0;
             for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) for (int z = -1; z <= 1; z++) {
                 int wx = shape.centerX + x, wy = shape.centerY + y, wz = shape.centerZ + z;
-                gregtech.api.interfaces.ITexture[] textures = gregtech.api.render.RenderOverlay.get(world, wx, wy, wz);
-                if (!VaultMod.isLuVCasing(world, wx, wy, wz)) {
-                    check(textures == null, "overlay hid controller/port/hatch face");
-                    continue;
-                }
-                for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-                    boolean exterior = x * side.offsetX + y * side.offsetY + z * side.offsetZ == 1;
-                    check(
-                        (textures != null && textures[side.ordinal()] != null) == exterior,
-                        "casing face missing/inside overlay");
-                    if (exterior) faces++;
-                }
+                boolean shell = VaultGeometry.shell(x, y, z);
+                check(
+                    dev.aestoragevault.client.VaultCasingSkin.owner(world, wx, wy, wz) == (shell ? owner : null),
+                    "synced casing/controller/port footprint missing or covers center air");
+                if (shell) cells++;
+                check(
+                    gregtech.api.render.RenderOverlay.get(world, wx, wy, wz) == null,
+                    "custom renderer must not allocate unused GT casing overlays");
                 skin.update(owner, false);
                 check(
-                    gregtech.api.render.RenderOverlay.get(world, wx, wy, wz) == textures,
-                    "unchanged state duplicated overlay");
+                    dev.aestoragevault.client.VaultCasingSkin.owner(world, wx, wy, wz) == (shell ? owner : null),
+                    "unchanged state lost footprint");
             }
-            check(faces >= 42, "too few native casing faces: " + faces);
+            check(cells == 26, "synced footprint does not include all 26 shell blocks");
             owner.formed = false;
             skin.update(owner, false);
             for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) for (int z = -1; z <= 1; z++) check(
-                gregtech.api.render.RenderOverlay.get(world, shape.centerX + x, shape.centerY + y, shape.centerZ + z)
-                    == null,
+                dev.aestoragevault.client.VaultCasingSkin
+                    .owner(world, shape.centerX + x, shape.centerY + y, shape.centerZ + z) == null,
                 "broken structure retained skin");
             owner.formed = true;
             skin.update(owner, false);
             skin.update(owner, true);
             check(
-                gregtech.api.render.RenderOverlay.get(world, shape.centerX + 1, shape.centerY + 1, shape.centerZ + 1)
-                    == null,
+                dev.aestoragevault.client.VaultCasingSkin
+                    .owner(world, shape.centerX + 1, shape.centerY + 1, shape.centerZ + 1) == null,
                 "unloaded controller retained skin");
         } finally {
             skin.update(owner, true);
@@ -116,7 +120,7 @@ final class TerminalVaultChecks {
                     null,
                     (short) gregtech.api.enums.ItemList.Hatch_Input_Bus_LuV.get(1)
                         .getItemDamage());
-            world.setBlock(x, y + 1, z, gregtech.api.GregTechAPI.sBlockCasings1, 6, 2);
+            world.setBlock(x, y + 1, z, VaultMod.RESONANCE_CASING, 0, 2);
         }
         boolean creative = player.capabilities.isCreativeMode;
         ItemStack held = player.getHeldItem();

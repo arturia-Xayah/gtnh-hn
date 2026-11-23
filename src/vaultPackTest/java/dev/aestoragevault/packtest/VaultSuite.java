@@ -270,7 +270,7 @@ public final class VaultSuite {
         world.playerEntities.add(player);
         if (!restart) {
             for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++) for (int depth = 0; depth <= 2; depth++)
-                world.setBlock(X + dx, Y + dy, Z + depth, GregTechAPI.sBlockCasings1, 6, 3);
+                world.setBlock(X + dx, Y + dy, Z + depth, VaultMod.RESONANCE_CASING, 0, 3);
             world.setBlockToAir(X, Y, Z + 1);
             world.setBlock(X, Y, Z, VaultMod.CONTROLLER, 2, 3);
             world.setBlock(X - 1, Y, Z + 1, VaultMod.ACCESS, 0, 3);
@@ -439,7 +439,7 @@ public final class VaultSuite {
                 b.checkStructure();
                 a.checkStructure();
                 check(!a.formed && !b.formed, "order-dependent ownership");
-                world.setBlock(cx + 3, cy, cz, GregTechAPI.sBlockCasings1, 6, 2);
+                world.setBlock(cx + 3, cy, cz, VaultMod.RESONANCE_CASING, 0, 2);
                 a.checkStructure();
                 check(a.formed, "ownership did not recover");
                 clearCube(cx, cy, cz);
@@ -479,7 +479,7 @@ public final class VaultSuite {
 
     private void fillCube(int x, int y, int z) {
         for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++)
-            for (int dz = -1; dz <= 1; dz++) world.setBlock(x + dx, y + dy, z + dz, GregTechAPI.sBlockCasings1, 6, 2);
+            for (int dz = -1; dz <= 1; dz++) world.setBlock(x + dx, y + dy, z + dz, VaultMod.RESONANCE_CASING, 0, 2);
         world.setBlockToAir(x, y, z);
     }
 
@@ -544,6 +544,7 @@ public final class VaultSuite {
                         .containsKey(new ItemStack(VaultMod.CONTROLLER)),
                 "vault missing cell icons");
         });
+        run("ME_resonance_casing_recipe_layout_cost_and_yield", () -> VaultCasingChecks.recipe(world));
         run("structurelib_nei_examples_three_variants_six_facings", () -> TerminalVaultChecks.previews(world));
         run("vault_complete_in_one_server_tick", () -> TerminalVaultChecks.instant(world, player, false));
         run(
@@ -660,7 +661,7 @@ public final class VaultSuite {
                     "low-tier crafting fallback exists");
             }
         });
-        run("formed_bus_uses_LuV_shell_without_mutating_native_skin", () -> {
+        run("formed_bus_uses_shared_shell_without_mutating_native_skin", () -> {
             IGregTechTileEntity base = bus.getBaseMetaTileEntity();
             NBTTagCompound before = new NBTTagCompound();
             bus.saveNBTData(before);
@@ -690,7 +691,7 @@ public final class VaultSuite {
                 false,
                 false);
             check(skin[0] != expected, "broken structure retained formed skin");
-            world.setBlock(X + 1, Y + 1, Z + 2, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(X + 1, Y + 1, Z + 2, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
             check(access.available(), "skin test repair failed");
         });
@@ -715,11 +716,15 @@ public final class VaultSuite {
                 "unrelated bus reskinned");
             world.setBlockToAir(x, y, z);
         });
-        run("wrong_tier_casings_rejected_and_legacy_casing_unregistered", () -> {
-            for (int meta : new int[] { 0, 5, 7 }) {
+        run("native_casings_including_LuV_rejected_and_inventory_binding_preserved", () -> {
+            java.util.UUID originalId = controller.id;
+            java.math.BigInteger originalCapacity = controller.capacity;
+            for (int meta : new int[] { 0, 5, 6, 7 }) {
                 world.setBlock(X + 1, Y + 1, Z + 2, GregTechAPI.sBlockCasings1, meta, 3);
                 controller.checkStructure();
-                check(!controller.formed, "wrong casing tier accepted " + meta);
+                check(!controller.formed && !access.available(), "native casing accepted " + meta);
+                check(originalId.equals(controller.id), "changing shell replaced inventory identity");
+                check(originalCapacity.equals(controller.capacity), "changing shell lost capacity");
             }
             check(
                 cpw.mods.fml.common.registry.GameRegistry.findBlock(VaultMod.ID, "casing") == null,
@@ -727,9 +732,10 @@ public final class VaultSuite {
             check(
                 cpw.mods.fml.common.registry.GameRegistry.findItem(VaultMod.ID, "casing") == null,
                 "legacy casing item still registered");
-            world.setBlock(X + 1, Y + 1, Z + 2, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(X + 1, Y + 1, Z + 2, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
-            check(access.available(), "LuV restore failed");
+            check(access.available(), "ME Resonance Casing restore failed");
+            check(originalId.equals(controller.id), "reforming changed inventory identity");
         });
         run("AE_item_insert_and_extract", () -> {
             IAEItemStack request = AEItemStack.create(new ItemStack(Items.gold_ingot))
@@ -825,7 +831,7 @@ public final class VaultSuite {
                         new MachineSource(access))
                     == null,
                 "broken structure extracted");
-            world.setBlock(X + 1, Y + 1, Z + 2, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(X + 1, Y + 1, Z + 2, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
             check(access.available(), "repair failed");
         });
@@ -837,7 +843,7 @@ public final class VaultSuite {
             world.setBlock(X + 1, Y + 1, Z + 2, VaultMod.ACCESS, 0, 3);
             controller.checkStructure();
             check(!controller.formed, "two interfaces accepted");
-            world.setBlock(X + 1, Y + 1, Z + 2, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(X + 1, Y + 1, Z + 2, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
             check(access.available(), "reform failed");
         });
@@ -1371,7 +1377,7 @@ public final class VaultSuite {
                 .tryPlaceItemIntoWorld(player, world, x, Y + 1, z, 1, .5f, .5f, .5f);
             a.tile.checkStructure();
             check(!a.tile.formed, "second output accepted");
-            world.setBlock(x, Y + 1, z, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(x, Y + 1, z, VaultMod.RESONANCE_CASING, 0, 3);
             a.tile.checkStructure();
             check(a.tile.formed, "output removal did not recover");
         });

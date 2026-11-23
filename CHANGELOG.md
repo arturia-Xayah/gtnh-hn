@@ -1,5 +1,19 @@
 # 更新日志 / Changelog
 
+## 0.4.1 — GTNH 2.9.1 · 2026-11-23
+
+### 中文
+
+- 新增 **ME 谐振外壳**，替代聚合器结构中的原生 LuV 机器外壳；与主机共用蓝白紫材质、成型连续表面和照明渲染。
+- 工作台有序合成：四角 ME 驱动器、四边 LuV 机器方块、中心超导线圈，每次产出 1 个外壳。同步更新 NEI 结构预览、终端自动搭建及中英文提示。
+- 已有聚合器需更换 23 个外壳；安装普通元件退回总线时为 22 个。保留主机及库存绑定，更换后重新检测成型。
+
+### English
+
+- Add **ME Resonance Casing** as the vault's dedicated structure material, replacing native LuV casings and sharing the controller's white/cyan/violet surface and formed-shell lighting.
+- Shaped recipe: ME Drives in the four corners, LuV Machine Casings on the four edges, and a Superconducting Coil Block in the center; yields one casing. Update NEI previews, terminal construction and localized tooltips.
+- Existing vaults need 23 replacement casings, or 22 with the optional cell-return bus. Keep the controller and inventory binding, then recheck the structure.
+
 ## 0.4.0 — GTNH 2.9.1 · 2026-11-23
 
 ### 中文

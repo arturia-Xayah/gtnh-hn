@@ -46,7 +46,7 @@ public final class VaultStructure {
                 if (!world.isAirBlock(wx, wy, wz)) return null;
                 continue;
             }
-            if (VaultMod.isLuVCasing(world, wx, wy, wz)) continue;
+            if (VaultMod.isResonanceCasing(world, wx, wy, wz)) continue;
             TileEntity tile = world.getTileEntity(wx, wy, wz);
             if (tile instanceof TileAccess) {
                 result.access = (TileAccess) tile;

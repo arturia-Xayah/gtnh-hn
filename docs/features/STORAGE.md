@@ -12,7 +12,7 @@ This guide has moved to the categorized user guide. Use the language links above
 
 ## LuV 制作与统一外观
 
-[查看使用说明](../wiki/zh/storage.md#luv-制作与统一外观)
+[查看使用说明](../wiki/zh/storage.md#制作与统一外观)
 
 ## 扩容与迁移
 

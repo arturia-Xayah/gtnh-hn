@@ -318,7 +318,7 @@ public final class VaultIOSuite {
         world.playerEntities.add(player);
         if (!restart) {
             for (int x = 7; x <= 9; x++) for (int y = 79; y <= 81; y++)
-                for (int z = 8; z <= 10; z++) world.setBlock(x, y, z, GregTechAPI.sBlockCasings1, 6, 3);
+                for (int z = 8; z <= 10; z++) world.setBlock(x, y, z, VaultMod.RESONANCE_CASING, 0, 3);
             world.setBlockToAir(8, 80, 9);
             world.setBlock(8, 80, 8, VaultMod.CONTROLLER, 2, 3);
             world.setBlock(7, 80, 9, VaultMod.ACCESS, 0, 3);
@@ -561,7 +561,7 @@ public final class VaultIOSuite {
             world.setBlock(9, 81, 10, VaultMod.ACCESS, 0, 3);
             controller.checkStructure();
             check(!controller.formed, "link+output formed");
-            world.setBlock(9, 81, 10, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(9, 81, 10, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
             check(controller.formed, "repair after duplicate port");
         });
@@ -595,7 +595,7 @@ public final class VaultIOSuite {
             check(!output.available(), "broken output available");
             output.exportTick();
             check(stockCount() == before, "broken output changed stock");
-            world.setBlock(9, 81, 10, GregTechAPI.sBlockCasings1, 6, 3);
+            world.setBlock(9, 81, 10, VaultMod.RESONANCE_CASING, 0, 3);
             controller.checkStructure();
         });
         output.upgrades.setInventorySlotContents(

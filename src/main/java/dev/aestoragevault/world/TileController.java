@@ -177,7 +177,7 @@ public class TileController extends TileEntity {
             returnBus = null;
         }
         if (store != null && !status.startsWith("LOCKED:"))
-            status = formed ? "Online" : "Need face-center controller, LuV casings, exclusive buses/access";
+            status = formed ? "Online" : "Need face-center controller, ME Resonance Casings, exclusive buses/access";
         if (changed && access != null) access.refresh();
         if (changed && worldObj != null && !worldObj.isRemote) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }

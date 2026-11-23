@@ -18,7 +18,7 @@ import dev.aestoragevault.world.VaultBlock;
 import dev.aestoragevault.world.VaultSkin;
 import dev.aestoragevault.world.VaultStructure;
 
-/** Native unformed shell; continuous formed skin with separately rendered functional overlays. */
+/** Shared casing/controller base and lighting, with functional overlays only on controllers and ports. */
 @SideOnly(Side.CLIENT)
 public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
 
@@ -37,10 +37,9 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
         RenderBlocks renderer) {
         if (skinOwner(world, x, y, z) != null) renderShell(world, x, y, z, block, renderer);
         else renderer.renderStandardBlock(block, x, y, z);
-        VaultBlock vault = (VaultBlock) block;
         int metadata = world.getBlockMetadata(x, y, z);
         for (int side = 0; side < 6; side++) {
-            IIcon icon = vault.overlay(side, metadata);
+            IIcon icon = overlay(block, side, metadata);
             if (icon == null) continue;
             ForgeDirection normal = ForgeDirection.getOrientation(side);
             if (!block.shouldSideBeRendered(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ, side))
@@ -78,7 +77,7 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
             Tessellator.instance.setNormal(normal.offsetX, normal.offsetY, normal.offsetZ);
             face(renderer, block, side, 0, 0, 0, block.getIcon(side, metadata));
             Tessellator.instance.draw();
-            IIcon icon = ((VaultBlock) block).overlay(side, metadata);
+            IIcon icon = overlay(block, side, metadata);
             if (icon != null) {
                 Tessellator.instance.startDrawingQuads();
                 Tessellator.instance.setColorOpaque_F(1, 1, 1);
@@ -90,6 +89,10 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
         }
         GL11.glPopMatrix();
         GL11.glPopAttrib();
+    }
+
+    private static IIcon overlay(Block block, int side, int metadata) {
+        return block instanceof VaultBlock ? ((VaultBlock) block).overlay(side, metadata) : null;
     }
 
     private static TileController skinOwner(IBlockAccess world, int x, int y, int z) {
