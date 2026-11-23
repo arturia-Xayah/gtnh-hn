@@ -9,7 +9,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 
 import dev.structureterminal.net.TerminalNetwork;
-import dev.structureterminal.projection.*;
+import dev.structureterminal.projection.Projection;
+import dev.structureterminal.projection.ProjectorTile;
+import dev.structureterminal.projection.SceneService;
+import dev.structureterminal.projection.SceneView;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

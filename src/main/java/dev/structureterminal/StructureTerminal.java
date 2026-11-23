@@ -62,6 +62,8 @@ public final class StructureTerminal {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        dev.structureterminal.stocking.MixedInputs.register();
+        dev.structureterminal.output.MixedOutputs.register();
         dev.structureterminal.packing.PackingItems.recipe();
         dev.structureterminal.pattern.IntegratedPattern.recipe();
         dev.structureterminal.packing.PackingService.configure(configFile);

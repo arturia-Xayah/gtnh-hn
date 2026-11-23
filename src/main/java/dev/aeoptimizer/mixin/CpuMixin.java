@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -37,6 +38,8 @@ import dev.aeoptimizer.api.CpuBatchStats;
 import dev.aeoptimizer.api.IBatchMedium;
 import dev.aeoptimizer.api.ProgressAccess;
 import dev.aeoptimizer.dispatch.BatchContext;
+import dev.aeoptimizer.dispatch.BatchLimitSettings;
+import dev.aeoptimizer.dispatch.BatchLimits;
 import dev.aeoptimizer.dispatch.OrderOrigin;
 
 /** Bulk exact processing; unsupported crafting/receiver semantics stay in the untouched native loop. */
@@ -208,7 +211,18 @@ public abstract class CpuMixin implements CpuBatchStats {
                     ICraftingMedium medium = mediums.get(mediumIndex);
                     if (medium.isBusy()) continue;
                     long count = max;
-                    if (medium.getBlockingMode() == ICraftingMedium.BlockingMode.BLOCKING) count = 1;
+                    BatchLimitSettings limits = medium instanceof BatchLimitSettings ? (BatchLimitSettings) medium
+                        : null;
+                    boolean limited = limits != null && limits.hasBatchLimitCard();
+                    if (medium.getBlockingMode() == ICraftingMedium.BlockingMode.BLOCKING && !limited) count = 1;
+                    if (limited) {
+                        count = BatchLimits.maximum(inputs, limits, count);
+                        limits.setBatchLimitBlocked(count == 0);
+                        if (count == 0) {
+                            reasonProvider.put(pattern, ScheduledReason.BLOCKING_MODE);
+                            continue;
+                        }
+                    }
                     if (medium instanceof IBatchMedium)
                         count = Math.max(0, Math.min(count, ((IBatchMedium) medium).maxBatch(pattern, count)));
                     double perCraft = unitEnergy;
@@ -224,13 +238,17 @@ public abstract class CpuMixin implements CpuBatchStats {
                         MEInventoryCrafting table = aeo$take(slots, count);
                         if (table == null) break;
                         boolean pushed;
+                        boolean oldActive = BatchContext.ACTIVE.get();
+                        boolean oldOptimized = BatchContext.OPTIMIZED.get();
                         BatchContext.ACTIVE.set(count > 1);
+                        BatchContext.OPTIMIZED.set(true);
                         try {
                             pushed = medium instanceof IBatchMedium
                                 ? ((IBatchMedium) medium).pushBatch(pattern, table, count)
                                 : medium.pushPattern(pattern, table);
                         } finally {
-                            BatchContext.ACTIVE.remove();
+                            BatchContext.ACTIVE.set(oldActive);
+                            BatchContext.OPTIMIZED.set(oldOptimized);
                         }
                         if (pushed) {
                             energy.extractAEPower(perCraft * count, Actionable.MODULATE, PowerMultiplier.CONFIG);
@@ -287,6 +305,23 @@ public abstract class CpuMixin implements CpuBatchStats {
             }
         }
         if (sent > 0) for (CraftUpdateListener listener : craftUpdateListeners) listener.accept(sent);
+    }
+
+    /** Native fallback paths (e.g. substitutions) must not bypass a limit smaller than one recipe. */
+    @Redirect(
+        method = "executeCrafting",
+        at = @At(
+            value = "INVOKE",
+            target = "Lappeng/api/networking/crafting/ICraftingMedium;pushPattern(Lappeng/api/networking/crafting/ICraftingPatternDetails;Lnet/minecraft/inventory/InventoryCrafting;)Z"))
+    private boolean modernization$nativeLimit(ICraftingMedium medium, ICraftingPatternDetails pattern,
+        net.minecraft.inventory.InventoryCrafting table) {
+        boolean old = BatchContext.OPTIMIZED.get();
+        BatchContext.OPTIMIZED.set(aeo$origin.enabled(getGrid()));
+        try {
+            return medium.pushPattern(pattern, table);
+        } finally {
+            BatchContext.OPTIMIZED.set(old);
+        }
     }
 
     @Unique

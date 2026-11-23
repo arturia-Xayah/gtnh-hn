@@ -1,0 +1,135 @@
+{
+  "version": "0.4.0",
+  "gtnh": "2.9.1",
+  "java": "25.0.4.1",
+  "client_launched": false,
+  "passed": true,
+  "unit_tests": 183,
+  "runs": [
+    {
+      "suite": "bc_range",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 12,
+      "report": "bc_range/bc-range-tests.json",
+      "fixture_sha256": "d08d5e645cd2a74674d18a476fdfb01651c49cdf2e4df7801c83daf0660ab1be",
+      "source_run": "run-other"
+    },
+    {
+      "suite": "projector",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 15,
+      "report": "projector/projector-tests.json",
+      "fixture_sha256": "d08d5e645cd2a74674d18a476fdfb01651c49cdf2e4df7801c83daf0660ab1be",
+      "source_run": "run-other"
+    },
+    {
+      "suite": "ae",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 185,
+      "report": "ae/ae-order-report.json",
+      "fixture_sha256": "466fa72b15d98d74b2625f8223cfc556e096b6ba6ca2e3a451752beee8f066d8",
+      "source_run": "run-output-switch-01"
+    },
+    {
+      "suite": "forge",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 26,
+      "report": "forge/forge-power-tests.json",
+      "fixture_sha256": "d01a37382825dbc05aed947302163d30712e39c310c8947e8648f2dd815f43f8",
+      "source_run": "run-regression"
+    },
+    {
+      "suite": "fusion",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 131,
+      "report": "fusion/fusion-power-tests.json",
+      "fixture_sha256": "125c31a2c4275a3b401d5693b8c2092c4cc416818005b6719ec28f5678699bc0",
+      "source_run": "run-14"
+    },
+    {
+      "suite": "vault_io",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 14,
+      "report": "vault_io/vault-io-tests.json",
+      "fixture_sha256": "965e377774a441b74109c561689477055c73a4e76ff87cc8ec3dbefb5b619e3f",
+      "source_run": "run-rest"
+    },
+    {
+      "suite": "vault_io",
+      "stage": 2,
+      "exit": 0,
+      "passed": true,
+      "cases": 2,
+      "report": "vault_io/vault-io-tests-restart.json",
+      "fixture_sha256": "965e377774a441b74109c561689477055c73a4e76ff87cc8ec3dbefb5b619e3f",
+      "source_run": "run-rest"
+    },
+    {
+      "suite": "smart_blocking",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 16,
+      "report": "smart_blocking/smart-blocking-tests.json",
+      "fixture_sha256": "58d8e1703de167b8ebb4dff653b451278387f604248e9d967e00c16e2c74074a",
+      "source_run": "run-batch-card-info-02"
+    },
+    {
+      "suite": "structures",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 3,
+      "report": "structures/machine-validation/report.json",
+      "fixture_sha256": "128d8cc9748510add7038f4a78c67eeee0f1f354d954a38454298b5da0fe91d7",
+      "source_run": "run-mixed-05"
+    },
+    {
+      "suite": "multi_output",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 19,
+      "report": "multi_output/multi-output-tests.json",
+      "fixture_sha256": "9d6b2c4fbd5e2ee90c962484dd509355090fd5dbdf5d19b8ddd4cdee0feedd2f",
+      "source_run": "run-hn-rename-01"
+    },
+    {
+      "suite": "mixed_output",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 8,
+      "report": "mixed_output/mixed-output-tests.json",
+      "fixture_sha256": "466fa72b15d98d74b2625f8223cfc556e096b6ba6ca2e3a451752beee8f066d8",
+      "source_run": "run-output-switch-01"
+    },
+    {
+      "suite": "emitter",
+      "stage": 1,
+      "exit": 0,
+      "passed": true,
+      "cases": 16,
+      "report": "emitter/emitter-tests.json",
+      "fixture_sha256": "cd20d326f2edd06c33486500ff19a4fbb9d0742fdf6f8a9e3d0bccbb18a6aad3",
+      "source_run": "run-multi-after-03"
+    }
+  ],
+  "reported_cases": 447,
+  "production_jar": "gtnh-hn-0.4.0-GTNH-2.9.1.jar",
+  "production_sha256": "51e6af7a5e44498f3ddc876db5d84f1e40ef0354696419cf8472fcb359ae9441",
+  "project_name": "GTNH: Handy & Nimble",
+  "repository": "arturia-Xayah/gtnh-hn"
+}

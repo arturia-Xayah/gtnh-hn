@@ -364,16 +364,47 @@ public final class FusionPowerSuite {
                 && r.machine.mOutputFluids[0].amount == parallelNativeOutput,
             "native parallel/OC behavior changed");
         row(r.id + "_native_parallel_at_full_budget", true, "eut=" + eut(r) + ", output=" + parallelNativeOutput);
+        boolean nativeBatch = r.machine.isBatchModeEnabled();
+        r.machine.setBatchMode(false); // Isolate concurrent power from the native sequential batch multiplier.
         r.access.pfp$applySettings(settings);
         reset(r);
         idle(r, 64);
+        CheckRecipeResult lowParallel = r.machine.checkProcessing();
         check(
-            r.machine.checkProcessing()
-                .wasSuccessful() && eut(r) <= 64
+            lowParallel.wasSuccessful() && eut(r) <= 64
                 && r.inputs.get(0)
                     .getFluidAmount() == 6300,
-            "low cap did not constrain parallels/OC");
+            "low cap did not constrain parallels/OC: machine=" + r.id
+                + ", result="
+                + lowParallel.getID()
+                + ", eut="
+                + eut(r)
+                + ", remaining="
+                + r.inputs.get(0)
+                    .getFluidAmount()
+                + ", attempt="
+                + r.access.pfp$attemptPower());
         row(r.id + "_low_budget_parallel_control", true, "eut=" + eut(r));
+        r.machine.setBatchMode(nativeBatch);
+        if (nativeBatch) {
+            reset(r);
+            idle(r, 64);
+            check(
+                r.machine.checkProcessing()
+                    .wasSuccessful(),
+                "low-budget batch rejected");
+            int units = (6400 - r.inputs.get(0)
+                .getFluidAmount()) / 100;
+            check(
+                units > 0 && eut(r) <= 64
+                    && r.machine.mOutputFluids[0].amount == units * 100
+                    && eut(r) * r.machine.mMaxProgresstime == (long) units * 64 * 64,
+                "native batch exceeded power or changed energy per recipe");
+            row(
+                r.id + "_low_budget_native_batch",
+                true,
+                "eut=" + eut(r) + ", units=" + units + ", duration=" + r.machine.mMaxProgresstime);
+        }
         r.access.pfp$applySettings(new PowerSettings());
         reset(r);
         idle(r, 1);

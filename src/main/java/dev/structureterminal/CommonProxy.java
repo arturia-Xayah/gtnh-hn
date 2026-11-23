@@ -7,6 +7,11 @@ public class CommonProxy implements cpw.mods.fml.common.network.IGuiHandler {
 
     public Object getServerGuiElement(int id, EntityPlayer player, net.minecraft.world.World world, int x, int y,
         int z) {
+        if (id == dev.structureterminal.stocking.MixedInputs.GUI) {
+            dev.structureterminal.stocking.MixedInputBus bus = dev.structureterminal.stocking.MixedInputs
+                .at(world, x, y, z);
+            return bus == null ? null : new dev.structureterminal.stocking.MixedInputContainer(player, bus);
+        }
         if (id == dev.structureterminal.projection.ProjectorMenu.ID)
             return dev.structureterminal.projection.ProjectorMenu.at(world, x, y, z);
         if (id == 37 && cpw.mods.fml.common.Loader.isModLoaded("BuildCraft|Builders"))

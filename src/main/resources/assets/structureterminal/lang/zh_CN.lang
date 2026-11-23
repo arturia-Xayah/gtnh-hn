@@ -258,3 +258,27 @@ projector.sceneOff=目的地画面：关
 projector.live=模式：实时
 projector.snapshot=模式：快照
 projector.sceneEmpty=无频率，仅展示投影
+
+bc.range.reset=重置
+bc.range.unaligned=当前范围未以机器正前方为起点，无法转换为宽高深。
+
+mixed.input.description=16 个共享标记槽，支持物品和流体；在同一 AE 网络中取料。
+mixed.input.advanced=自动拉取交替选择物品与流体，可设置最小数量和刷新间隔。
+mixed.input.basic=点击标记或从 NEI 拖入；支持电路与手动槽。
+mixed.input.title=二合一 ME 输入总线
+mixed.input.filter=标记
+mixed.input.stock=可用数量
+mixed.input.auto=自动拉取
+mixed.input.minimum=最小量
+mixed.input.interval=间隔t
+gt.blockmachines.modernization.mixed_input.name=二合一 ME 输入总线
+gt.blockmachines.modernization.mixed_input_advanced.name=进阶二合一 ME 输入总线
+
+gt.blockmachines.modernization.mixed_output.name=二合一 ME 输出总线
+mixed.output.description=通过一个 AE 连接输出物品与流体；两个通道独立缓存。
+mixed.output.placement=仅限同一格同时允许输出总线和输出仓的结构位置。
+mixed.output.cell=共用一个升级槽：物品元件升级物品通道，流体元件升级流体通道；另一通道使用默认容量。
+mixed.output.cell.short=通道容量 / 过滤元件
+mixed.output.overflow=本总线所连网络有下单优化器时，实际产物可暂存至超过容量；新配方仍检查容量。
+mixed.output.items=物品输出
+mixed.output.fluids=流体输出

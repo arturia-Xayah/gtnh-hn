@@ -6,7 +6,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('compileJava', JavaCompile) { options.release = 8 }
 tasks.named('compileTestJava', JavaCompile) { options.release = 8 }
 tasks.named('compileInjectedTagsJava', JavaCompile) { options.release = 8 }
-version = '0.3.8-alpha'
+version = '0.4.0'
 
 
 ext.modVersion = version
@@ -70,6 +70,11 @@ tasks.register('verifyDistribution') {
             for (String required : ['dev/aeoptimizer/OrderOptimizer.class', 'dev/aeoptimizer/LateMixins.class', 'mixins.aeorderoptimizer.late.json', 'assets/aeorderoptimizer/textures/blocks/core.png', 'assets/aeorderoptimizer/lang/zh_CN.lang', 'assets/aeorderoptimizer/lang/en_US.lang', 'NOTICE-AE-OPTIMIZER']) {
                 if (!zip.getEntry(required)) throw new GradleException('Missing bundled AE component: ' + required)
             }
+            for (String required : ['dev/aeoptimizer/dispatch/ItemBatchLimitCard.class', 'dev/aeoptimizer/dispatch/BatchLimits.class', 'dev/aeoptimizer/mixin/BatchLimitUpgradeMixin.class', 'dev/aeoptimizer/mixin/BatchLimitContainerMixin.class', 'dev/aeoptimizer/mixin/client/BatchLimitScreenMixin.class', 'dev/aeoptimizer/ui/client/BatchLimitPanel.class']) {
+                if (!zip.getEntry(required)) throw new GradleException('Missing batch limit component: ' + required)
+            }
+            if (zip.getEntry('dev/aeoptimizer/dispatch/SafeSubnetDispatch.class'))
+                throw new GradleException('Obsolete forced-empty subnet guard remains in distribution')
             for (String required : ['dev/structureterminal/packing/PackingItems.class', 'dev/structureterminal/packing/PackingService.class', 'dev/structureterminal/packing/PackedPartContext.class', 'dev/aeoptimizer/mixin/PackedPartMixin.class', 'assets/structureterminal/textures/items/me_packing_tape.png', 'assets/structureterminal/textures/items/package.png']) {
                 if (!zip.getEntry(required)) throw new GradleException('Missing ME packing component: ' + required)
             }
@@ -93,7 +98,7 @@ tasks.register('verifyDistribution') {
                 if (!zip.getEntry(required)) throw new GradleException('Missing modernization module: ' + required)
             }
             def updateMetadata = new groovy.json.JsonSlurper().parse(zip.getInputStream(zip.getEntry('modernization-update.json')))
-            if (updateMetadata.schema != 1 || updateMetadata.version != expectedModVersion || updateMetadata.gtnh != '2.9.0')
+            if (updateMetadata.schema != 1 || updateMetadata.version != expectedModVersion || updateMetadata.gtnh != '2.9.1')
                 throw new GradleException('Updater metadata does not match installation JAR')
             if (!zip.getEntry('dev/structureterminal/update/UpdateInstaller.class'))
                 throw new GradleException('Missing standalone update helper')
@@ -166,7 +171,7 @@ tasks.register('generateUpdateMetadata') {
     doLast {
         def target = updateMetadataDir.get().file('modernization-update.json').asFile
         target.parentFile.mkdirs()
-        target.text = groovy.json.JsonOutput.toJson([schema: 1, version: project.version.toString(), gtnh: '2.9.0']) + '\n'
+        target.text = groovy.json.JsonOutput.toJson([schema: 1, version: project.version.toString(), gtnh: '2.9.1']) + '\n'
     }
 }
 tasks.named('processResources') {
@@ -179,5 +184,5 @@ tasks.register('prepareUpdateAsset', Copy) {
     dependsOn('verifyDistribution')
     from(tasks.named('reobfJar').flatMap { it.archiveFile })
     into(layout.buildDirectory.dir('release'))
-    rename { "gtnh-hn-${project.version}-GTNH-2.9.0.jar" }
+    rename { "gtnh-hn-${project.version}-GTNH-2.9.1.jar" }
 }

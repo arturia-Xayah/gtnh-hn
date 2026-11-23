@@ -1,5 +1,7 @@
 package dev.aeoptimizer.ui;
 
+import java.util.Arrays;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.StatCollector;
@@ -12,7 +14,7 @@ public class OptimizerScreen extends GuiContainer {
         super(container);
         state = container;
         xSize = 244;
-        ySize = 210;
+        ySize = 236;
     }
 
     private String tr(String key) {
@@ -26,6 +28,7 @@ public class OptimizerScreen extends GuiContainer {
         buttonList.add(new GuiButton(0, guiLeft + 16, guiTop + 46, 212, 20, ""));
         buttonList.add(new GuiButton(1, guiLeft + 16, guiTop + 72, 212, 20, ""));
         buttonList.add(new GuiButton(2, guiLeft + 16, guiTop + 98, 212, 20, ""));
+        buttonList.add(new GuiButton(3, guiLeft + 16, guiTop + 124, 212, 20, ""));
     }
 
     @Override
@@ -36,6 +39,23 @@ public class OptimizerScreen extends GuiContainer {
         GuiButton encode = (GuiButton) buttonList.get(2);
         encode.displayString = tr("rename.encode") + ": " + tr(state.autoEncodeRename ? "on" : "off");
         encode.enabled = state.autoRename;
+        ((GuiButton) buttonList.get(3)).displayString = tr("output.overflow") + ": "
+            + tr(state.outputOverflow ? "on" : "off");
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float ticks) {
+        super.drawScreen(mouseX, mouseY, ticks);
+        GuiButton overflow = (GuiButton) buttonList.get(3);
+        if (overflow.mousePressed(mc, mouseX, mouseY)) drawHoveringText(
+            Arrays.asList(
+                tr("output.overflow.help"),
+                tr("output.overflow.scope"),
+                tr("output.overflow.disabled"),
+                tr("output.overflow.network")),
+            mouseX,
+            mouseY,
+            fontRendererObj);
     }
 
     @Override
@@ -56,9 +76,9 @@ public class OptimizerScreen extends GuiContainer {
         fontRendererObj.drawSplitString(
             tr(state.conflict ? "conflict" : "ready"),
             16,
-            188,
+            214,
             212,
             state.conflict ? 0xb03a30 : 0x36546a);
-        fontRendererObj.drawSplitString(tr("rename.encode.help"), 16, 128, 212, 0x36546a);
+        fontRendererObj.drawSplitString(tr("rename.encode.help"), 16, 154, 212, 0x36546a);
     }
 }

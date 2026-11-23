@@ -19,7 +19,6 @@ import buildcraft.builders.gui.GuiArchitect;
 import buildcraft.builders.gui.GuiFiller;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.structureterminal.bc.RangeContainer;
-import dev.structureterminal.bc.RangeJobs;
 import dev.structureterminal.net.TerminalNetwork;
 
 public final class RangeScreen extends GuiContainer {
@@ -27,35 +26,20 @@ public final class RangeScreen extends GuiContainer {
     private final RangeContainer menu;
     private final GuiTextField[] fields = new GuiTextField[3];
     private final String[] values = { "1", "1", "1" };
-    private int[] bounds;
     private String status = "";
     private boolean waiting;
-    private GuiButton preview, apply;
+    private GuiButton preview, apply, reset;
 
     public RangeScreen(RangeContainer menu) {
         super(menu);
         this.menu = menu;
         xSize = 214;
         ySize = 136;
-        int[] size = dev.structureterminal.bc.PortableRange.dimensions(menu.tile);
-        if (size.length == 3) {
-            for (int i = 0; i < 3; i++) values[i] = String.valueOf(size[i]);
-            return;
-        }
-        int[] b = RangeJobs.bounds(menu.tile);
-        if (b.length == 6) {
-            int f = menu.front(), fx = f == 5 ? 1 : f == 4 ? -1 : 0, fz = f == 3 ? 1 : f == 2 ? -1 : 0;
-            int x = menu.tile.xCoord + fx, y = menu.tile.yCoord, z = menu.tile.zCoord + fz;
-            boolean aligned = fx > 0 ? b[0] == x : fx < 0 ? b[3] == x : fz > 0 ? b[2] == z : b[5] == z;
-            int low = fx == 0 ? b[0] : b[2], high = fx == 0 ? b[3] : b[5], anchor = fx == 0 ? x : z;
-            if (aligned && (anchor == low || anchor == high) && (y == b[1] || y == b[4])) {
-                int width = high - low + 1;
-                values[0] = String.valueOf(width == 1 ? 1 : width * (anchor == low ? 1 : -1) * (fx == 0 ? -fz : fx));
-                values[1] = String.valueOf((b[4] - b[1] + 1) * (y == b[1] ? 1 : -1));
-                values[2] = String.valueOf(fx == 0 ? b[5] - b[2] + 1 : b[3] - b[0] + 1);
-            }
-        }
     }
+
+    private static int[] projected;
+    private static net.minecraft.world.World projectionWorld;
+    private static long expires;
 
     private static String tr(String key) {
         return StatCollector.translateToLocal("bc.range." + key);
@@ -72,29 +56,41 @@ public final class RangeScreen extends GuiContainer {
             fields[i].setText(values[i]);
         }
         fields[0].setFocused(true);
-        preview = new GuiButton(0, 0, 0, 90, 20, tr("preview"));
-        apply = new GuiButton(1, 0, 0, 90, 20, tr("apply"));
+        preview = new GuiButton(0, 0, 0, 62, 20, tr("preview"));
+        apply = new GuiButton(1, 0, 0, 62, 20, tr("apply"));
         buttonList.add(preview);
         buttonList.add(apply);
+        reset = new GuiButton(2, 0, 0, 62, 20, tr("reset"));
+        buttonList.add(reset);
         layout();
+        NBTTagCompound load = command(menu.windowId);
+        load.setBoolean("load", true);
+        send(load);
     }
 
     private void layout() {
-        boolean viewing = bounds != null;
-        preview.xPosition = width / 2 - 95;
-        apply.xPosition = width / 2 + 5;
-        preview.yPosition = apply.yPosition = viewing ? height - 26 : guiTop + 110;
-        preview.displayString = tr(viewing ? "edit" : "preview");
-        preview.enabled = !waiting;
-        apply.enabled = viewing && !waiting;
+        preview.xPosition = guiLeft + 9;
+        apply.xPosition = guiLeft + 76;
+        reset.xPosition = guiLeft + 143;
+        preview.yPosition = apply.yPosition = reset.yPosition = guiTop + 110;
+        preview.enabled = apply.enabled = reset.enabled = !waiting;
     }
 
     public void receive(NBTTagCompound tag) {
         if (tag.getInteger("window") != menu.windowId) return;
         waiting = false;
+        status = tag.hasKey("error") ? StatCollector.translateToLocal(tag.getString("error")) : "";
+        int[] size = tag.getIntArray("size");
+        if (size.length == 3) for (int i = 0; i < 3; i++) fields[i].setText(Integer.toString(size[i]));
+        if (tag.getBoolean("reset")) projected = null;
         int[] c = tag.getIntArray("bounds");
-        bounds = c.length == 6 ? c : null;
-        status = bounds == null ? StatCollector.translateToLocal(tag.getString("error")) : "";
+        if (c.length == 6) {
+            projected = c;
+            projectionWorld = mc.theWorld;
+            expires = mc.theWorld.getTotalWorldTime() + 1200;
+            mc.thePlayer.closeScreen();
+        }
+        if (tag.getBoolean("close")) mc.thePlayer.closeScreen();
         layout();
     }
 
@@ -112,26 +108,36 @@ public final class RangeScreen extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (waiting) return;
-        if (button == preview && bounds != null) {
-            bounds = null;
-            layout();
-            return;
-        }
         NBTTagCompound tag = command(menu.windowId);
-        if (button == apply && bounds != null) tag.setBoolean("apply", true);
-        else if (button == preview) {
-            try {
-                tag.setInteger("w", Integer.parseInt(fields[0].getText()));
-                tag.setInteger("h", Integer.parseInt(fields[1].getText()));
-                tag.setInteger("d", Integer.parseInt(fields[2].getText()));
-            } catch (NumberFormatException e) {
-                status = tr("dimensions");
-                return;
-            }
-        } else return;
+        if (button == reset) tag.setBoolean("reset", true);
+        else {
+            if (!dimensions(tag)) return;
+            if (button == apply) tag.setBoolean("apply", true);
+            else if (button != preview) return;
+        }
         waiting = true;
         layout();
         send(tag);
+    }
+
+    private boolean dimensions(NBTTagCompound tag) {
+        try {
+            tag.setInteger("w", Integer.parseInt(fields[0].getText()));
+            tag.setInteger("h", Integer.parseInt(fields[1].getText()));
+            tag.setInteger("d", Integer.parseInt(fields[2].getText()));
+            return true;
+        } catch (NumberFormatException e) {
+            status = tr("dimensions");
+            return false;
+        }
+    }
+
+    private void saveDraft() {
+        NBTTagCompound tag = command(menu.windowId);
+        if (dimensions(tag)) {
+            tag.setBoolean("draft", true);
+            send(tag);
+        }
     }
 
     @Override
@@ -141,28 +147,7 @@ public final class RangeScreen extends GuiContainer {
     }
 
     @Override
-    public void drawDefaultBackground() {
-        if (bounds == null) super.drawDefaultBackground();
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partial, int mx, int my) {
-        if (bounds != null) {
-            String extent = "(" + bounds[0]
-                + ", "
-                + bounds[1]
-                + ", "
-                + bounds[2]
-                + ")  →  ("
-                + bounds[3]
-                + ", "
-                + bounds[4]
-                + ", "
-                + bounds[5]
-                + ")";
-            drawCenteredString(fontRendererObj, extent, width / 2, height - 40, 0xffffff);
-            return;
-        }
         drawRect(guiLeft, guiTop, guiLeft + xSize, guiTop + ySize, 0xf0232934);
         drawCenteredString(fontRendererObj, tr("title"), width / 2, guiTop + 7, 0xffffff);
         String[] labels = { "width", "height", "depth" };
@@ -181,26 +166,42 @@ public final class RangeScreen extends GuiContainer {
     @Override
     protected void keyTyped(char c, int key) {
         if (key == Keyboard.KEY_ESCAPE) {
-            super.keyTyped(c, key);
+            closeWithDraft();
             return;
         }
-        if (!waiting && bounds == null) {
+        if (!waiting) {
             for (int i = 0; i < 3; i++) if (fields[i].isFocused()) {
                 if (key == Keyboard.KEY_TAB) {
                     fields[i].setFocused(false);
                     fields[(i + 1) % 3].setFocused(true);
                     return;
                 }
-                if (fields[i].textboxKeyTyped(c, key)) return;
+                if (fields[i].textboxKeyTyped(c, key)) {
+                    saveDraft();
+                    return;
+                }
             }
         }
-        if (key == mc.gameSettings.keyBindInventory.getKeyCode()) mc.thePlayer.closeScreen();
+        if (key == mc.gameSettings.keyBindInventory.getKeyCode()) closeWithDraft();
+    }
+
+    private void closeWithDraft() {
+        if (waiting) return;
+        NBTTagCompound tag = command(menu.windowId);
+        if (!dimensions(tag)) {
+            mc.thePlayer.closeScreen();
+            return;
+        }
+        tag.setBoolean("close", true);
+        waiting = true;
+        layout();
+        send(tag);
     }
 
     @Override
     protected void mouseClicked(int x, int y, int button) {
         super.mouseClicked(x, y, button);
-        if (bounds == null && !waiting) for (GuiTextField field : fields) field.mouseClicked(x, y, button);
+        if (!waiting) for (GuiTextField field : fields) field.mouseClicked(x, y, button);
     }
 
     @Override
@@ -239,8 +240,12 @@ public final class RangeScreen extends GuiContainer {
         @SubscribeEvent
         public void render(RenderWorldLastEvent e) {
             Minecraft mc = Minecraft.getMinecraft();
-            if (!(mc.currentScreen instanceof RangeScreen) || mc.renderViewEntity == null) return;
-            int[] b = ((RangeScreen) mc.currentScreen).bounds;
+            if (projectionWorld != mc.theWorld || mc.theWorld == null || mc.theWorld.getTotalWorldTime() > expires) {
+                projected = null;
+                projectionWorld = null;
+            }
+            if (mc.renderViewEntity == null) return;
+            int[] b = projected;
             if (b == null) return;
             Entity eye = mc.renderViewEntity;
             double x = eye.lastTickPosX + (eye.posX - eye.lastTickPosX) * e.partialTicks;

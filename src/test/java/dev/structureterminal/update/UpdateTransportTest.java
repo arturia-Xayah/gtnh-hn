@@ -51,6 +51,11 @@ public class UpdateTransportTest {
                 UpdateTransport.verifyJar(file, "0.3.3-alpha", "2.9.0-RC-2");
                 fail();
             } catch (IOException expected) {}
+            jar(file, "0.4.0", "2.9.1", false);
+            try {
+                UpdateTransport.verifyJar(file, "0.4.0", "2.9.0");
+                fail("2.9.1 JAR must not install into 2.9.0");
+            } catch (IOException expected) {}
             jar(file, "0.3.3-alpha", "2.9.0", true);
             try {
                 UpdateTransport.verifyJar(file, "0.3.3-alpha", "2.9.0");

@@ -351,7 +351,7 @@ final class IntegratedPatternPackChecks {
 
     private static void memory(OptimizerPackTest s) {
         NBTTagCompound data = new NBTTagCompound();
-        ToolMemoryCard.savePatterns(data, block);
+        ToolMemoryCard.savePatterns(data, s.player, block);
         check(
             s,
             "memory_saves_holder",

@@ -1,6 +1,7 @@
 dependencies {
+    compileOnly("com.github.GTNewHorizons:AE2FluidCraft-Rework:1.6.0-gtnh:dev") { transitive = false }
     compileOnly("curse.maven:cofh-lib-220333:2388748") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:MatterManipulator:0.1.75-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:MatterManipulator:0.1.77-GTNH:dev") { transitive = false }
     compileOnly("org.joml:joml:1.10.8")
     if (providers.gradleProperty("modernizationPackTests").getOrElse("false").toBoolean()) {
         compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
@@ -8,17 +9,17 @@ dependencies {
     testRuntimeOnly("org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209") { transitive = false }
     compileOnly("com.github.GTNewHorizons:Custom-Main-Menu:1.14.1:dev") { transitive = false }
     testImplementation("com.github.GTNewHorizons:Custom-Main-Menu:1.14.1:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.65:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.66:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:ModularUI:1.3.4:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.265:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:ModularUI2:2.3.94-1.7.10:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:GTNHLib:0.11.54:dev") { transitive = false }
-    testRuntimeOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.265:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.275:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:ModularUI2:2.3.96-1.7.10:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GTNHLib:0.11.58:dev") { transitive = false }
+    testRuntimeOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.275:dev") { transitive = false }
     implementation("com.github.GTNewHorizons:StructureLib:1.4.47:dev")
-    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1095-GTNH:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.8.171-GTNH:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:NotEnoughEnergistics:1.7.50:dev") { transitive = false }
-    testRuntimeOnly("com.github.GTNewHorizons:NotEnoughEnergistics:1.7.50:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1104-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.8.175-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:NotEnoughEnergistics:1.8.0:dev") { transitive = false }
+    testRuntimeOnly("com.github.GTNewHorizons:NotEnoughEnergistics:1.8.0:dev") { transitive = false }
     compileOnly("io.github.legacymoddingmc:unimixins:0.3.1:dev") { transitive = false }
     compileOnly("it.unimi.dsi:fastutil:8.5.15")
     compileOnly("org.jetbrains:annotations:24.1.0")
@@ -26,7 +27,7 @@ dependencies {
     // Inspect GT's Java 17 multi-release render classes when tests run on Java 25.
     testImplementation("org.ow2.asm:asm-tree:9.10.1")
     // Read pinned AE bytecode to validate client hook selectors without starting a client.
-    testRuntimeOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1095-GTNH:dev") { transitive = false }
+    testRuntimeOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1104-GTNH:dev") { transitive = false }
 }
 
 // Forge's bundled ASM 5 shadows ASM 9 unless removed from the test-only runtime.

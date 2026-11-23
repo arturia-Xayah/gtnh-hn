@@ -11,7 +11,43 @@ public final class PortableRange {
 
     public static final String KEY = "modernization.bcDimensions";
 
+    public static final String DRAFT = "modernization.bcDraft";
+
     private PortableRange() {}
+
+    public static int[] actualDimensions(TileEntity tile) {
+        int[] b = RangeJobs.bounds(tile);
+        if (b.length != 6) return new int[] { 1, 1, 1 };
+        int f = front(tile), fx = f == 5 ? 1 : f == 4 ? -1 : 0, fz = f == 3 ? 1 : f == 2 ? -1 : 0;
+        int x = tile.xCoord + fx, y = tile.yCoord, z = tile.zCoord + fz;
+        boolean aligned = fx > 0 ? b[0] == x : fx < 0 ? b[3] == x : fz > 0 ? b[2] == z : b[5] == z;
+        int low = fx == 0 ? b[0] : b[2], high = fx == 0 ? b[3] : b[5], anchor = fx == 0 ? x : z;
+        if (!aligned || (anchor != low && anchor != high) || (y != b[1] && y != b[4]))
+            throw new IllegalArgumentException("bc.range.unaligned");
+        int width = high - low + 1;
+        return new int[] { width == 1 ? 1 : width * (anchor == low ? 1 : -1) * (fx == 0 ? -fz : fx),
+            (b[4] - b[1] + 1) * (y == b[1] ? 1 : -1), fx == 0 ? b[5] - b[2] + 1 : b[3] - b[0] + 1 };
+    }
+
+    public static int[] draft(TileEntity tile) {
+        int[] stored = ((RangeMachine) tile).rangeData()
+            .getIntArray(DRAFT);
+        return stored.length == 3 ? stored : actualDimensions(tile);
+    }
+
+    public static void saveDraft(TileEntity tile, int[] size) {
+        bounds(
+            tile.xCoord,
+            tile.yCoord,
+            tile.zCoord,
+            front(tile),
+            size,
+            tile.getWorldObj()
+                .getHeight());
+        ((RangeMachine) tile).rangeData()
+            .setIntArray(DRAFT, size.clone());
+        tile.markDirty();
+    }
 
     public static int front(TileEntity tile) {
         return ((BlockBuildCraft) tile.getBlockType()).getFrontSide(tile.getBlockMetadata());

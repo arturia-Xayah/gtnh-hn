@@ -51,11 +51,16 @@ public class ReleaseCatalogTest {
             + ","
             + release("0.4.0", "2.10.0", false)
             + ","
+            + release("0.4.0", "2.9.1", false)
+            + ","
             + release("0.3.10-alpha", "2.9.0", true)
             + "]";
         assertEquals("0.3.10-alpha", ReleaseCatalog.select(releases, "0.3.2-alpha", "2.9.0", true, null).version);
         assertNull(ReleaseCatalog.select(releases, "0.3.2-alpha", "2.9.0", false, null));
         assertNull(ReleaseCatalog.select(releases, "0.3.2-alpha", null, true, null));
+        assertEquals("0.4.0", ReleaseCatalog.select(releases, "0.3.8-alpha", "2.9.1", true, null).version);
+        assertNull(ReleaseCatalog.select(release("0.4.0", "2.9.1", false), "0.3.8-alpha", "2.9.0", true, null));
+        assertNull(ReleaseCatalog.select(release("0.4.0", "2.9.1", false), "0.3.8-alpha", "2.9.0", true, "0.4.0"));
     }
 
     @Test

@@ -1,0 +1,20 @@
+{
+  "performance": {
+    "scope": "warmed live AE grid, 1 optimizer; lookup microbenchmark, NOT whole-server MSPT",
+    "iterations_per_sample": 100000,
+    "samples": 9,
+    "median_ns_per_lookup": 31.20709,
+    "max_ns_per_lookup": 38.1275
+  },
+  "passed": true,
+  "tests": [
+    "native GT/MUI2 menu constructed on dedicated server",
+    "position and auto-build rules: bus only/hatch only/dual/native OR/alias/custom override/direct legacy/prior approval isolation",
+    "real LCR construction/forms/independent native item + fluid ejection",
+    "optimizer absent: two 10k completions fit native overshoot, later completion rejected in both channels",
+    "NBT round trip preserves both overfull caches, channel settings, and a single AE node",
+    "12 upgrade/filter checks: native item/fluid partitions, optimizer retains filters, channel isolation and AE fluid cache exposure",
+    "optimizer: 4 x 10k retained per 16k channel; new recipe checks and simulations reject; flushed 60k items + 60k mB conserved",
+    "strict-check mode still retains actual outputs; removing optimizer preserves buffered contents and restores native acceptance"
+  ]
+}

@@ -9,6 +9,11 @@ aeo.rename=Auto-rename AL inputs
 aeo.rename.help=NEI duplicates use fixed names: 重命名1, 重命名2... Supply matching items from a Forming Press.
 aeo.rename.encode=Auto-encode rename patterns
 aeo.rename.encode.help=Imports create 1:1 rename patterns in your inventory, consuming blanks. Supply matching Name Molds in Forming Presses.
+aeo.output.overflow=ME output overflow
+aeo.output.overflow.help=Accept completions beyond capacity; new recipes still check limits.
+aeo.output.overflow.scope=ME Output Buses, Hatches and Dual ME Output Buses.
+aeo.output.overflow.disabled=OFF: native acceptance; existing excess is kept and flushed.
+aeo.output.overflow.network=Output grid only; planning and batch dispatch are independent.
 aeo.rename.encode.done=Rename patterns: created %s in your inventory; skipped %s existing. Install them at Forming Presses with the matching Name Molds.
 aeo.rename.encode.permission=Cannot create rename patterns: no pattern editing permission. Import cancelled.
 aeo.rename.encode.space=Cannot create rename patterns: inventory full. Import cancelled; no blanks consumed.
@@ -23,3 +28,32 @@ aeoptimizer.locate.unknown=%s: this pattern provider does not expose block coord
 
 aeoptimizer.report.multi_output=Multiple-output error: %s has %s output types in the selected recipe.
 aeoptimizer.report.error=Order calculation error: %s
+
+aeorderoptimizer.emitter.target.0=Specific
+aeorderoptimizer.emitter.target.1=All items
+aeorderoptimizer.emitter.target.2=All fluids
+aeorderoptimizer.emitter.switch=Click to change the detection target.
+aeorderoptimizer.emitter.count.1=Network inventory: %s items
+aeorderoptimizer.emitter.count.2=Network inventory: %s mB
+item.aeorderoptimizer.batch_limit_card.name=Batch Dispatch Limit Card
+aeoptimizer.batch.card.install=§7Install in the §bsending ME interface§7; maximum §f1 §7card.
+aeoptimizer.batch.card.require=§7Requires an optimizer on the §bordering network§7.
+aeoptimizer.batch.card.limit=§7Caps each §bitem type / fluid type§7 per batch.
+aeoptimizer.batch.card.why=§7Match receiver capacity to reduce oversized batches filling its tanks.
+aeoptimizer.batch.card.strict=§7Strict Blocking sends a batch, then follows native waiting rules.
+aeoptimizer.batch.card.configure=§7Click the left §b≤§7 button. §f0§7 = unlimited; fluids use §fmB§7.
+aeoptimizer.batch.card.more=§8Hold §fShift §8for details and supported devices.
+aeoptimizer.batch.detail.same=§7Repeated ingredients are added before calculating the batch size.
+aeoptimizer.batch.detail.smart=§7Smart Blocking checks emptiness on the first push or a recipe change.
+aeoptimizer.batch.detail.not=§ePer batch, not per tick or a subnet inventory limit.
+aeoptimizer.batch.detail.small=§cLess than one recipe fits: pause this interface; see its settings.
+aeoptimizer.batch.detail.queue=§7Editing limits does not recall ingredients already queued for delivery.
+aeoptimizer.batch.card.devices=§8Supported devices (one card each):
+aeoptimizer.batch.title=Batch dispatch limits
+aeoptimizer.batch.items=Each item / batch (items)
+aeoptimizer.batch.fluids=Each fluid / batch (mB)
+aeoptimizer.batch.hint=0 = unlimited. K/M/G/T use base 1000. Requires an optimizer on the ordering grid.
+aeoptimizer.batch.apply=Apply
+aeoptimizer.batch.cancel=Cancel
+aeoptimizer.batch.invalid=Enter 0 to 9223372036854775807
+aeoptimizer.batch.blocked=One recipe exceeds the limit; paused

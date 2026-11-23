@@ -72,6 +72,29 @@ public final class BcRangeChecks {
                     .isInitialized(),
                 "preview mutated selection");
             tests.add("preview_only");
+            PortableRange.saveDraft(filler, new int[] { -3, 2, 4 });
+            check(Arrays.equals(PortableRange.draft(filler), new int[] { -3, 2, 4 }), "draft remembered");
+            check(
+                !Arrays.equals(
+                    RangeJobs.bounds(filler),
+                    PortableRange.bounds(
+                        filler.xCoord,
+                        filler.yCoord,
+                        filler.zCoord,
+                        PortableRange.front(filler),
+                        new int[] { -3, 2, 4 },
+                        world.getHeight())),
+                "draft must not apply");
+            NBTTagCompound savedDraft = new NBTTagCompound();
+            filler.writeToNBT(savedDraft);
+            TileEntity draftCopy = TileEntity.createAndLoadEntity(savedDraft);
+            check(
+                Arrays.equals(
+                    ((RangeMachine) draftCopy).rangeData()
+                        .getIntArray(PortableRange.DRAFT),
+                    new int[] { -3, 2, 4 }),
+                "draft NBT");
+            tests.add("unapplied_draft_persists");
             world.setBlockMetadataWithNotify(x, y, z, 5, 3);
             try {
                 c.applyPreview();

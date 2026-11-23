@@ -56,9 +56,9 @@ public final class BundleChecks {
         check(GameRegistry.findBlock("aestoragevault", "casing") == null, "retired casing block still registered");
         check(GameRegistry.findItem("aestoragevault", "casing") == null, "retired casing item still registered");
         Map<String, String> dependencies = new LinkedHashMap<>();
-        for (String[] expected : new String[][] { { "gregtech", "5.09.54.265" },
-            { "appliedenergistics2", "rv3-beta-1095-GTNH" }, { "structurelib", "1.4.47" },
-            { "modularui2", "2.3.94-1.7.10" }, { "gtnhlib", "0.11.54" }, { "NotEnoughItems", "2.8.171-GTNH" } }) {
+        for (String[] expected : new String[][] { { "gregtech", "5.09.54.275" },
+            { "appliedenergistics2", "rv3-beta-1104-GTNH" }, { "structurelib", "1.4.47" },
+            { "modularui2", "2.3.96-1.7.10" }, { "gtnhlib", "0.11.58" }, { "NotEnoughItems", "2.8.175-GTNH" } }) {
             ModContainer dependency = Loader.instance()
                 .getIndexedModList()
                 .get(expected[0]);
@@ -69,7 +69,7 @@ public final class BundleChecks {
             dependencies.put(expected[0], dependency.getVersion());
         }
         report.put("dependencies", dependencies);
-        report.put("pack", System.getProperty("modernization.packVersion", "2.9.0"));
+        report.put("pack", System.getProperty("modernization.packVersion", "2.9.1"));
         report.put("passed", true);
         report.put("modules", modules);
         report.put("client_launched", false);
@@ -81,6 +81,18 @@ public final class BundleChecks {
                 .create()
                 .toJson(report)
                 .getBytes(StandardCharsets.UTF_8));
+        if (Boolean.getBoolean("structureterminal.multiOutputTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new MultiOutputChecks());
+        if (Boolean.getBoolean("structureterminal.mixedOutputTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new MixedOutputChecks());
+        if (Boolean.getBoolean("structureterminal.smartBlockingTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new SmartBlockingChecks());
+        if (Boolean.getBoolean("structureterminal.emitterTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new EmitterChecks());
         if (Boolean.getBoolean("structureterminal.projectorTests")) ProjectorChecks.run();
         if (Boolean.getBoolean("structureterminal.bcRangeTests")) BcRangeChecks.run();
     }

@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "tests": [
+    "native per-recipe smart dispatch: 16 complete sets filled three tanks with separate fluids",
+    "unprotected 100-craft bulk call into native interface: fluid A filled all three 16k tanks, B/C could not enter",
+    "AE2FC upgrade slot accepts one limit card, rejects a duplicate",
+    "1M mB per fluid / 2M per item, 100k+50k+20k fluids / 250k items \u003d\u003e eight sets",
+    "Repeated slots merge by exact AE identity; named item remains a different type",
+    "Smart Blocking + card: two consecutive batches of eight, native smart behavior retained",
+    "Strict Blocking + card: eight sets once, wait empty, then resume",
+    "Oversized actual table rejected before any item/fluid insertion",
+    "Limit below one recipe blocks optimized dispatch; unoptimized transaction ignores it",
+    "Card removal immediately disables limits; long limits and upgrade survive NBT round trip",
+    "Zero limits allow full native payload",
+    "Native block / part interface and AE2FC part declare limit card support",
+    "Native container: atomic edit, negative limit, distance, card-removal and closed-screen checks",
+    "Real native CPU: strict 8x1, smart 8x2, sub-recipe cap, one operation for eight sets, no-card/zero cases; inputs conserved",
+    "No Advanced Blocking Card / no blocking: native receiving semantics, two batches of eight",
+    "Native CPU fallback also enforces the cap and returns all rejected inputs"
+  ],
+  "cpu_dispatch": [
+    {
+      "name": "strict eight then wait empty",
+      "sets": 8,
+      "batches": 1,
+      "nanoseconds": 5004584
+    },
+    {
+      "name": "smart two consecutive batches of eight",
+      "sets": 16,
+      "batches": 2,
+      "nanoseconds": 231916
+    },
+    {
+      "name": "limit below one set",
+      "sets": 0,
+      "batches": 0,
+      "nanoseconds": 20667
+    },
+    {
+      "name": "one remaining operation sends eight sets",
+      "sets": 8,
+      "batches": 1,
+      "nanoseconds": 87750
+    },
+    {
+      "name": "no card strict keeps one-set native boundary",
+      "sets": 1,
+      "batches": 1,
+      "nanoseconds": 173709
+    },
+    {
+      "name": "zero limit does not cap optimized batch",
+      "sets": 16,
+      "batches": 1,
+      "nanoseconds": 126292
+    },
+    {
+      "name": "unblocked subnet without advanced card",
+      "sets": 16,
+      "batches": 2,
+      "nanoseconds": 142584
+    },
+    {
+      "name": "native fallback cannot bypass too-small cap",
+      "sets": 0,
+      "batches": 0,
+      "nanoseconds": 53208
+    }
+  ]
+}

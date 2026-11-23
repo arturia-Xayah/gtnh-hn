@@ -53,13 +53,26 @@ public final class RangeContainer extends Container {
                 || !p.worldObj.canMineBlock(p, tile.xCoord, tile.yCoord, tile.zCoord)
                 || !p.canPlayerEdit(tile.xCoord, tile.yCoord, tile.zCoord, front(), p.getHeldItem()))
                 throw new IllegalArgumentException("bc.range.denied");
-            if (!cmd.getBoolean("apply")) {
-                reply.setIntArray("bounds", preview(cmd.getInteger("w"), cmd.getInteger("h"), cmd.getInteger("d")));
+            if (cmd.getBoolean("load")) {
+                reply.setIntArray("size", PortableRange.draft(tile));
+            } else if (cmd.getBoolean("reset")) {
+                int[] size = PortableRange.actualDimensions(tile);
+                PortableRange.saveDraft(tile, size);
+                reply.setIntArray("size", size);
+                reply.setBoolean("reset", true);
+                preview = null;
             } else {
-                boolean queued = applyPreview();
-                p.closeScreen();
-                p.addChatMessage(new ChatComponentTranslation(queued ? "bc.range.queued" : "bc.range.applied"));
-                return;
+                int[] box = preview(cmd.getInteger("w"), cmd.getInteger("h"), cmd.getInteger("d"));
+                PortableRange.saveDraft(tile, new int[] { w, h, d });
+                if (cmd.getBoolean("apply")) {
+                    boolean queued = applyPreview();
+                    p.addChatMessage(new ChatComponentTranslation(queued ? "bc.range.queued" : "bc.range.applied"));
+                    reply.setBoolean("reset", true);
+                } else if (cmd.getBoolean("close")) {
+                    reply.setBoolean("close", true);
+                } else if (!cmd.getBoolean("draft")) {
+                    reply.setIntArray("bounds", box);
+                } else return;
             }
         } catch (IllegalArgumentException invalid) {
             preview = null;

@@ -134,8 +134,13 @@ final class SceneImage {
         GL11.glPushMatrix();
         try {
             GL20.glUseProgram(0);
-            if (image == null) {
-                image = new Framebuffer(192, 192, true);
+            int edge = Math
+                .min(dev.structureterminal.TerminalConfig.sceneResolution, GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE));
+            int w = Math.max(1, edge * gate.width / Math.max(gate.width, gate.height));
+            int h = Math.max(1, edge * gate.height / Math.max(gate.width, gate.height));
+            if (image == null || image.framebufferWidth != w || image.framebufferHeight != h) {
+                if (image != null) image.deleteFramebuffer();
+                image = new Framebuffer(w, h, true);
                 image.setFramebufferFilter(GL11.GL_LINEAR);
             }
             image.bindFramebuffer(true);

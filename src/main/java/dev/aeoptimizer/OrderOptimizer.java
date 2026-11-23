@@ -34,6 +34,16 @@ public final class OrderOptimizer {
     public static BlockOptimizer BLOCK;
 
     @Mod.EventHandler
+    public void preInit(cpw.mods.fml.common.event.FMLPreInitializationEvent event) {
+        dev.aeoptimizer.dispatch.ItemBatchLimitCard.register();
+    }
+
+    @Mod.EventHandler
+    public void postInit(cpw.mods.fml.common.event.FMLPostInitializationEvent event) {
+        dev.aeoptimizer.dispatch.ItemBatchLimitCard.registerHosts();
+    }
+
+    @Mod.EventHandler
     public void serverStarting(cpw.mods.fml.common.event.FMLServerStartingEvent event) {
         event.registerServerCommand(new dev.aeoptimizer.planning.PatternLocations());
     }
@@ -41,10 +51,14 @@ public final class OrderOptimizer {
     @Mod.EventHandler
     public void serverStopped(cpw.mods.fml.common.event.FMLServerStoppedEvent event) {
         dev.aeoptimizer.planning.PatternLocations.clear();
+        dev.aeoptimizer.emitter.EmitterUpdates.INSTANCE.clear();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(dev.aeoptimizer.emitter.EmitterUpdates.INSTANCE);
         BLOCK = new BlockOptimizer();
         GameRegistry.registerBlock(BLOCK, "core");
         GameRegistry.registerTileEntity(TileOptimizer.class, ID + ":core");

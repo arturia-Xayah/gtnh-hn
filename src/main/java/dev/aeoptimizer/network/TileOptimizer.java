@@ -17,6 +17,7 @@ public class TileOptimizer extends AENetworkTile {
     public boolean detailed;
     public boolean autoRename;
     public boolean autoEncodeRename;
+    public boolean outputOverflow = true;
     public boolean conflict;
 
     @Override
@@ -32,6 +33,8 @@ public class TileOptimizer extends AENetworkTile {
         detailed = nbt.getBoolean("Detailed");
         autoRename = nbt.getBoolean("AutoRenameAssemblyLine");
         autoEncodeRename = nbt.getBoolean("AutoEncodeRenamePatterns");
+        // Existing optimizers retain the completion protection they had before this switch was added.
+        outputOverflow = !nbt.hasKey("AllowMEOutputOverflow") || nbt.getBoolean("AllowMEOutputOverflow");
         conflict = nbt.getBoolean("DuplicateDisconnected");
         if (conflict) getProxy().setValidSides(EnumSet.noneOf(ForgeDirection.class));
     }
@@ -41,6 +44,7 @@ public class TileOptimizer extends AENetworkTile {
         nbt.setBoolean("Detailed", detailed);
         nbt.setBoolean("AutoRenameAssemblyLine", autoRename);
         nbt.setBoolean("AutoEncodeRenamePatterns", autoEncodeRename);
+        nbt.setBoolean("AllowMEOutputOverflow", outputOverflow);
         nbt.setBoolean("DuplicateDisconnected", conflict);
     }
 

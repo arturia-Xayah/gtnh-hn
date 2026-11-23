@@ -12,6 +12,10 @@ from summarize_pack_validation import classify
 
 EXCLUDED = ('structureterminal','aeorderoptimizer','aeoptimizer','aeorderbench','plasmaforgepower','aestoragevault','gtnh-modernization','gtnh-hn')
 SUITES = {
+    "multi_output": ("multi-output-validation", ["-Dstructureterminal.multiOutputTests=true"], ["multi-output-tests.json"]),
+    "mixed_output": ("mixed-output-validation", ["-Dstructureterminal.mixedOutputTests=true"], ["mixed-output-tests.json"]),
+    'smart_blocking': ('smart-blocking-validation', ['-Dstructureterminal.smartBlockingTests=true'], ['smart-blocking-tests.json']),
+    'emitter': ('emitter-validation', ['-Dstructureterminal.emitterTests=true'], ['emitter-tests.json']),
     'projector': ('projector-validation', ['-Dstructureterminal.projectorTests=true'], ['projector-tests.json']),
     'bc_range': ('bc-range-validation', ['-Dstructureterminal.bcRangeTests=true'], ['bc-range-tests.json']),
     'cache_config': ('cache-config-validation', ['-Daestoragevault.cacheConfigTests=true'], ['cache-config-tests.json','cache-config-tests-restart.json']),
@@ -43,7 +47,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--pack',type=Path,required=True);ap.add_argument('--java',type=Path,required=True)
     ap.add_argument('--fixture',type=Path,required=True);ap.add_argument('--run-dir',type=Path,required=True)
-    ap.add_argument('--pack-version',default='2.9.0')
+    ap.add_argument('--pack-version',default='2.9.1')
     ap.add_argument('--suites',nargs='+',choices=SUITES,default=list(SUITES));a=ap.parse_args()
     pack,target,fixture,java=(p.resolve() for p in (a.pack,a.run_dir,a.fixture,a.java))
     if target.exists() or pack==target or pack in target.parents: ap.error('Use a new directory outside the source pack')

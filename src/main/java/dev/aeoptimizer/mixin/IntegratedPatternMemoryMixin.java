@@ -17,7 +17,8 @@ import dev.structureterminal.pattern.PatternCopy;
 public abstract class IntegratedPatternMemoryMixin {
 
     @Inject(method = "savePatterns", at = @At("RETURN"))
-    private static void modernization$save(NBTTagCompound data, IInterfaceHost host, CallbackInfo ci) {
+    private static void modernization$save(NBTTagCompound data, EntityPlayer player, IInterfaceHost host,
+        CallbackInfo ci) {
         PatternCopy.save(data, host);
     }
 

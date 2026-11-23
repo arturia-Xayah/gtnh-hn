@@ -83,8 +83,18 @@ public final class GateTravel {
                 continue;
             ProjectorTile source = live((WorldServer) p.worldObj, e, false);
             if (!ready(source)) continue;
+            WorldServer departure = (WorldServer) p.worldObj;
+            double sx = p.posX, sy = p.posY, sz = p.posZ;
             String failure = travel(p, dest);
             if (failure == null) {
+                departure.playSoundEffect(sx, sy, sz, "portal.trigger", .5f, 1.3f);
+                p.worldObj.playSoundEffect(p.posX, p.posY, p.posZ, "portal.travel", .45f, 1.2f);
+                net.minecraft.nbt.NBTTagCompound effect = new net.minecraft.nbt.NBTTagCompound();
+                effect.setBoolean("gateTravel", true);
+                effect.setInteger("primary", source.gate.primary);
+                effect.setInteger("secondary", source.gate.secondary);
+                dev.structureterminal.net.TerminalNetwork.channel
+                    .sendTo(new dev.structureterminal.net.TerminalNetwork.Reply(effect), p);
                 m.record(p);
                 m.arrived = true;
                 p.getEntityData()

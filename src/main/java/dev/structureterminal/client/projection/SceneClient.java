@@ -128,7 +128,7 @@ public final class SceneClient implements net.minecraft.client.resources.IResour
                 } catch (RuntimeException ex) {
                     fallback(view, ex);
                 }
-                view.nextFrame = System.nanoTime() + 66_666_667L;
+                view.nextFrame = System.nanoTime() + 1_000_000_000L / dev.structureterminal.TerminalConfig.sceneFps;
             }
         }
         if (views.isEmpty()) return;

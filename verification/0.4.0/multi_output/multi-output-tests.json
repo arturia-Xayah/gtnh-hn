@@ -1,0 +1,37 @@
+{
+  "four_completions": {
+    "item_caches": [
+      20000,
+      20000
+    ],
+    "fluid_caches": [
+      20000,
+      20000
+    ],
+    "next_item_recipe": 0,
+    "next_fluid_recipe": 0
+  },
+  "native_fluid_nbt_boundary": "AE2 1104 AEFluidStack.create merges custom FluidStack.tag before output routing; quantities checked by native AE keys. Item NBT remains distinct.",
+  "passed": true,
+  "tests": [
+    "four separate 10k completions fill both 16k ports; new recipes stop; no loss or duplicate outputs",
+    "all-full fallback retains completion; uncommitted/simulated work is invisible; single commit and strict checks conserve quantities",
+    "two native plus two combined output endpoints use available combined caches before overfilling native peers",
+    "mixed grids: the optimizer-free full endpoint never receives overflow",
+    "optimizer absent: native two-port routing retained, both full ports reject a later completion",
+    "multiple simultaneous products: distinct item NBT preserved; registered fluids and native AE fluid-key totals commit exactly once",
+    "3,000,000,000 items and mB distributed without int truncation; every native/combined cache survives NBT save/load",
+    "ordinary output bus/hatch mixed with full ME ports: ordinary free capacity used first",
+    "filtered incompatible empty peer is skipped; correct full peer receives fallback without bypassing filters",
+    "priority categories: full filtered ME port does not hide free unfiltered capacity",
+    "200 seeded configurations: reordered native/combined ports, empty/partial/overfull caches, strict mode on/off; per-channel quantity conserved",
+    "AE destination storage removed/restored: 80k per channel retained then flushed exactly once across four ports",
+    "output switch defaults ON for new optimizers and legacy NBT without the setting",
+    "server-authoritative GUI toggle, observer sync, OFF persistence, distance and invalid-action guards",
+    "per-network isolation: disabling one optimizer leaves a second network protected",
+    "OFF with 40k/16k caches: native/dual direct and transaction paths reject later outputs; strict and normal prechecks preserve every item and mB",
+    "OFF strict multi-output: an overfilled first port does not hide free peers or create negative acceptance",
+    "OFF drains existing excess to AE: 160k per channel delivered exactly once, on top of the prior 80k",
+    "re-enable takes effect live on native/dual outputs, synchronizes/persists ON, and leaves another network OFF"
+  ]
+}

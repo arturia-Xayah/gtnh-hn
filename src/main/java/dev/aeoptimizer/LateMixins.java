@@ -20,6 +20,21 @@ public final class LateMixins implements ILateMixinLoader {
     public List<String> getMixins(Set<String> mods) {
         List<String> mixins = new ArrayList<>(
             Arrays.asList(
+                "EmitterMonitorMixin",
+                "OutputBusOverflowMixin",
+                "OutputHatchOverflowMixin",
+                "OutputBufferOverflowMixin",
+                "ItemOutputRoutingMixin",
+                "FluidOutputRoutingMixin",
+                "MixedInputFluidsMixin",
+                "MixedOutputEitherMixin",
+                "MixedOutputAliasMixin",
+                "MixedOutputBuilderMixin",
+                "MixedOutputMachineMixin",
+                "AdvancedEmitterMixin",
+                "EmitterContainerMixin",
+                "BatchLimitContainerMixin",
+                "BatchLimitUpgradeMixin",
                 "PackedPartMixin",
                 "IntegratedPatternDualityMixin",
                 "IntegratedPatternSlotMixin",
@@ -40,6 +55,9 @@ public final class LateMixins implements ILateMixinLoader {
         }
         if (FMLLaunchHandler.side()
             .isClient()) {
+            mixins.add("client.EmitterScreenMixin");
+            mixins.add("client.BatchLimitScreenMixin");
+            mixins.add("client.BatchLimitUpgradeTooltipMixin");
             mixins.add("client.TerminalRepoAccessor");
             mixins.add("client.IntegratedPatternViewMixin");
             mixins.add("client.ItemRepoAccessor");

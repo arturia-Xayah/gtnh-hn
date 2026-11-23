@@ -1,11 +1,44 @@
 # 更新日志 / Changelog
 
-## Unreleased — 项目更名 / Project rename
+## 0.4.0 — GTNH 2.9.1 · 2026-11-23
+
+### 中文
 
 - 项目更名为 **GTNH: Handy & Nimble（GTNH-HN）**，仓库及新发行文件前缀改为 `gtnh-hn`；统一 Mod 列表、更新入口与中英说明。保留存档注册 ID、配置和数据路径。
 - 更新器使用新仓库并兼容历史 JAR 文件名；旧版需手动换装一次，之后恢复游戏内更新。历史 Release 文件不改名。
+- GitHub 首页终端图标改为游戏内原贴图的循环动画，保留原帧序、颜色和速度。
+- 适配 GTNH 2.9.1，更新 GT、AE2、BuildCraft、ModularUI2 等依赖，并适配 AE 记忆卡复制接口的变更。
+- ME 进阶发信器的六行条件可独立选择指定物品／流体、全部物品或全部流体；同网共享统计，库存变化时增量更新。
+- 新增普通与进阶二合一 ME 输入总线，共享 16 个物品／流体标记槽。进阶自动拉取同时支持两类原料，保留编程电路、手动槽和配置复制。
+- 新增二合一 ME 输出总线：共用 AE 节点，物品与流体独立缓存；仅能用于同一格同时允许输出仓与输出总线的位置。原生过滤、配置复制、保存与输出防丢接入双通道。
+- 优化器网络中的原生 ME 输出总线／仓及二合一输出总线允许已开工配方的产出临时超过缓存容量，后续配方仍按原上限检查。
+- 优化器界面新增“ME 输出临时超限”独立开关，默认开启、按网络保存；关闭后保留并正常输出已有超额缓存，下单计算、批量发配和重命名不受影响。
+- 修复多个 ME 输出端的分配问题：先尝试仍有空间的正常输出端，剩余产物才进入优化器端的紧急缓存；防止首仓持续膨胀、后仓闲置导致配方不断开工。覆盖物品、流体、二合一、过滤端和普通输出端混用。
+- 修复临时超额缓存下严格容量检查可能计算负接收量的问题，原生物品／流体输出与二合一输出一起覆盖，关闭保护后留下的超额缓存也能正确处理。
+- 新增限制批量发配卡：发送接口可独立设置每种物品／流体的单批最大投料量，0 为无限制；仅下单网络有优化器且接口安装卡片时生效。重复原料合计，上限不足一套时暂停，配置随接口保存。
+- 限制批量发配卡沿用 AE 原生升级机制及高级阻挡卡的可安装设备列表，加入 AE 创造栏；补充用途、设置方法、Shift 详细说明及本地化设备列表。
+- 移除强制清空子网的额外保护，恢复 AE 原生严格／智能阻挡规则；安装新卡后，严格阻挡支持整批投料再等待清空，智能阻挡可连续发配。
+- BC 范围设置保留未应用草稿，预览后自动关闭界面并显示世界线框，支持自由移动镜头；新增重置到当前实际范围。
+- 传送门增加穿越音效、抵达光环和粒子；目的地画面按门的比例渲染，默认最长边 1024 像素，分辨率和实时帧率可配置。
+
+### English
+
 - Rename the project to **GTNH: Handy & Nimble (GTNH-HN)** and the repository/new JAR prefix to `gtnh-hn`. Refresh mod/menu labels and bilingual documentation while preserving registry IDs, configuration and data paths.
 - Point updates at the new repository and accept historical JAR names. Old installed updaters require a one-time manual replacement; existing Release assets remain unchanged.
+- Animate the README terminal icon from the actual in-game sprite, preserving its frame order, colours and timing.
+- Target GTNH 2.9.1 with updated GT, AE2, BuildCraft and ModularUI2 dependencies; adapt integrated-pattern copying to the new AE Memory Card API.
+- Six independent Advanced Level Emitter targets: specific item/fluid, all items or all fluids, with shared per-network incremental counts.
+- Basic and Advanced Dual ME Stocking Input Buses share 16 item/fluid filter slots. Advanced auto-pull handles both channels; manual/circuit slots and configuration copying are retained.
+- Add the Dual ME Output Bus: one AE node, independent native item/fluid caches, and position-level validation requiring both output roles. Retains native filtering, configuration copying, persistence and completion overflow.
+- Native ME outputs and the Dual ME Output Bus on optimizer-enabled networks retain in-flight completions beyond their configured buffer capacity; new recipe checks retain normal limits.
+- Add an independent, persistent per-network ME output overflow switch to the optimizer, default ON. OFF keeps and flushes existing excess without changing planning, batch dispatch or renaming.
+- Fix multi-output routing: try normal destinations with space before emergency overflow. Prevent a full first ME output from monopolizing completions while empty peers keep new recipes eligible. Covers item/fluid, combined, filtered and ordinary outputs.
+- Clamp negative acceptance amounts during strict checks of overfilled outputs, including native item/fluid hatches and excess remaining after protection is switched off.
+- Add the Batch Dispatch Limit Card: independent per-item-type and per-fluid-type caps on a sending interface, with 0 meaning unlimited. Requires a card plus an optimizer on the ordering grid. Merge repeated inputs, pause if a single recipe exceeds its cap, and persist interface settings.
+- Align the limit card with native AE upgrade registration and Advanced Blocking Card hosts; add it to the AE creative tab and document its purpose, controls and Shift details with localized device names.
+- Remove the forced-empty subnet guard. Preserve native Strict/Smart Blocking: a card allows a complete batch before strict waiting, while Smart Blocking may send consecutive batches.
+- BC range drafts persist without applying. Preview closes the menu for free camera movement; Reset restores the actual working area.
+- Portal travel sounds, arrival pulse and particles; aspect-correct destination images default to a 1024-pixel longest edge, with configurable resolution and live frame rate.
 
 ## 0.3.8-alpha — GTNH 2.9.0 · 2026-11-20
 

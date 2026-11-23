@@ -9,6 +9,11 @@ aeo.rename=装配线自动重命名
 aeo.rename.help=NEI 导入时，重复原料依次命名为“重命名1、2…”；需配套成型机改名。
 aeo.rename.encode=导入时生成改名样板
 aeo.rename.encode.help=导入装配线时生成 1→1 改名样板并放入背包，消耗空白样板；成型机需预装对应名称模具。
+aeo.output.overflow=ME 输出临时超限
+aeo.output.overflow.help=允许完成产物临时超过缓存容量；开工仍检查原上限。
+aeo.output.overflow.scope=支持 ME 输出总线、输出仓及二合一 ME 输出总线。
+aeo.output.overflow.disabled=关闭后按原版接收；已有超额缓存保留并继续输出。
+aeo.output.overflow.network=仅控制输出设备所在网络，不影响下单计算与批量发配。
 aeo.rename.encode.done=改名样板：已生成 %s 张放入背包，已存在 %s 张已跳过。请安装到使用对应名称模具的成型机接口。
 aeo.rename.encode.permission=无法生成改名样板：没有样板编辑权限。本次导入已取消。
 aeo.rename.encode.space=无法生成改名样板：背包空间不足。本次导入已取消，未消耗空白样板。
@@ -23,3 +28,32 @@ aeoptimizer.locate.unknown=%s：此样板提供者未提供方块坐标。
 
 aeoptimizer.report.multi_output=多输出错误：%s，所选配方有 %s 种输出。
 aeoptimizer.report.error=下单计算错误：%s
+
+aeorderoptimizer.emitter.target.0=指定物品/流体
+aeorderoptimizer.emitter.target.1=全部物品
+aeorderoptimizer.emitter.target.2=全部流体
+aeorderoptimizer.emitter.switch=点击切换此行的检测目标
+aeorderoptimizer.emitter.count.1=网络库存：%s 件
+aeorderoptimizer.emitter.count.2=网络库存：%s mB
+item.aeorderoptimizer.batch_limit_card.name=限制批量发配卡
+aeoptimizer.batch.card.install=§7装入§b发送端 ME 接口§7升级槽，每个接口最多 §f1 §7张。
+aeoptimizer.batch.card.require=§7仅在§b下单网络有优化器§7时生效。
+aeoptimizer.batch.card.limit=§7限制§b每种物品 / 每种流体§7的单批投料量。
+aeoptimizer.batch.card.why=§7用于匹配接收容量，降低大批投料挤满储罐的风险。
+aeoptimizer.batch.card.strict=§7严格阻挡可整批投多套，随后按原版条件等待。
+aeoptimizer.batch.card.configure=§7点击接口左侧 §b≤§7 设置；§f0§7 = 不限，流体单位 §fmB§7。
+aeoptimizer.batch.card.more=§8按住 §fShift §8查看详细规则与支持设备。
+aeoptimizer.batch.detail.same=§7同种原料在多个槽位出现时，先合计再计算批数。
+aeoptimizer.batch.detail.smart=§7智能阻挡可连续发送同配方；首次/换配方时检查空闲。
+aeoptimizer.batch.detail.not=§e这是单批限额，不是每 tick 或子网总库存上限。
+aeoptimizer.batch.detail.small=§c上限不足一套：暂停该接口，并在设置页提示。
+aeoptimizer.batch.detail.queue=§7调整设置不会撤回已进入发送缓存的原料。
+aeoptimizer.batch.card.devices=§8可安装设备（每个最多 1 张）：
+aeoptimizer.batch.title=限制批量发配
+aeoptimizer.batch.items=每种物品 / 单批（件）
+aeoptimizer.batch.fluids=每种流体 / 单批（mB）
+aeoptimizer.batch.hint=0 = 无限制；支持 K、M、G、T（1000 进制）。仅在下单网络有优化器时生效。
+aeoptimizer.batch.apply=应用
+aeoptimizer.batch.cancel=取消
+aeoptimizer.batch.invalid=请输入有效非负整数，最大为 long 上限
+aeoptimizer.batch.blocked=单套原料超过上限，发配已暂停

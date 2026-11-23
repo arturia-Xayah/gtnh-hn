@@ -14,6 +14,9 @@ public final class TerminalConfig {
     public static int buildMillis = 1000;
     public static boolean demolish = true;
     public static boolean demolishTiles;
+    public static int sceneResolution = 1024;
+    public static int sceneFps = 30;
+    public static int mixedInputId = 31990, mixedAdvancedInputId = 31991, mixedOutputId = 31992;
 
     private TerminalConfig() {}
 
@@ -49,6 +52,31 @@ public final class TerminalConfig {
             "features",
             false,
             "Opt-in: remove inspectably empty tile entities. Disabled until pack-specific inventory/cover behavior is verified.");
+        sceneResolution = c.getInt(
+            "portalSceneResolution",
+            "client",
+            sceneResolution,
+            256,
+            2048,
+            "Longest side of a destination scene texture in pixels. Each visible portal has its own texture.");
+        sceneFps = c.getInt(
+            "portalSceneFps",
+            "client",
+            sceneFps,
+            5,
+            60,
+            "Maximum live destination camera frames per second per visible portal.");
+        mixedInputId = c
+            .getInt("mixedInputId", "machines", mixedInputId, 1, 32766, "GT ID for the dual stocking input bus.");
+        mixedAdvancedInputId = c.getInt(
+            "mixedAdvancedInputId",
+            "machines",
+            mixedAdvancedInputId,
+            1,
+            32766,
+            "GT ID for the advanced dual stocking input bus.");
+        mixedOutputId = c
+            .getInt("mixedOutputId", "machines", mixedOutputId, 1, 32766, "GT ID for the dual ME output bus.");
         if (c.hasChanged()) c.save();
     }
 }

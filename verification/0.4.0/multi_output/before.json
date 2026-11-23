@@ -1,0 +1,17 @@
+{
+  "four_completions": {
+    "item_caches": [
+      40000,
+      0
+    ],
+    "fluid_caches": [
+      40000,
+      0
+    ],
+    "next_item_recipe": 1,
+    "next_fluid_recipe": 1
+  },
+  "error": "java.lang.AssertionError: BUG: full first port monopolizes completions while second stays empty",
+  "passed": false,
+  "tests": []
+}

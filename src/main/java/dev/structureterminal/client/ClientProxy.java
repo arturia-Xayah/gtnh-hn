@@ -18,6 +18,11 @@ public final class ClientProxy extends CommonProxy {
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, net.minecraft.world.World world, int x, int y,
         int z) {
+        if (id == dev.structureterminal.stocking.MixedInputs.GUI) {
+            dev.structureterminal.stocking.MixedInputBus bus = dev.structureterminal.stocking.MixedInputs
+                .at(world, x, y, z);
+            return bus == null ? null : new MixedInputScreen(player, bus);
+        }
         if (id == dev.structureterminal.projection.ProjectorMenu.ID) {
             dev.structureterminal.projection.ProjectorMenu menu = dev.structureterminal.projection.ProjectorMenu
                 .at(world, x, y, z);
@@ -48,6 +53,8 @@ public final class ClientProxy extends CommonProxy {
             new dev.structureterminal.client.projection.ProjectorRenderer());
         if (cpw.mods.fml.common.Loader.isModLoaded("BuildCraft|Builders"))
             net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(new RangeScreen.Events());
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS
+            .register(new dev.structureterminal.client.projection.TransitEffect());
         dev.structureterminal.client.update.UpdateClient.INSTANCE.init();
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(dev.aeoptimizer.ui.PatternHighlights.INSTANCE);
         FMLCommonHandler.instance()
@@ -135,6 +142,10 @@ public final class ClientProxy extends CommonProxy {
     public void receive(NBTTagCompound tag) {
         queue.add(() -> {
             Minecraft mc = Minecraft.getMinecraft();
+            if (tag.getBoolean("gateTravel")) {
+                dev.structureterminal.client.projection.TransitEffect.begin(tag);
+                return;
+            }
             if (tag.getBoolean("sceneReply")) {
                 dev.structureterminal.client.projection.SceneClient.INSTANCE.receive(tag);
                 return;
