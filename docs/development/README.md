@@ -2,7 +2,7 @@
 
 [中文首页](../../README.md) · [English README](../../README.en.md)
 
-玩家操作说明位于 [功能指南](../features/AE_ORDERING.md)、[功率控制](../features/POWER.md) 与 [容量仓库](../features/STORAGE.md)。本目录集中构建、内部规则、实验、兼容性和验证边界。
+玩家操作说明位于分类使用手册：[中文](../wiki/README.md) / [English](../wiki/README.en.md)。本目录集中构建、内部规则、实验、兼容性和验证边界。
 
 ## 当前整合版
 
@@ -57,7 +57,7 @@
 
 ## English
 
-This directory contains developer-facing build steps, internals, experiments, compatibility details and test evidence. Player-facing instructions remain in the READMEs and feature guides. Use the current [integration validation](VALIDATION.md) for the merged artifact; historical standalone reports retain their original scope. No game client has been launched for visual acceptance.
+This directory contains developer-facing build steps, internals, experiments, compatibility details and test evidence. Player-facing instructions are in the categorized [user guide](../wiki/README.en.md). Use the current [integration validation](VALIDATION.md) for the merged artifact; historical standalone reports retain their original scope. No game client has been launched for visual acceptance.
 
 - [元件容量规则与贡献统计：当前验证](VALIDATION.md)（123 单元测试、302 后台检查、3 台结构样本；部分退回与重启恢复、AVS6）
 

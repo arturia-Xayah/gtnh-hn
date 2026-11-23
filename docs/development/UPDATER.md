@@ -1,6 +1,6 @@
 # Client updater (0.3.2)
 
-Player instructions: [中文](../../README.md#客户端更新) / [English](../../README.en.md#client-updates).
+Player instructions: [中文](../wiki/zh/updates.md) / [English](../wiki/en/updates.md).
 
 ## Boundaries and integration
 

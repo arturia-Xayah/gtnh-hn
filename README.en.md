@@ -8,8 +8,6 @@
 
 **GTNH-HN** · Handy & Nimble
 
-**Structure building · AE conveniences · Color-based power limits · ME storage vault**
-
 [简体中文](README.md) · **English** · [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases)
 
 [![Download JAR](https://img.shields.io/github/v/release/arturia-Xayah/gtnh-hn?include_prereleases&label=Download)](https://github.com/arturia-Xayah/gtnh-hn/releases)
@@ -18,187 +16,32 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 
 </div>
 
+**GTNH-HN** is a lightweight collection of practical additions and quality-of-life improvements for **GT New Horizons**. It makes everyday multiblock building, AE pattern and crafting work, machine power control, storage and travel easier to manage.
+
+**[User guide](docs/wiki/README.en.md)** · [Download JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.4.0-GTNH-2.9.1/gtnh-hn-0.4.0-GTNH-2.9.1.jar) · [Changelog](CHANGELOG.md)
+
 ## Contents
 
-- [Portal Projector](#portal-projector)
-- [BuildCraft work range](#buildcraft-work-range)
-- [Client updates](#client-updates): menu checks, exact server versions and exit-time installation
-- [Installation and upgrading](#installation-and-upgrading)
-- [Structure Terminal](#structure-terminal): projection, material selection, instant building and coil replacement
-- [ME Packing Tape](#me-packing-tape)
-- [Integrated Pattern](#integrated-pattern): 36 real patterns in one interface slot
-- [ME Advanced Level Emitter](#me-advanced-level-emitter)
-- [Dual ME Stocking Input Bus](#dual-me-stocking-input-bus)
-- [Dual ME Output Bus](#dual-me-output-bus)
-- [AE order optimization](#ae-order-optimization): opt-in planning checks and bulk dispatch
-- [Craftable input badges](#craftable-input-badges): see which ingredients already have patterns
-- [Forge and fusion power controls](#forge-and-fusion-power-controls): limit processing power by input color
-- [ME Cell Aggregation Storage](#me-cell-aggregation-storage): consume cells for capacity with external inventory files
-- [Storage cache configuration](docs/features/CACHE_CONFIGURATION.md): LRU entries and shared byte budgets
-- [Compatibility and saves](#compatibility-and-saves)
-- [Changelog](CHANGELOG.md)
-- [Developer documentation](#developer-documentation)
+| Category | Features and guides |
+| --- | --- |
+| [Installation and updates](docs/wiki/README.en.md#installation-and-updates) | <a id="installation-and-upgrading"></a>[Installation and upgrading](docs/wiki/en/installation.md) · <a id="client-updates"></a>[Client updates](docs/wiki/en/updates.md) |
+| [Building and machine controls](docs/wiki/README.en.md#building-and-machine-controls) | <a id="structure-terminal"></a>[Advanced Structure Terminal](docs/wiki/en/structure-terminal.md) · <a id="buildcraft-work-range"></a>[BuildCraft work range](docs/wiki/en/buildcraft-range.md) · <a id="forge-and-fusion-power-controls"></a>[Forge and fusion power controls](docs/wiki/en/power-controls.md) |
+| [AE networks and automation](docs/wiki/README.en.md#ae-networks-and-automation) | <a id="craftable-input-badges"></a>[Craftable input badges](docs/wiki/en/craftable-inputs.md) · <a id="integrated-pattern"></a>[Integrated Pattern](docs/wiki/en/integrated-patterns.md) · <a id="me-packing-tape"></a>[ME Packing Tape](docs/wiki/en/packing-tape.md) · <a id="ae-order-optimization"></a>[AE order optimization](docs/wiki/en/ae-ordering.md) · <a id="me-advanced-level-emitter"></a>[ME Advanced Level Emitter](docs/wiki/en/level-emitter.md) · <a id="dual-me-stocking-input-bus"></a>[Dual ME Stocking Input Bus](docs/wiki/en/dual-input-bus.md) · <a id="dual-me-output-bus"></a>[Dual ME Output Bus](docs/wiki/en/dual-output-bus.md) |
+| [ME storage](docs/wiki/README.en.md#me-storage) | <a id="me-cell-aggregation-storage"></a>[ME Cell Aggregation Storage](docs/wiki/en/storage.md) · <a id="read-cache-settings"></a>[Read-cache settings](docs/wiki/en/storage-cache.md) |
+| [Portals and scenes](docs/wiki/README.en.md#portals-and-scenes) | <a id="portal-projector"></a>[Portal Projector](docs/wiki/en/portal-projector.md) |
+| [Compatibility and configuration](docs/wiki/README.en.md#compatibility-and-configuration) | <a id="compatibility-and-saves"></a>[Compatibility and configuration](docs/wiki/en/compatibility.md) |
+| [Project resources](docs/wiki/README.en.md#project-resources) | [Changelog](CHANGELOG.md) · <a id="developer-documentation"></a>[Developer docs](docs/development/README.md) · [License](LICENSE) · [Credits](THIRD_PARTY_NOTICES.md) |
 
-## Installation and upgrading
+## Quick installation
 
-**GTNH-HN** is the short name of the former GTNH Modernization Upgrade, retaining its terminal icon. Install a renamed build manually once to move an old in-game updater to the new repository. Historical Release filenames are unchanged; keep only one bundled JAR installed.
+Current version: **0.4.0**, for **GTNH 2.9.1 / Minecraft 1.7.10**.
 
-1. Install `gtnh-hn-0.4.0-GTNH-2.9.1.jar` in `mods`. Multiplayer clients and servers need the same version; install on the client for single-player.
-2. Remove older GTNH Modernization Upgrade / Structure Terminal JARs and standalone **AE Order Optimizer, Plasma Forge Power and AE Storage Vault** JARs. Their features are included; installing both creates duplicate modules.
-3. Back up the complete world first. Terminal, AE component and power-setting registration IDs are retained. **0.3.0 changes the vault inventory format and cannot directly open 0.2.x vault files**. Export existing stock using the old version, then create a new vault and supply capacity sources after upgrading. Do not delete old files to clear a lock.
+1. Download the JAR for your GTNH version from [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases) and place it in `mods`. Multiplayer clients and servers need the same version.
+2. Replace the previous merged mod JAR and remove duplicate standalone AE Order Optimizer, Plasma Forge Power and AE Storage Vault JARs.
+3. Back up the whole world before upgrading. **Export inventory from 0.2.x vaults first**, then follow the [migration instructions](docs/wiki/en/installation.md).
 
-Dependencies are supplied by the target pack: GregTech, StructureLib, GTNHLib, AE2, ModularUI2 and UniMixins. The former standalone mods are not required.
+GTNH Modernization Upgrade is now **GTNH-HN**. Install a renamed build manually once. Dependencies come from the target GTNH pack. See [Installation](docs/wiki/en/installation.md) and [In-game updates](docs/wiki/en/updates.md) for the full steps.
 
-## Client updates
+## Documentation
 
-Use **Check mod updates** at the top right of GTNH’s main menu, including when startup checks are off. Each launch checks once in the background. Network failures do not block play. The update screen offers download, cancellation, later and skip-version actions, plus switches for startup checks, prereleases and automatic server-version downloads.
-
-On a version-mismatch disconnect, the updater queries the server's public Forge status and looks for **that exact server version**. Disabled status queries, network failures or unavailable releases leave the ordinary connection error in place; compatibility checks are never relaxed. Server auto-download is optional, and installation still requires confirmation.
-
-After verification, choose **Exit and install**. A separate helper waits for the game process to exit, backs up the old JAR and atomically replaces it. Restart using your usual launcher after installation finishes. There is no hot reload or automatic launcher restart. The installed filename is preserved; the Mods screen reports the actual version. Backups, logs and results are in `.modernization-updates/update-…/` inside the instance.
-
-Settings are in `config/gtnh-modernization-updates.cfg`. The pack version is read from GTNH's main-menu resources. If detection fails, set an exact `gtnhVersionOverride`; unknown versions are never assumed compatible. Only matching complete JARs from this project's GitHub Releases are eligible. Existing old clients must manually install an updater-enabled version once.
-
-## Structure Terminal
-
-Find **Advanced Structure Terminal** in NEI. Craft it shapelessly from a **Multiblock Structure Hologram Projector + Ender Pearl + Book**.
-
-1. **Right-click a controller to project; sneak-right-click it to execute Build, Swap or Remove.**
-2. **Sneak-right-click air to open terminal settings.** Rounded controls include coil and glass selectors, repeat count, exclusive Build/Swap/Remove modes, and boolean checkboxes. The triangle opens a tier-sorted item list using NEI item rendering and full tooltips, including coil heat capacity and modifier-key details, scrolling and page buttons; select one material per group. Closing the screen saves the settings.
-
-   Five settings pages cover controls, casings/pipes, energy/fields, special parts and size/helpers. Use the bottom arrows or Page Up/Page Down. Hover settings or candidate items to see the raw channel name. New material selectors keep native projector values; Auto restores native defaults. Different machines may interpret the same value as different materials, especially `casing`. Length accepts 1–99 and boiler width 1–3; 0 means Auto, and valid combinations remain machine-specific. No `hatch`/`height` selectors are added; the existing no-hatch toggle remains.
-
-3. The Auto coil option retains an existing coil ring or chooses the lowest carried tier; AE supply can also provide coils when enabled. Repeat count accepts `0–99`; `0` uses the native minimum. Exact dimensions follow the GTNH machine definition.
-
-Glass selection applies to structures using the native GTNH `glass` channel. Dedicated glass and fixed materials keep their machine rules. The first list has one representative per voltage tier; its submenu selects a variant. Per-tier Auto prefers installed glass, then backpack/AE stock of that tier. The top-level Auto restores the native default.
-
-The top-right checkbox switches dark mode, saved locally. Press the inventory key (E by default) or Esc to close and save.
-
-4. Build fills empty positions; Swap replaces existing ordinary structure blocks; Remove recovers them. Keep hatches is enabled by default; disable it to dismantle structure hatches as well, retaining only the controller. Contents follow native dismantling rules without extra item/fluid packaging; native item drops follow the demolition return route. Swap always retains hatches. Swap also offers a Coils only checkbox. No-hatch mode defaults to on and suppresses optional hatches, while exclusive hatch-only positions retain native requirements. Coil replacement returns the old coils and consumes replacement materials.
-5. **AE demolition returns** go only to the network linked by a carried wireless terminal, with range, power and insertion permission required. Blocks remain when the destination cannot accept them; there is no backpack or ground fallback. If an actual insertion is rejected after removal, the terminal retains the remainder and displays a warning. Restore access and use it on a controller again to retry the pending return first. Without AE mode, recovery uses backpack space and skips blocks when full.
-
-A construction pass executes in one server tick, skips missing materials and continues with other positions. Existing ordinary blocks and hatches are retained. Replenish materials and click again to finish. Configured scan and build limits still apply and report an interrupted pass explicitly.
-
-Machines must expose a readable StructureLib definition. Normal building skips formed GT machines; projection does not force structure checks or stop them. Replacing coils or changing a structure can stop a running machine. AE supply requires a linked, powered wireless terminal within range and extraction permission.
-
-## Portal Projector
-
-Take two projectors from the Redstone creative tab. Right-click each to edit its shape, dimensions and colours. Open **Connection**, enter the same frequency at both ends, and select **Apply & open** on each. The pair transports players in both directions, including between dimensions. Opening a gate with an empty frequency shows a projection-only notice. In **Connection**, name the local station and choose whether to display the destination name above this gate. The label updates when the other station is renamed.
-
-Enable **Scene** to see up to 16 blocks ahead of the exit. **Live** aims the camera from the exit centre according to your eye position relative to the entrance. **Snapshot** faces the configured exit direction and refreshes every 200 game ticks. The viewer must be within 16 blocks of the entrance centre. Only loaded destination chunks are shown. All eligible gates in view display their own destinations simultaneously, each using its selected mode. The feature defaults to off.
-
-Set the arrival direction on the destination projector. It follows the projector by default and can be set to any cardinal direction. Keep the space above the projector clear for landing. Open apertures cannot intersect. Select **Save and close gate** to release its frequency slot.
-
-Travel plays portal sounds and a brief arrival pulse with particles in the gate's colours. Destination images follow the gate's aspect ratio, with a default longest edge of 1024 pixels and a live limit of 30 FPS. Adjust `client.portalSceneResolution` (256–2048) and `client.portalSceneFps` (5–60) in `config/structureterminal.cfg`. Higher settings cost more GPU time, especially with several visible gates.
-
-## BuildCraft work range
-
-Choose **Set range** in the Filler or Architect Table. Right-click an unconfigured Architect Table with an empty hand. The first block touching the front is included. Looking in the machine’s forward direction, positive width extends right and negative width left. Positive height extends up and negative height down. Depth is always positive. Each dimension is limited by the server’s BC marker range. Preview the outline in the world, then apply. If the machine is busy, the last confirmed range takes effect after its current job.
-
-Mining the machine saves the last confirmed dimensions on its dropped item. Placing it again anchors the range to its new front. In Matter Manipulator copy mode, a blue outline previews each destination machine’s work range, including horizontal rotations and arrays.
-
-Valid edits are retained as a draft when closing and reopening the menu. **Preview** closes the menu and leaves a world outline for 60 seconds, allowing free camera movement. It does not alter the working area. Reopen and choose **Apply** to commit; **Reset** restores the current actual area. Queued changes on busy machines are separate from the actual area.
-
-## ME Packing Tape
-
-Find **ME Packing Tape** in NEI. It uses the unchanged ExtendedAE tape and package textures used by GTO, lasts 64 uses, and follows GTO's fluix dust / duct tape / slimeball / ender pearl dust recipe.
-
-Sneak-right-click a device to drop a **Packaged Device**, then right-click with that package to restore it. Supported defaults: normal and dual ME interfaces (block and part forms), plus ME drives. Packing a part leaves the cable and its other parts intact. Native patterns, upgrades, buffered items/fluids and persistent settings are retained; drives retain their cells. Moving disconnects the device temporarily, so ongoing crafting jobs are not guaranteed to survive.
-
-Blocked or unauthorized placement keeps the package. No optimizer component is required. Both client and server need this mod. The device whitelist is `packingtape.deviceWhitelist` in `config/structureterminal.cfg`, using `modid:item@metadata` entries; additional devices require validation.
-
-## Integrated Pattern
-
-Search NEI for **Integrated Pattern**. Craft with **4 blank patterns, 4 Dual Interfaces and any IV circuit** (`circuitElite`): blanks at the corners, interfaces on the edges, circuit in the center.
-
-1. Right-click while holding it to open **4×9** slots. Each holds one encoded pattern; Shift transfer is supported.
-2. Place the holder in one pattern slot of a normal or Dual ME Interface, block or part. Every child recipe becomes available; no optimizer component is required.
-3. Remove the holder to edit its contents. The Interface Terminal moves the whole holder and searches child inputs/outputs. Take individual patterns out before multiplying, clearing or editing them.
-
-Children retain native crafting/processing, item/fluid, substitution and metadata. Nesting is disabled. Fluid recipes still require a Dual Interface and a fluid-capable receiver. Extra pattern capacity does not increase machine parallelism or dispatch speed. Memory Card copies consume an empty holder plus one blank per child; Matter Manipulator requires an existing holder with matching contents. Breaking or packing retains the whole holder. Remove its contents before uninstalling this mod.
-
-## ME Advanced Level Emitter
-
-Click the button on the right of each of the six rows to select a specific item or fluid, all items (count), or all fluids (mB). Hover over an enabled total to see its current value. To emit redstone when the connected network is empty, enable two rows: all items below 1 and all fluids below 1, combined with AND. Emitters on the same grid share the counts. This feature works without an Order Optimizer.
-
-## AE order optimization
-
-Connect an **ME Order Optimizer** to the submitting network. Right-click to toggle detailed reports, auto-renaming, rename-pattern encoding and ME output overflow. Only one per network; **1 AE/t**, no channel required.
-
-- An active component enables the modified Lite planner and bulk dispatch on supported receivers. Without it, native behavior remains.
-- Only the selected route is checked. Cycles and multi-output patterns stop planning with a report. Detail mode reports only the main output and recipe count, without changing route selection. Cycles display their main-output chain. Click a colored, underlined output for provider coordinates and a 30-second outline in the current dimension; other dimensions are reported by name and coordinates.
-- Keep patterns at their original unit quantities. Bulk insertion does not add machine parallelism; unsupported receivers retain unit dispatch.
-- When borrowing patterns across grids, the submitting network controls whether optimization is enabled.
-- Optional assembly-line auto-renaming assigns duplicate NEI inputs the fixed names `重命名1`, `重命名2`, etc., matching Forming Press Name Mold outputs. A second switch generates missing renaming patterns during import, consuming blanks and skipping exact duplicates.
-- Install one **Batch Dispatch Limit Card** in the sending interface and click its left `≤` button to set per-item-type and per-fluid-type batch limits. Decimal suffixes such as `1M` are supported; fluids use mB and `0` means unlimited. Requires an optimizer on the ordering grid. Repeated ingredients are merged; a limit smaller than one recipe pauses that interface. Strict Blocking sends a complete batch before waiting; Smart Blocking retains native consecutive dispatch. The old forced-empty guard is removed. This is a per-batch limit, not a per-tick limit or a substitute for receiver capacity planning.
-- **ME output overflow** defaults to ON and can be switched off independently in the optimizer; its setting is saved with the world. When enabled, native ME output buses/hatches and Dual ME Output Buses on that grid retain completions beyond buffer capacity. New recipe checks retain native capacity and filters. Standard GT routing tries destinations with space before emergency overflow. OFF restores native acceptance; existing excess remains saved and flushes normally. Planning and bulk dispatch are unaffected. The output device’s own network governs this setting; isolated subnets are configured separately.
-
-[Recipe, usage and limits](docs/features/AE_ORDERING.md)
-
-## Dual ME Stocking Input Bus
-
-The basic and advanced variants each combine the corresponding native ME stocking item bus and fluid hatch in a shapeless recipe. Both share 16 item-or-fluid filter slots, with available amounts shown on the right, and retain the manual item slot, circuit slot, colouring and configuration copying.
-
-Advanced auto-pull alternates item and fluid candidates within the same 16 slots, with a minimum quantity and refresh interval. Install these as input buses. Fluids participate in GT's standard multiblock ingredient collection; special machines that directly require dedicated fluid-hatch positions, such as assembly lines, still require those hatches. No Order Optimizer is needed.
-
-## Dual ME Output Bus
-
-Shapeless recipe: **ME Output Bus + ME Output Hatch**. One AE connection handles both channels with independent native caches, caching mode, priority, strict capacity checking and output intervals. Right-click to configure each channel.
-
-The **same structure position must permit both an output bus and an output hatch**. A bus-only or hatch-only position rejects it, even when other positions in that machine allow the other role. Unrecognized custom position rules are rejected conservatively.
-
-The shared upgrade/filter slot accepts an item or fluid cell, upgrading and filtering only its channel. The other retains its native default capacity: 1,600 items or 128,000 mB. The bus works without an optimizer; enabling ME output overflow in its network’s optimizer protects both channels. Both caches are saved with the world and use their native output intervals.
-
-## Craftable input badges
-
-Pattern-terminal ingredients show a top-right **+** when the current network has a crafting pattern for them. Hover for an explanation. Covers item/fluid inputs and extended/wireless terminals sharing the native GUI.
-
-No optimizer component is needed. A badge indicates that a pattern exists; it does not guarantee enough materials for the full crafting chain.
-
-## Forge and fusion power controls
-
-Supports the **Dimensionally Transcendent Plasma Forge, ordinary Fusion Mk-I–V and Compact Fusion Mk-I–V**, using their existing controllers.
-
-1. Open the machine GUI and click the blue **P** button.
-2. Choose the color of the input hatch, bus or input assembly. Unpainted inputs use their own group.
-3. Enter maximum amperage, select a voltage unit and save. **0 / -1 means automatic**.
-
-For example: red `1A UEV`, green `16A UMV`, unpainted automatic. All groups still share the original machine supply; the settings cap their processing budgets.
-
-Edits apply to the next recipe without interrupting the running reaction. Successfully reforming after energy-hatch changes clamps excessive manual limits. Fusion keeps native recipe order, startup energy and continuous-operation behavior; no order-priority scheduler is added.
-
-Matter Manipulator and Data Orb configuration copying are supported. [Detailed usage and fusion notes](docs/features/POWER.md)
-
-## ME Cell Aggregation Storage
-
-Build a **3×3×3 hollow cube**: outward-facing controller at the center of any of the six faces, **23 native LuV machine casings, exactly one ordinary GT input bus and exactly one ME Storage Link Hatch or Export Bus (mutually exclusive)**, with air in the center. Optionally replace one casing with **one ordinary GT item output bus** for returning cells, leaving 22 casings. No storage cores. All three custom blocks require **LuV assembler recipes**.
-
-- Connect the Storage Link Hatch to powered AE: **one channel, 2 AE/t**. Right-click for the native AE2 priority GUI; native storage access and Reshuffle are supported.
-- Alternatively install the **ME Cell Aggregation Storage Export Bus**. It actively exports into its connected AE network, using 36 item/fluid phantom filters with NEI drag-and-drop and fuzzy, inverter and ore-filter cards. Empty filters export everything.
-- Insert components, empty cells or ordinary filled cells. Ordinary cells migrate stock and upgrade cards, then contribute nominal bytes. Singularity and Universe cells require empty stock: Singularity credits `(nominal bytes + 1) / 32768`, Universe credits full nominal bytes. Empty Avaritia Addons Infinity Chests are supported.
-- No artificial type limit or type overhead. The vault uses **BigInteger** for total capacity and exact stock, removing the 8 EiB ceiling; AE-visible quantities and individual requests retain AE2's signed `long` interface. Shared capacity: **8 items or 2048 mB of fluid per byte**.
-- **Cell details** shows paged icons, remaining absorbed counts, credited bytes and capacity shares. With the optional ordinary GT output bus installed, click a row and enter a return quantity. **All** fills its remaining count; free capacity and bus space may limit the actual return. Returned cells are empty; stored stock stays in the vault.
-- The blue-white dashboard adds a capacity ring, scanning sweep, moving highlights and number transitions, with a compact layout for smaller screens. Disable animations locally from the GUI.
-- Controller and port tooltips include operating instructions. Right-click the controller for usage, status and automatic-absorption controls. Unsupported, creative, void and spatial cells remain in the bus.
-
-Once formed, the entire structure shares a smooth blue/white/violet sci-fi surface connected across each complete face, with functional panels preserved. The bus and interface can occupy any remaining shell position, including top, bottom, edges and corners. Sharing either component between vaults prevents both from forming; buses reserved by a registered native GT multiblock are also rejected. Releasing the conflict allows formation again.
-
-Inventory lives in external world-save files. Normal harvesting preserves the controller UUID; replacing and reforming reconnects it. Back up the whole world. Importing or returning cells forces a save and may briefly pause the server.
-
-![Dashboard animation illustration (headless shared-geometry render)](docs/assets/vault/dashboard/animation-en.gif)
-
-[Structure diagram, supported cells and backup guide](docs/features/STORAGE.md)
-
-## Compatibility and saves
-
-- Target: **GTNH 2.9.1**. Use an adapted build for other pack versions.
-- The approved original GTO terminal icon is retained. Legacy internal module IDs preserve existing saves; all features ship in one JAR.
-- Terminal settings remain in `config/structureterminal.cfg`; restart after editing. Vault files remain in `<world>/data/aestoragevault/`.
-- The vault supports Structure Terminal construction and NEI multiblock previews. Preview size 1/2/3 shows storage link, active export, or physical cell-return bus examples. Actual port positions remain flexible.
-- Back up, migrate and restore the complete stopped world. Do not roll back only inventory files or controller NBT. Removing this mod makes its added blocks and inventories unavailable.
-
-## Developer documentation
-
-[Build, architecture, test reports, validation scope and roadmap](docs/development/README.md)
-
-[License](LICENSE) · [Upstream and artwork credits](THIRD_PARTY_NOTICES.md)
+Detailed controls, settings and compatibility notes are collected in the [user guide](docs/wiki/README.en.md). Build steps, implementation details, experiments and verification records are kept in [developer documentation](docs/development/README.md).
