@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 /** Only release assets belonging to our fixed repository are eligible. No server supplied download URLs. */
 public final class ReleaseCatalog {
 
-    public static final String REPOSITORY = "arturia-Xayah/gtnh-structure-terminal";
+    public static final String REPOSITORY = "arturia-Xayah/gtnh-hn";
     public static final String API = "https://api.github.com/repos/" + REPOSITORY + "/releases";
     public static final String WEB = "https://github.com/" + REPOSITORY + "/releases";
     public static final long MAX_JAR = 32L * 1024 * 1024;
@@ -78,13 +78,13 @@ public final class ReleaseCatalog {
                     : !previews && (obj.get("prerelease")
                         .getAsBoolean() || version.contains("-")))
                     continue;
-                String filename = "gtnh-modernization-upgrade-" + version + suffix + ".jar";
+                String currentFilename = "gtnh-hn-" + version + suffix + ".jar";
+                String legacyFilename = "gtnh-modernization-upgrade-" + version + suffix + ".jar";
                 for (JsonElement asset : obj.getAsJsonArray("assets")) {
                     JsonObject file = asset.getAsJsonObject();
-                    if (!filename.equals(
-                        file.get("name")
-                            .getAsString())
-                        || !file.has("digest")
+                    String filename = file.get("name")
+                        .getAsString();
+                    if ((!currentFilename.equals(filename) && !legacyFilename.equals(filename)) || !file.has("digest")
                         || file.get("digest")
                             .isJsonNull())
                         continue;
@@ -110,7 +110,10 @@ public final class ReleaseCatalog {
                             .toLowerCase(java.util.Locale.ROOT),
                         size,
                         notes.substring(0, Math.min(notes.length(), 12000)));
-                    if (best == null || compare(next.version, best.version) > 0) best = next;
+                    if (best == null || compare(next.version, best.version) > 0
+                        || (compare(next.version, best.version) == 0 && currentFilename.equals(filename)
+                            && !best.url.endsWith("/" + currentFilename)))
+                        best = next;
                 }
             }
             return best;

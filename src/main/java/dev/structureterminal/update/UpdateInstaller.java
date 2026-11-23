@@ -47,7 +47,7 @@ public final class UpdateInstaller {
 
     public static void save(Path file, Properties values) throws IOException {
         try (OutputStream out = Files.newOutputStream(file)) {
-            values.store(out, "GTNH Modernization updater");
+            values.store(out, "GTNH-HN updater");
         }
     }
 
@@ -84,7 +84,7 @@ public final class UpdateInstaller {
                     .endsWith(".jar") || Files.isSameFile(file, source)) continue;
                 try (ZipFile zip = new ZipFile(file.toFile())) {
                     if (zip.getEntry("dev/structureterminal/StructureTerminal.class") != null)
-                        throw new IOException("Duplicate modernization JAR: " + file.getFileName());
+                        throw new IOException("Duplicate GTNH-HN JAR: " + file.getFileName());
                 } catch (java.util.zip.ZipException ignored) { /* Forge owns diagnostics for unrelated broken JARs. */ }
             }
         }

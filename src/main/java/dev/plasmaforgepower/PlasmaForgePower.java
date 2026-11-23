@@ -9,7 +9,7 @@ import dev.structureterminal.Tags;
 
 @Mod(
     modid = PlasmaForgePower.ID,
-    name = "GTNH现代化升级 · 功率控制",
+    name = "GTNH-HN · 功率控制",
     version = Tags.VERSION,
     dependencies = "required-after:structureterminal;required-after:gregtech;required-after:modularui2;required-after:unimixins",
     acceptedMinecraftVersions = "[1.7.10]")

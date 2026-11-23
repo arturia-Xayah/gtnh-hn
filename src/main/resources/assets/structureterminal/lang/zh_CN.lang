@@ -61,12 +61,12 @@ structureterminal.minimap=结构缩略图
 structureterminal.result.limit=放置 %s 个方块后达到搭建安全上限（轮次或耗时）；修正设置后可再次搭建。
 
 # Client updater
-modernization.update.entry=现代化升级 · 检查更新
-modernization.update.entryChecking=现代化升级 · 正在检查…
-modernization.update.entryFailed=现代化升级 · 检查失败
-modernization.update.entryAvailable=现代化升级 · 有新版本
-modernization.update.entryReady=现代化升级 · 等待安装
-modernization.update.title=GTNH现代化升级 · 更新中心
+modernization.update.entry=GTNH-HN · 检查更新
+modernization.update.entryChecking=GTNH-HN · 正在检查…
+modernization.update.entryFailed=GTNH-HN · 检查失败
+modernization.update.entryAvailable=GTNH-HN · 有新版本
+modernization.update.entryReady=GTNH-HN · 等待安装
+modernization.update.title=GTNH-HN · 更新中心
 modernization.update.versions=当前 %s  |  GTNH %s
 modernization.update.target=可更新至 %s
 modernization.update.serverTarget=服务器要求 %s

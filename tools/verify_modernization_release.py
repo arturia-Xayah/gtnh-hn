@@ -40,7 +40,7 @@ def main():
         check('no_test_or_dependency_classes',not any('/packtest/' in n or '/servertest/' in n or '/qa/' in n or n.startswith(('appeng/','gregtech/','org/spongepowered/','it/unimi/')) for n in classes))
         mods=json.loads(z.read('mcmod.info'))['modList'];version={m['version'] for m in mods}
         check('preserved_four_module_ids',{m['modid'] for m in mods}==MODULES)
-        check('unified_name',all(m['name'].startswith('GTNH现代化升级') for m in mods))
+        check('unified_name',all(m['name'].startswith(('GTNH现代化升级', 'GTNH: Handy & Nimble', 'GTNH-HN')) for m in mods))
         check('shared_version',version=={a.version})
         check('child_metadata',all(m['parent']==('' if m['modid']=='structureterminal' else 'structureterminal') for m in mods))
         check('terminal_icon_for_all_modules',all(m['logoFile']==ICON for m in mods) and z.read(ICON)==(ROOT/'src/main/resources'/ICON).read_bytes())

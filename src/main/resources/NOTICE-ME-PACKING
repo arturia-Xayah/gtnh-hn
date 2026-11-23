@@ -8,6 +8,6 @@ The me_packing_tape.png and package.png item textures are unchanged upstream ass
 The crafting recipe follows GregTech-Odyssey/GTOCore's ME Packing Tape registration.
 
 Port source is included in this project's public source distribution:
-https://github.com/arturia-Xayah/gtnh-structure-terminal
+https://github.com/arturia-Xayah/gtnh-hn
 See THIRD_PARTY_NOTICES.md and LICENSES/ExtendedAE-LGPL-3.0.txt in that distribution.
 The upstream license text is also bundled as LICENSE-EXTENDEDAE-LGPL-3.0.txt.

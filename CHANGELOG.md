@@ -1,5 +1,12 @@
 # 更新日志 / Changelog
 
+## Unreleased — 项目更名 / Project rename
+
+- 项目更名为 **GTNH: Handy & Nimble（GTNH-HN）**，仓库及新发行文件前缀改为 `gtnh-hn`；统一 Mod 列表、更新入口与中英说明。保留存档注册 ID、配置和数据路径。
+- 更新器使用新仓库并兼容历史 JAR 文件名；旧版需手动换装一次，之后恢复游戏内更新。历史 Release 文件不改名。
+- Rename the project to **GTNH: Handy & Nimble (GTNH-HN)** and the repository/new JAR prefix to `gtnh-hn`. Refresh mod/menu labels and bilingual documentation while preserving registry IDs, configuration and data paths.
+- Point updates at the new repository and accept historical JAR names. Old installed updaters require a one-time manual replacement; existing Release assets remain unchanged.
+
 ## 0.3.8-alpha — GTNH 2.9.0 · 2026-11-20
 
 ### 中文
@@ -141,4 +148,4 @@
 
 适配 GTNH 2.9.0 正式版，更新依赖并验证后台存档升级。 / Updated compatibility and dependencies for GTNH 2.9.0 stable, with dedicated-server saved-world upgrade checks.
 
-[历史发布 / Previous release](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases/tag/v0.2.6-alpha-GTNH-2.9.0)
+[历史发布 / Previous release](https://github.com/arturia-Xayah/gtnh-hn/releases/tag/v0.2.6-alpha-GTNH-2.9.0)

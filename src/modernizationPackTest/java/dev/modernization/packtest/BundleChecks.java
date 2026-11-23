@@ -19,7 +19,7 @@ import dev.structureterminal.Tags;
 /** Verifies all compatibility namespaces are live together in the single test artifact. */
 @Mod(
     modid = "modernizationpackchecks",
-    name = "Modernization bundle checks",
+    name = "GTNH-HN bundle checks",
     version = "1",
     dependencies = "required-after:structureterminal;required-after:aeorderoptimizer;required-after:plasmaforgepower;required-after:aestoragevault")
 public final class BundleChecks {
@@ -37,8 +37,9 @@ public final class BundleChecks {
             check(container != null, "missing module " + id);
             check(Tags.VERSION.equals(container.getVersion()), "module version mismatch " + id);
             check(
-                container.getName()
-                    .startsWith("GTNH现代化升级"),
+                ("structureterminal".equals(id) ? "GTNH: Handy & Nimble".equals(container.getName())
+                    : container.getName()
+                        .startsWith("GTNH-HN ·")),
                 "old display name " + id);
             check(
                 "assets/structureterminal/textures/items/structure_terminal_logo.png"

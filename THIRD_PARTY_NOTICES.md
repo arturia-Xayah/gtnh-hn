@@ -1,6 +1,6 @@
 # Third-party notices
 
-GTNH现代化升级 bundles the Structure Terminal backport, AE conveniences, power controls and external-file storage for Minecraft 1.7.10 / GTNH. Upstream code, artwork and build resources are credited below.
+GTNH: Handy & Nimble bundles the Structure Terminal backport, AE conveniences, power controls and external-file storage for Minecraft 1.7.10 / GTNH. Upstream code, artwork and build resources are credited below.
 
 * The reference UI is GregTech-Odyssey/GregTech-Modern, branch `gto`, observed commit `16abc4041714b0098324b86e10d119a2c84fa720` on 2026-10-15. Reference classes: `StructurePreviewScreen`, `StructureBuildFlow`, `TerminalModes`, `PatternBuilderPanel`, `OreSprites`, `UITheme`, `UISizes`. The Minecraft 1.20 rendering and layout engine is not included; `client/` implements a 1.7.10 adapter. Upstream license: LGPL-3.0. https://github.com/GregTech-Odyssey/GregTech-Modern
 * `assets/structureterminal/textures/gui/ore_styles.png` is the upstream Ore UI atlas, fetched unchanged from `assets/gtceu/textures/gui/uipro/ore_styles.png`. GTO's `OreSprites` identifies the original as Low-Drag-MC/LDLib2 (`textures/gui/ore_styles.png`), LGPL-3.0. The original atlas coordinates and visual constants are used in `OreTheme`. https://github.com/Low-Drag-MC/LDLib2

@@ -12,18 +12,20 @@ Server probing begins at `GuiOpenEvent` for `GuiConnecting`. FML's `ClientConnec
 
 ## Selection and transport
 
-Repository is fixed to `arturia-Xayah/gtnh-structure-terminal`. Menu checks inspect up to the most recent 100 Releases, selecting the highest supported semantic version for the exact detected GTNH version and prerelease channel. Exact server lookups use the corresponding release tag, bypassing menu skip/prerelease preferences but never downgrading or substituting a newer release. Required naming:
+Repository is fixed to `arturia-Xayah/gtnh-hn`. Menu checks inspect up to the most recent 100 Releases, selecting the highest supported semantic version for the exact detected GTNH version and prerelease channel. Exact server lookups use the corresponding release tag, bypassing menu skip/prerelease preferences but never downgrading or substituting a newer release. Required naming:
 
 - Tag: `v<version>-GTNH-<pack>`
-- Asset: `gtnh-modernization-upgrade-<version>-GTNH-<pack>.jar`
+- Asset: `gtnh-hn-<version>-GTNH-<pack>.jar`; historical `gtnh-modernization-upgrade-…` assets on this same repository remain accepted. Prefer the new name if both are present.
 - GitHub-provided `sha256:` asset digest is mandatory.
 - Embedded `modernization-update.json`: `{schema: 1, version: "…", gtnh: "…"}`.
 
-`generateUpdateMetadata` and `verifyDistribution` bind the descriptor to build version. `prepareUpdateAsset` provides the correctly named CI asset. Older release assets without this descriptor cannot be installed by this updater. The descriptor currently declares the build's tested GTNH 2.9.0 target; update it deliberately when porting.
+`generateUpdateMetadata` and `verifyDistribution` bind the descriptor to build version. `prepareUpdateAsset` provides the correctly named CI asset. Older release assets without this descriptor cannot be installed by this updater. The descriptor declares the build's tested GTNH target; update it deliberately when porting. The descriptor filename and schema remain stable across the rename.
 
 Detection reads `mainmenu:version.txt`, stripping Minecraft color codes and preserving RC qualifiers. An optional explicit override is supported. No pack is inferred from a single mod version. Unknown packs fail closed.
 
 HTTPS is mandatory. Redirects are bounded and restricted to GitHub/API/release asset hosts. Timeouts and size limits apply (2 MiB metadata, 32 MiB JAR); downloads verify length, hash, all four module marker classes, compatibility metadata, and absence of test fixtures. There is no arbitrary server-provided download URL. These checks trust the project GitHub account and TLS; they are not a separate publisher-signature scheme.
+
+Old installed updaters pin the previous repository URL and filename. After the repository rename they require one manual compatible-JAR replacement; URL redirects alone do not satisfy their exact asset checks. New builds query the canonical repository.
 
 ## Installation transaction
 

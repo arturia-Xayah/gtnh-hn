@@ -98,6 +98,10 @@ tasks.register('verifyDistribution') {
             if (!zip.getEntry('dev/structureterminal/update/UpdateInstaller.class'))
                 throw new GradleException('Missing standalone update helper')
             def mods = new groovy.json.JsonSlurper().parse(zip.getInputStream(zip.getEntry('mcmod.info'))).modList
+            if (!mods.every { it.modid == 'structureterminal' ? it.name == 'GTNH: Handy & Nimble' : it.name.startsWith('GTNH-HN ·') })
+                throw new GradleException('GTNH-HN display names are inconsistent')
+            if (!mods.every { it.url == 'https://github.com/arturia-Xayah/gtnh-hn' })
+                throw new GradleException('GTNH-HN project URL is inconsistent')
             if (mods.collect { it.modid }.toSet() != ['structureterminal','aeorderoptimizer','plasmaforgepower','aestoragevault'].toSet())
                 throw new GradleException('Compatibility registration namespaces changed')
             if (!mods.every { it.version == expectedModVersion && it.logoFile == 'assets/structureterminal/textures/items/structure_terminal_logo.png' })
@@ -175,5 +179,5 @@ tasks.register('prepareUpdateAsset', Copy) {
     dependsOn('verifyDistribution')
     from(tasks.named('reobfJar').flatMap { it.archiveFile })
     into(layout.buildDirectory.dir('release'))
-    rename { "gtnh-modernization-upgrade-${project.version}-GTNH-2.9.0.jar" }
+    rename { "gtnh-hn-${project.version}-GTNH-2.9.0.jar" }
 }

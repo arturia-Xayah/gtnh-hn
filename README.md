@@ -2,15 +2,17 @@
 
 <div align="center">
 
-<img src="docs/assets/terminal-gto-preview.png" alt="GTNH现代化升级：GTO 原版终端图标" width="128">
+<img src="docs/assets/terminal-gto-preview.png" alt="GTNH: Handy & Nimble：GTO 原版终端图标" width="128">
 
-# GTNH现代化升级
+# GTNH: Handy & Nimble
+
+**GTNH-HN** · 顺手，轻巧。
 
 **结构搭建 · AE 便利功能 · 分色功率控制 · ME元件聚合存储器**
 
-**简体中文** · [English](README.en.md) · [版本下载](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases)
+**简体中文** · [English](README.en.md) · [版本下载](https://github.com/arturia-Xayah/gtnh-hn/releases)
 
-[![Download JAR](https://img.shields.io/badge/Download_JAR-0.3.8--alpha-4aa8e8?logo=github)](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases/download/v0.3.8-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar)
+[![Download JAR](https://img.shields.io/badge/Download_JAR-0.3.8--alpha-4aa8e8?logo=github)](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.3.8-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar)
 
 Minecraft **1.7.10** · GTNH **2.9.0**
 
@@ -36,6 +38,8 @@ Minecraft **1.7.10** · GTNH **2.9.0**
 
 ## 安装与旧版升级
 
+简称 **GTNH-HN**。原项目“GTNH现代化升级”现已更名，仍使用原终端图标。旧版游戏内更新器需要手动换装一次新命名版本，之后即可通过新地址检查更新。历史 Release 的文件名保留；安装时只保留一个整合 JAR。
+
 1. 获取 `gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar`，放入实例的 `mods`。联机时客户端与服务器安装相同版本；单人游戏只需安装在客户端。
 2. 移除旧版 **GTNH现代化升级 / 结构终端**，以及独立的 **AE Order Optimizer、Plasma Forge Power、AE Storage Vault** JAR。以上功能已包含在整合版中，不能重复安装。
 3. 升级前备份整个世界。终端、AE 元件和功率设置保留原注册 ID。**0.3.0 更改了聚合器库存格式，不能直接读取 0.2.x 的仓库文件**；已有聚合器需先在旧版导出库存，升级后新建仓库并重新投入容量来源。不要删除旧文件来解除锁定。
@@ -44,7 +48,7 @@ Minecraft **1.7.10** · GTNH **2.9.0**
 
 ## 客户端更新
 
-GTNH 主菜单右上方的 **现代化升级 · 检查更新** 可随时打开，即使关闭了启动检查也能手动检查。每次启动在后台检查一次，网络失败不影响游戏；发现兼容版本时入口会显示提示。更新中心支持下载、取消、稍后和跳过此版本，并可开关启动检查、测试版本和服务器自动下载。
+GTNH 主菜单右上方的 **GTNH-HN · 检查更新** 可随时打开，即使关闭了启动检查也能手动检查。每次启动在后台检查一次，网络失败不影响游戏；发现兼容版本时入口会显示提示。更新中心支持下载、取消、稍后和跳过此版本，并可开关启动检查、测试版本和服务器自动下载。
 
 联机版本不匹配时，会尝试读取服务器公开的 Forge 状态，提供**服务器使用的确切版本**。服务器关闭状态查询、网络不通或对应版本未发布时，保留原来的连接错误，不放宽版本校验。开启“服务器自动下载”后会自动下载匹配的新版本，安装仍由你点击确认。
 

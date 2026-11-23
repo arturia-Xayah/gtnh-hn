@@ -29,7 +29,7 @@ public final class UpdateTransport {
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
             connection.setInstanceFollowRedirects(false);
-            connection.setRequestProperty("User-Agent", "GTNH-Modernization-Updater");
+            connection.setRequestProperty("User-Agent", "GTNH-HN-Updater");
             connection.setRequestProperty("Accept", "application/vnd.github+json");
             int status;
             try {
@@ -107,7 +107,7 @@ public final class UpdateTransport {
                 "dev/aeoptimizer/OrderOptimizer.class", "dev/plasmaforgepower/PlasmaForgePower.class",
                 "dev/aestoragevault/VaultMod.class", "modernization-update.json" };
             for (String entry : required)
-                if (zip.getEntry(entry) == null) throw new IOException("Not a modernization installation JAR");
+                if (zip.getEntry(entry) == null) throw new IOException("Not a GTNH-HN installation JAR");
             java.util.Enumeration<? extends java.util.zip.ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 String name = entries.nextElement()

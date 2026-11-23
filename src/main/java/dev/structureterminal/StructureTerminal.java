@@ -18,7 +18,7 @@ import dev.structureterminal.server.BuildService;
 
 @Mod(
     modid = StructureTerminal.ID,
-    name = "GTNH现代化升级",
+    name = "GTNH: Handy & Nimble",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies = "required-after:structurelib@[1.4.45,);required-after:appliedenergistics2;required-after:unimixins;required-after:gregtech;required-after:modularui2")

@@ -61,12 +61,12 @@ structureterminal.minimap=Structure minimap
 structureterminal.result.limit=Stopped after %s blocks at the build safety limit (rounds or elapsed time). Adjust settings and retry.
 
 # Client updater
-modernization.update.entry=Check mod updates
-modernization.update.entryChecking=Checking for updates…
-modernization.update.entryFailed=Update check failed
-modernization.update.entryAvailable=Modernization: update!
-modernization.update.entryReady=Modernization: ready
-modernization.update.title=GTNH Modernization · Updates
+modernization.update.entry=GTNH-HN: updates
+modernization.update.entryChecking=GTNH-HN: checking…
+modernization.update.entryFailed=GTNH-HN: check failed
+modernization.update.entryAvailable=GTNH-HN: update!
+modernization.update.entryReady=GTNH-HN: ready
+modernization.update.title=GTNH-HN · Updates
 modernization.update.versions=Installed %s  |  GTNH %s
 modernization.update.target=Update available: %s
 modernization.update.serverTarget=Server requires %s

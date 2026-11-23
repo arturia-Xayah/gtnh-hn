@@ -10,7 +10,7 @@ import time
 
 from summarize_pack_validation import classify
 
-EXCLUDED = ('structureterminal','aeorderoptimizer','aeoptimizer','aeorderbench','plasmaforgepower','aestoragevault','gtnh-modernization')
+EXCLUDED = ('structureterminal','aeorderoptimizer','aeoptimizer','aeorderbench','plasmaforgepower','aestoragevault','gtnh-modernization','gtnh-hn')
 SUITES = {
     'projector': ('projector-validation', ['-Dstructureterminal.projectorTests=true'], ['projector-tests.json']),
     'bc_range': ('bc-range-validation', ['-Dstructureterminal.bcRangeTests=true'], ['bc-range-tests.json']),
@@ -35,7 +35,7 @@ def prepare(pack,target,fixture,world):
         if (pack/name).is_dir(): (target/name).symlink_to(pack/name,target_is_directory=True)
     for p in pack.iterdir():
         if p.is_file() and (p.suffix=='.jar' or p.name=='java9args.txt'): shutil.copy2(p,target/p.name)
-    shutil.copy2(fixture,target/'mods/gtnh-modernization-tests.jar')
+    shutil.copy2(fixture,target/'mods/gtnh-hn-tests.jar')
     (target/'eula.txt').write_text('eula=true\n')
     (target/'server.properties').write_text(f'server-ip=127.0.0.1\nserver-port=0\nonline-mode=false\nlevel-name={world}\nlevel-type=FLAT\ngenerator-settings=2;7,2x3,2;1;\ngenerate-structures=false\nspawn-protection=0\nview-distance=3\nallow-nether=false\nspawn-monsters=false\nspawn-animals=false\nenable-query=false\nenable-rcon=false\nallow-flight=true\nmax-tick-time=120000\n')
 

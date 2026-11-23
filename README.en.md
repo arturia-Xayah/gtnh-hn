@@ -2,15 +2,17 @@
 
 <div align="center">
 
-<img src="docs/assets/terminal-gto-preview.png" alt="GTNH Modernization Upgrade — original GTO terminal icon" width="128">
+<img src="docs/assets/terminal-gto-preview.png" alt="GTNH: Handy & Nimble — original GTO terminal icon" width="128">
 
-# GTNH Modernization Upgrade
+# GTNH: Handy & Nimble
+
+**GTNH-HN** · Handy & Nimble
 
 **Structure building · AE conveniences · Color-based power limits · ME storage vault**
 
-[简体中文](README.md) · **English** · [Releases](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases)
+[简体中文](README.md) · **English** · [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases)
 
-[![Download JAR](https://img.shields.io/badge/Download_JAR-0.3.8--alpha-4aa8e8?logo=github)](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases/download/v0.3.8-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar)
+[![Download JAR](https://img.shields.io/badge/Download_JAR-0.3.8--alpha-4aa8e8?logo=github)](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.3.8-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar)
 
 Minecraft **1.7.10** · GTNH **2.9.0**
 
@@ -35,6 +37,8 @@ Minecraft **1.7.10** · GTNH **2.9.0**
 - [Developer documentation](#developer-documentation)
 
 ## Installation and upgrading
+
+**GTNH-HN** is the short name of the former GTNH Modernization Upgrade, retaining its terminal icon. Install a renamed build manually once to move an old in-game updater to the new repository. Historical Release filenames are unchanged; keep only one bundled JAR installed.
 
 1. Install `gtnh-modernization-upgrade-0.3.8-alpha-GTNH-2.9.0.jar` in `mods`. Multiplayer clients and servers need the same version; install on the client for single-player.
 2. Remove older GTNH Modernization Upgrade / Structure Terminal JARs and standalone **AE Order Optimizer, Plasma Forge Power and AE Storage Vault** JARs. Their features are included; installing both creates duplicate modules.

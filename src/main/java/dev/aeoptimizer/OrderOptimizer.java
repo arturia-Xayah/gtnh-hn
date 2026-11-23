@@ -19,7 +19,7 @@ import dev.structureterminal.Tags;
 
 @Mod(
     modid = OrderOptimizer.ID,
-    name = "GTNH现代化升级 · AE下单优化",
+    name = "GTNH-HN · AE下单优化",
     version = Tags.VERSION,
     dependencies = "required-after:structureterminal;required-after:appliedenergistics2;required-after:unimixins",
     acceptedMinecraftVersions = "[1.7.10]")

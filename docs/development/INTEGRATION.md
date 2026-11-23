@@ -2,7 +2,7 @@
 
 ## 名称与模块
 
-产品显示名：**GTNH现代化升级**。英文文档名：**GTNH Modernization Upgrade**。发行文件前缀 `gtnh-modernization-upgrade`，本次版本 `0.3.0-alpha`，目标 GTNH `2.9.0`。
+产品显示名：**GTNH: Handy & Nimble**，简称 **GTNH-HN**。仓库名及发行文件前缀为 `gtnh-hn`；版本与目标 GTNH 以发行说明为准。更名保留所有注册 ID、NBT 键、网络通道、配置文件名、库存文件路径与更新器描述文件 `modernization-update.json`，不迁移或重建玩家数据。
 
 一个 JAR 包含四个 FML 注册模块。主模块显示统一产品名称，其他模块通过元数据 `parent=structureterminal` 归于主模块并沿用终端图标。保留模块 ID 是为了兼容已有世界、物品注册和 GUI 路由，并非要求玩家安装四个 Mod。
 

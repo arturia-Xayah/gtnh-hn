@@ -6,7 +6,7 @@
 
 ## 最终安装包
 
-[下载 JAR](https://github.com/arturia-Xayah/gtnh-structure-terminal/releases/download/v0.3.0-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.0-alpha-GTNH-2.9.0.jar)
+[下载 JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.3.0-alpha-GTNH-2.9.0/gtnh-modernization-upgrade-0.3.0-alpha-GTNH-2.9.0.jar)
 
 - 文件：`gtnh-modernization-upgrade-0.3.0-alpha-GTNH-2.9.0.jar`
 - 体积：483,991 字节；174 个生产类，全部为 Java 8 字节码，不含后台测试入口。

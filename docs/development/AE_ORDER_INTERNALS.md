@@ -1,6 +1,6 @@
 # ME 下单优化元件 / ME Order Optimizer
 
-本模块从 Structure Terminal **0.1.4-alpha** 起内置，客户端与服务端只安装合并后的结构终端 JAR。移除独立的 AE Order Optimizer JAR，避免重复 Mod ID。保留 `aeorderoptimizer:core` 及 TileEntity ID，便于已有存档继续识别。当前整合版将所有功能归入 GTNH现代化升级，保留历史注册模块 ID 以兼容存档。
+本模块从 Structure Terminal **0.1.4-alpha** 起内置，客户端与服务端只安装合并后的结构终端 JAR。移除独立的 AE Order Optimizer JAR，避免重复 Mod ID。保留 `aeorderoptimizer:core` 及 TileEntity ID，便于已有存档继续识别。当前整合版将所有功能归入 GTNH: Handy & Nimble，保留历史注册模块 ID 以兼容存档。
 
 Bundled since Structure Terminal **0.1.4-alpha**. Install only the merged Structure Terminal JAR on both sides and remove the standalone AE Order Optimizer JAR to avoid duplicate Mod IDs. Block and TileEntity registration IDs are retained for existing saves.
 
