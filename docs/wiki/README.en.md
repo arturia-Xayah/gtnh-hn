@@ -1,3 +1,5 @@
+<img src="../assets/branding/hn-icon.png" alt="GTNH-HN icon" width="72">
+
 # GTNH-HN User Guide
 
 [Project home](../../README.en.md) · [简体中文](README.md)

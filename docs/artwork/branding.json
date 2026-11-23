@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen",
+  "date": "2026-11-23",
+  "reference": "Homepage hero illustration approved by the maintainer; retain its HN monogram and GTNH: Handy & Nimble wordmark.",
+  "scope": "Repository presentation assets",
+  "assets": {
+    "logo": "docs/assets/branding/hn-logo.png",
+    "icon": "docs/assets/branding/hn-icon.png"
+  },
+  "prompts": {
+    "logo": "Use case: precise-object-edit. This image contains an approved brand logo at the upper left. Extract and present ONLY that exact logo lockup as a clean GitHub README header asset: the cyan-to-violet geometric HN monogram on the left, the thin vertical divider, and the white two-line text on the right reading exactly \"GTNH:\" then \"Handy & Nimble\". Keep the approved monogram silhouette, color gradient, letterforms, capitalization, spacing and subtle faceting as faithful as possible. Preserve the original plain deep navy background behind the mark, made uniform across the output. Remove every other element: all machines, portal, floor, icons, Chinese text, feature labels and graphic stripes. Reframe tightly into a wide horizontal banner roughly 4:1, with even comfortable padding and a centered whole lockup. The full logo should be large, crisp, uncut and suitable for displaying at 820 px wide. Do not redesign the mark, invent alternative initials, add typography, or include a decorative border. One finished image only. Opaque dark navy background.",
+    "icon": "Use case: precise-object-edit. Extract ONLY the approved geometric cyan-to-violet HN monogram from the upper left of this reference. Preserve the exact angular interlocking HN letter silhouette, proportions, cyan-to-lilac-to-purple color gradient and subtle faceted surfaces. Remove the divider and all text, machines, portal, decorative strips and other graphics. Center the monogram on a plain opaque deep navy square background matching the original logo area. Square 1:1 composition, generous 15 percent padding, clean crisp edges, visually balanced and legible at 64 px. This is the standalone icon for the same GTNH: Handy & Nimble brand, not a redesign. No extra letters, border, shadowed badge, or watermark. One icon only."
+  },
+  "sha256": {
+    "hn-logo.png": "95a17087b4539c0796ea2ceb4350d88e400b8842f6702832af2753085bcc8537",
+    "hn-icon.png": "12a554ee7cda10378a6e890aa316b9c5a6466c24096f929fce2f3884c0da036c"
+  }
+}

@@ -2,9 +2,8 @@
 
 <div align="center">
 
-<img src="docs/assets/terminal-in-game.gif" alt="GTNH-HN 高级终端游戏内动画" width="128">
-
-# GTNH: Handy & Nimble
+<a id="gtnh-handy--nimble"></a>
+<img src="docs/assets/branding/hn-logo.png" alt="GTNH: Handy & Nimble — HN Logo" width="820">
 
 **GTNH-HN** · 顺手，轻巧。
 

@@ -35,3 +35,7 @@ The original MIT starter notice is retained verbatim in `LICENSES/ExampleMod-MIT
 The integrated-pattern sprite is an AI-generated modification referenced from AE2 `ItemEncodedPattern.png`, tag `rv3-beta-1095-GTNH`, https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial . Applied Energistics 2, AlgorithmX2 and contributors, LGPL-3.0-or-later. The variation retains the encoded-pattern card motif with an integration badge. UI reuses Minecraft's built-in chest texture at runtime; Minecraft assets are not bundled.
 
 * `docs/assets/terminal-in-game.gif` is a lossless nearest-neighbor animation export of the current in-game advanced terminal sprite and its `.mcmeta` timing (two 16×16 frames, 6 ticks per frame). It uses the GTMThings-gto asset credited above; no new artwork is introduced. Regenerate it with `tools/render_terminal_readme_icon.py` (Pillow required).
+
+## Repository branding
+
+`docs/assets/branding/hn-logo.png` and `hn-icon.png` are original project presentation artwork prepared with the built-in image generator from the maintainer-approved GTNH-HN promotional design. They feature the cyan/violet HN monogram and the GTNH: Handy & Nimble wordmark. Prompts and provenance are recorded in `docs/artwork/branding.json`. The in-game terminal artwork retains its upstream attribution above.
