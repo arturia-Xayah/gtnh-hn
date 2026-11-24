@@ -1,5 +1,27 @@
 # 更新日志 / Changelog
 
+## 0.4.2 — GTNH 2.9.1 · 2026-11-24
+
+### 中文
+
+- 二合一 ME 输入总线改用可堆叠的存储组件。普通版消耗 1 个 ME 存储输入总线、4 个 IV 电路、16 个 16k 物品组件和 16 个 16k 流体组件。进阶版消耗 1 个普通版、16 个 IV 电路、8 个 64k 物品组件和 8 个 64k 流体组件。两张配方均为 EV 组装机配方，分别耗时 60 秒和 120 秒。
+- 将已配置的二合一输入总线单独放入背包或工作台合成栏，即可清空输入设置，保留名称、覆盖板、升级和手动槽物品。界面沿用 GT 的 ME 输入总线样式。
+- 新增 ME 二合一存储总线，一个频道可同时存取物品和流体，共用过滤列表。二合一输出总线新增独立流体元件槽，两类缓冲可分别扩容，Waila 分别显示物品和流体储量。
+- ME 接口 P2P 支持默认、批次均分、批次轮询。普通和二合一接口 P2P 均可在各输出端安装限制批量发配卡，独立设定限额。调整发配卡和 P2P 控件样式。
+- 修复进阶发信器的库存总量重复计数，以及装配线从 NEI 导入重复材料时的自动改名和样板生成。
+- 聚合器将写入锁与库存日志分开，解决 Windows 文件锁可能阻碍 ServerUtilities 在线备份的问题。调整谐振外壳外观和 NEI 分层预览，统一仓室的模组来源显示。
+- 修复 BC 范围预览后重开界面丢失草稿，以及传送门投影主机界面打开冲突。
+
+### English
+
+- Both dual ME stocking input buses now use stackable storage components in an EV assembler. The basic bus takes one ME stocking input bus, four IV circuits and sixteen each of the 16k item and fluid components in 60 seconds. The advanced bus takes one basic bus, sixteen IV circuits and eight each of the 64k components in 120 seconds.
+- Craft a configured dual input bus alone to reset its input settings. Its name, covers, upgrades and manual-slot items are retained. Both tiers use the GT stocking bus UI.
+- The new Dual ME Storage Bus exposes item and fluid storage on one channel with a shared filter list. Dual ME Output Buses have separate item and fluid cell slots, and Waila shows both stored amounts.
+- ME Interface P2P inputs support default routing, even splitting and round robin. Each standard or dual P2P output can use its own Batch Dispatch Limit Card and limits. Updated the card and P2P controls.
+- Fixed double counting in Advanced Level Emitter totals and restored automatic renaming and pattern generation for repeated assembly-line inputs imported from NEI.
+- The vault writer lock is now separate from inventory journals so ServerUtilities can read them during online backups on Windows. Updated casing textures, layered NEI previews and machine attribution.
+- Fixed BuildCraft range drafts after preview and a GUI conflict on the Portal Projector.
+
 ## 0.4.1 — GTNH 2.9.1 · 2026-11-23
 
 ### 中文

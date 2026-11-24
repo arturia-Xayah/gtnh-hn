@@ -13,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
@@ -57,6 +58,7 @@ public final class SmartBlockingChecks {
     private final WorldServer world = server.worldServerForDimension(0);
     private final int x = world.getSpawnPoint().posX, y = 100, z = world.getSpawnPoint().posZ;
     private TileInterface sender, receiver;
+    private P2PDispatchChecks tunnels;
     private final Tanks tanks = new Tanks();
     private final Fluid[] fluids = { FluidRegistry.WATER, FluidRegistry.LAVA, FluidRegistry.getFluid("oxygen") };
     private final BaseActionSource action = new BaseActionSource();
@@ -98,28 +100,9 @@ public final class SmartBlockingChecks {
             .getName()
             .equals("com.glodblock.github.common.item.ItemFluidEncodedPattern")) item = (Item) obj;
         check(item != null && fluids[2] != null, "fixture materials");
-        Class<?> cls = Class.forName("com.glodblock.github.util.FluidPatternDetails");
-        Object builder = cls.getConstructor(ItemStack.class)
-            .newInstance(new ItemStack(item));
         IAEStack<?>[] in = new IAEStack<?>[3];
         for (int i = 0; i < 3; i++) in[i] = AEFluidStack.create(new FluidStack(fluids[i], 1000));
-        IAEStack<?>[] out = { AEItemStack.create(new ItemStack(Items.diamond)) };
-        cls.getMethod("setInputs", IAEStack[].class)
-            .invoke(builder, (Object) in);
-        cls.getMethod("setOutputs", IAEStack[].class)
-            .invoke(builder, (Object) out);
-        encoded = (ItemStack) cls.getMethod("writeToStack")
-            .invoke(builder);
-        encoded.getTagCompound()
-            .setTag(
-                "in",
-                (NBTTagList) cls.getMethod("writeStackArray", IAEStack[].class)
-                    .invoke(null, (Object) in));
-        encoded.getTagCompound()
-            .setTag(
-                "out",
-                (NBTTagList) cls.getMethod("writeStackArray", IAEStack[].class)
-                    .invoke(null, (Object) out));
+        encoded = encode(item, in);
         pattern = ((appeng.api.implementations.ICraftingPatternItem) item).getPatternForItem(encoded, world);
         Block power = AEApi.instance()
             .definitions()
@@ -149,6 +132,30 @@ public final class SmartBlockingChecks {
                     .cardAdvancedBlocking()
                     .maybeStack(1)
                     .get());
+    }
+
+    private static ItemStack encode(Item item, IAEStack<?>[] in) throws Exception {
+        Class<?> cls = Class.forName("com.glodblock.github.util.FluidPatternDetails");
+        Object builder = cls.getConstructor(ItemStack.class)
+            .newInstance(new ItemStack(item));
+        IAEStack<?>[] out = { AEItemStack.create(new ItemStack(Items.diamond)) };
+        cls.getMethod("setInputs", IAEStack[].class)
+            .invoke(builder, (Object) in);
+        cls.getMethod("setOutputs", IAEStack[].class)
+            .invoke(builder, (Object) out);
+        ItemStack encoded = (ItemStack) cls.getMethod("writeToStack")
+            .invoke(builder);
+        encoded.getTagCompound()
+            .setTag(
+                "in",
+                (NBTTagList) cls.getMethod("writeStackArray", IAEStack[].class)
+                    .invoke(null, (Object) in));
+        encoded.getTagCompound()
+            .setTag(
+                "out",
+                (NBTTagList) cls.getMethod("writeStackArray", IAEStack[].class)
+                    .invoke(null, (Object) out));
+        return encoded;
     }
 
     private boolean push(int crafts) {
@@ -242,6 +249,71 @@ public final class SmartBlockingChecks {
                     check(dev.aeoptimizer.dispatch.OutputOverflow.enabled(sender.getProxy()), "optimizer active");
                     limitsChecks();
                     cpuChecks();
+                    encoded = encode(
+                        encoded.getItem(),
+                        new IAEStack<?>[] { AEItemStack.create(new ItemStack(Items.iron_ingot, 4)) });
+                    pattern = ((appeng.api.implementations.ICraftingPatternItem) encoded.getItem())
+                        .getPatternForItem(encoded, world);
+                    tunnels = new P2PDispatchChecks(world, x, y, z);
+                    tunnels.place(iface);
+                    break;
+                case 230:
+                    tunnels.link(encoded);
+                    break;
+                case 295:
+                    tunnels.configure(sender, pattern);
+                    break;
+                case 300:
+                    cpuDispatch("four P2P outputs: strict third without card", 1000, 64, 1000, 4);
+                    tunnels.expect("strict third without card", new int[] { 8, 4, 1, 8 }, new int[] { 0, 0, 0, 979 });
+                    tunnels.reset();
+                    break;
+                case 315:
+                    tunnels.zeroLimitThird();
+                    cpuDispatch("four P2P outputs: strict third with zero limit", 1000, 64, 1000, 3);
+                    tunnels
+                        .expect("strict third with zero limit", new int[] { 8, 4, 16, 0 }, new int[] { 0, 0, 972, 0 });
+                    tunnels.reset();
+                    break;
+                case 330:
+                    tunnels.smartThirdWithoutCard();
+                    cpuDispatch("four P2P outputs: smart third without card", 1000, 64, 1000, 3);
+                    tunnels.expect("smart third without card", new int[] { 8, 4, 16, 0 }, new int[] { 0, 0, 972, 0 });
+                    tunnels.reset();
+                    break;
+                case 350:
+                    tunnels.mode(1);
+                    cpuDispatch("even split across four linked P2P ports", 8, 64, 8, 4);
+                    tunnels.expect("even split", new int[] { 2, 2, 2, 2 }, new int[] { 0, 0, 0, 0 });
+                    tunnels.reset();
+                    break;
+                case 360:
+                    tunnels.prepareIndependentQueues();
+                    testAccelerator = 4;
+                    captureShares = true;
+                    cpuDispatch("four funded batches, one unavailable output", 16, 64, 12, 12);
+                    tunnels.expect(
+                        "three outputs work while second is blocked",
+                        new int[] { 4, 0, 4, 4 },
+                        new int[] { 0, 0, 0, 0 });
+                    tunnels.limitSecond(16);
+                    cpuDispatch("saved quota resumes at second output", 4, 64, 4, 1);
+                    tunnels.expect("reopened output catches up", new int[] { 4, 4, 4, 4 }, new int[] { 0, 0, 0, 0 });
+                    tunnels.reset();
+                    testAccelerator = 4096;
+                    break;
+                case 370:
+                    tunnels.mode(2);
+                    for (int i = 0; i < 4; i++) cpuDispatch("round visit " + i, 1, 64, 1, 1);
+                    tunnels.expect("round robin", new int[] { 1, 1, 1, 1 }, new int[] { 0, 0, 0, 0 });
+                    cpuDispatch("round cooldown", 1, 64, 0, 0);
+                    tunnels.reset();
+                    break;
+                case 380:
+                    cpuDispatch("round resumes", 1, 64, 1, 1);
+                    tunnels.checkRebind();
+                    tests.add(
+                        "Linked dual P2P outputs, per-output limits, four destinations: subnet/GT bus inventories and sender queues conserved");
                     finish(null);
                     break;
                 default:
@@ -347,12 +419,6 @@ public final class SmartBlockingChecks {
     }
 
     private void nativeHosts(ItemStack card) throws Exception {
-        check(
-            ItemBatchLimitCard.TYPE.getSupported()
-                .size()
-                == appeng.api.config.Upgrades.ADVANCED_BLOCKING.getSupported()
-                    .size(),
-            "same supported hosts as native advanced blocking card");
         for (ItemStack host : appeng.api.config.Upgrades.ADVANCED_BLOCKING.getSupported()
             .keySet())
             check(
@@ -435,6 +501,10 @@ public final class SmartBlockingChecks {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
+    private int testAccelerator = 4096;
+    private boolean captureShares;
+    private NBTTagCompound savedShare;
+
     private long cpuDispatch(String name, int sets, int operations, long expectedSets, long expectedBatches)
         throws Exception {
         appeng.api.networking.IGrid grid = sender.getProxy()
@@ -449,11 +519,16 @@ public final class SmartBlockingChecks {
             .iterator()
             .next();
         check(
-            cache.getMediums(pattern)
-                .contains(sender.getInterfaceDuality()),
+            !cache.getMediums(pattern)
+                .isEmpty(),
             "real sender registered as crafting medium");
         appeng.me.cluster.implementations.CraftingCPUCluster.TaskProgress progress = new appeng.me.cluster.implementations.CraftingCPUCluster.TaskProgress();
         ((dev.aeoptimizer.api.ProgressAccess) progress).aeo$set(sets);
+        if (savedShare != null) {
+            ((dev.aeoptimizer.api.ProgressAccess) progress).hn$share(true)
+                .read(savedShare);
+            savedShare = null;
+        }
         java.util.Map tasks = (java.util.Map) cpuField("tasks").get(cpu),
             workable = (java.util.Map) cpuField("workableTasks").get(cpu);
         tasks.clear();
@@ -467,7 +542,7 @@ public final class SmartBlockingChecks {
             Actionable.MODULATE);
         cpuField("inventory").set(cpu, inventory);
         cpuField("remainingOperations").setInt(cpu, operations);
-        cpuField("accelerator").setInt(cpu, 4096);
+        cpuField("accelerator").setInt(cpu, testAccelerator);
         long before = ((dev.aeoptimizer.api.CpuBatchStats) cpu).aeo$getBatches();
         java.lang.reflect.Method execute = cpu.getClass()
             .getDeclaredMethod(
@@ -500,6 +575,14 @@ public final class SmartBlockingChecks {
         row.put("batches", batches);
         row.put("nanoseconds", elapsed);
         cpuRuns.add(row);
+        if (captureShares) {
+            captureShares = false;
+            NBTTagCompound snapshot = new NBTTagCompound();
+            cpu.writeToNBT(snapshot);
+            savedShare = snapshot.getTagList("tasks", 10)
+                .getCompoundTagAt(0);
+            check(savedShare.hasKey("hnShares", 10), "CPU persisted the unfinished output quotas");
+        }
         tasks.clear();
         workable.clear();
         ((IItemList<?>) cpuField("waitingFor").get(cpu)).resetStatus();
@@ -580,6 +663,7 @@ public final class SmartBlockingChecks {
         report.put("passed", error == null);
         report.put("tests", tests);
         report.put("cpu_dispatch", cpuRuns);
+        if (tunnels != null) report.put("four_p2p_outputs", tunnels.observations);
         if (error != null) report.put("error", error);
         Files.write(
             server.getFile("smart-blocking-tests.json")

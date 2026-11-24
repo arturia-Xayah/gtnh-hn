@@ -3,8 +3,11 @@ package dev.aeoptimizer.api;
 import java.util.Map;
 
 import appeng.me.diagnostics.CraftingDiagnosticSessionId;
+import dev.aeoptimizer.dispatch.TunnelShare;
 
 public interface ProgressAccess {
+
+    TunnelShare hn$share(boolean create);
 
     long aeo$get();
 

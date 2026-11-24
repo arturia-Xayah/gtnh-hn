@@ -329,7 +329,8 @@ final class ProjectorChecks {
             ProjectorTile tile = (ProjectorTile) w.getTileEntity(x, y, z);
             expect(tile != null && !tile.canUpdate() && tile.getBlockMetadata() == 1, "orientation");
             tests.add("dedicated_registration_and_placement");
-            ProjectorMenu menu = ProjectorMenu.at(w, x, y, z);
+            ProjectorMenu menu = (ProjectorMenu) dev.structureterminal.StructureTerminal.proxy
+                .getServerGuiElement(ProjectorMenu.ID, p, w, x, y, z);
             expect(menu != null && menu.canInteractWith(p), "editor");
             p.openContainer = menu;
             NBTTagCompound command = new NBTTagCompound();

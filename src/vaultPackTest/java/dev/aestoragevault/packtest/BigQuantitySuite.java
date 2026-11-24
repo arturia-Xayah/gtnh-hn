@@ -68,6 +68,7 @@ public final class BigQuantitySuite {
     private int age;
     private boolean done, restart;
     private Path marker;
+    private final boolean backupTest = Boolean.getBoolean("aestoragevault.backupTests");
     private final BigInteger huge = BigInteger.ONE.shiftLeft(255)
         .add(BigInteger.valueOf(123));
 
@@ -129,9 +130,25 @@ public final class BigQuantitySuite {
                             .toByteArray());
                 }
                 CompressedStreamTools.writeCompressed(saved, Files.newOutputStream(marker));
+                if (backupTest) {
+                    check(
+                        server.getCommandManager()
+                            .executeCommand(server, "backup start vault-online") > 0,
+                        "ServerUtilities rejected backup command");
+                } else finish();
+            }
+            if (backupTest && !restart
+                && age > 75
+                && age % 10 == 0
+                && !((Boolean) Class.forName("serverutils.task.backup.BackupCoordinator")
+                    .getMethod("isRunning")
+                    .invoke(null))) {
+                check(
+                    controllers[0].available() && controllers[1].available(),
+                    "vaults must stay mounted throughout backup");
                 finish();
             }
-            if (age > 180) throw new AssertionError("timeout");
+            if (age > (backupTest ? 2400 : 180)) throw new AssertionError("timeout");
         } catch (Throwable failure) {
             failure.printStackTrace();
             row("fatal: " + failure, false);

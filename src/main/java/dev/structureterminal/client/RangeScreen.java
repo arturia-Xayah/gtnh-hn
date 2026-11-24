@@ -27,7 +27,7 @@ public final class RangeScreen extends GuiContainer {
     private final GuiTextField[] fields = new GuiTextField[3];
     private final String[] values = { "1", "1", "1" };
     private String status = "";
-    private boolean waiting;
+    private boolean waiting, loaded;
     private GuiButton preview, apply, reset;
 
     public RangeScreen(RangeContainer menu) {
@@ -63,9 +63,7 @@ public final class RangeScreen extends GuiContainer {
         reset = new GuiButton(2, 0, 0, 62, 20, tr("reset"));
         buttonList.add(reset);
         layout();
-        NBTTagCompound load = command(menu.windowId);
-        load.setBoolean("load", true);
-        send(load);
+
     }
 
     private void layout() {
@@ -207,6 +205,15 @@ public final class RangeScreen extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
+        // FML assigns the remote window ID after initGui has returned.
+        if (!loaded && menu.windowId > 0) {
+            loaded = true;
+            waiting = true;
+            layout();
+            NBTTagCompound load = command(menu.windowId);
+            load.setBoolean("load", true);
+            send(load);
+        }
         for (GuiTextField field : fields) field.updateCursorCounter();
     }
 

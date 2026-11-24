@@ -42,10 +42,17 @@ public abstract class NEIPatternRenameMixin {
         if (optimizer == null || !optimizer.autoRename) return;
         int size = container.getPatternInputsWidth() * container.getPatternInputsHeigh()
             * container.getPatternInputPages();
+        NBTTagCompound selected = input.hasKey("hnAssemblySlots", 10) ? input.getCompoundTag("hnAssemblySlots") : input;
+        if (selected.hasKey("#" + size, 10)) {
+            context.getServerHandler().playerEntity
+                .addChatMessage(new net.minecraft.util.ChatComponentTranslation("aeoptimizer.rename.slots"));
+            ci.cancel();
+            return;
+        }
         ItemStack[] items = new ItemStack[size];
         for (int i = 0; i < size; i++) {
-            if (!input.hasKey("#" + i, 10)) continue;
-            ItemStack stack = ItemUtils.loadItemStackFromNBT(input.getCompoundTag("#" + i));
+            if (!selected.hasKey("#" + i, 10)) continue;
+            ItemStack stack = ItemUtils.loadItemStackFromNBT(selected.getCompoundTag("#" + i));
             if (stack != null && !StackInfo.isFluidDisplayItem(stack)) items[i] = stack;
         }
         ItemStack[] renamed = AssemblyLineRenamer.rename(items);
@@ -54,6 +61,11 @@ public abstract class NEIPatternRenameMixin {
             return;
         }
         for (int i = 0; i < size; i++) {
+            String key = "#" + i;
+            if (selected != input) {
+                if (selected.hasKey(key, 10)) input.setTag(key, selected.getCompoundTag(key));
+                else input.removeTag(key);
+            }
             if (renamed[i] == items[i]) continue;
             // Preserve NEE's integer Count and every other serialized field verbatim.
             input.getCompoundTag("#" + i)

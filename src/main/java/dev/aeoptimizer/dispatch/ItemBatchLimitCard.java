@@ -35,6 +35,14 @@ public final class ItemBatchLimitCard extends Item implements IUpgradeModule {
         // Match the native Advanced Blocking Card's supported block/part interfaces, including AE2FC.
         for (ItemStack host : Upgrades.ADVANCED_BLOCKING.getSupported()
             .keySet()) TYPE.registerItem(host, 1);
+        TYPE.registerItem(
+            AEApi.instance()
+                .definitions()
+                .parts()
+                .p2PTunnelMEInterface(),
+            1);
+        Item dualTunnel = GameRegistry.findItem("ae2fc", "part_fluid_p2p_interface");
+        if (dualTunnel != null) TYPE.registerItem(new ItemStack(dualTunnel), 1);
         INSTANCE.setCreativeTab(appeng.core.CreativeTab.instance);
         GameRegistry.addShapelessRecipe(
             new ItemStack(INSTANCE),

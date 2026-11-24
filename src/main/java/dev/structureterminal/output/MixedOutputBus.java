@@ -6,7 +6,9 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.cleanroommc.modularui.factory.PosGuiData;
@@ -15,6 +17,7 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.glodblock.github.common.item.FCBaseItemCell;
 import com.glodblock.github.common.item.ItemFluidVoidStorageCell;
+import com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil;
 
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventory;
@@ -29,18 +32,28 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.util.item.AEFluidStack;
 import gregtech.api.enums.OutputHatchType;
+import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.interfaces.IOutputHatch;
 import gregtech.api.interfaces.IOutputHatchTransaction;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity.SkipGenerateDescription;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GTUtility;
 import gregtech.common.tileentities.machines.outputme.MTEHatchOutputBusME;
 import gregtech.common.tileentities.machines.outputme.MTEHatchOutputME;
 import gregtech.common.tileentities.machines.outputme.base.MTEHatchOutputMEBase;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 
 /** One physical output bus and AE node, with independent native item/fluid cache providers. */
+@SkipGenerateDescription
 public final class MixedOutputBus extends MTEHatchOutputBusME {
+
+    public static final String MACHINE_NAME = "modernization.mixed_output";
+    public static final int ITEM_SLOT = 0;
+    public static final int FLUID_SLOT = 1;
 
     public final MTEHatchOutputMEBase<IAEFluidStack> fluids = new MTEHatchOutputMEBase<IAEFluidStack>(
         new FluidEnvironment()) {
@@ -81,7 +94,7 @@ public final class MixedOutputBus extends MTEHatchOutputBusME {
     };
 
     public MixedOutputBus(int id) {
-        super(id, "modernization.mixed_output", "ME Dual Output Bus");
+        super(id, MACHINE_NAME, "ME Dual Output Bus");
     }
 
     private MixedOutputBus(String name, int tier, String[] description, ITexture[][][] textures) {
@@ -91,6 +104,18 @@ public final class MixedOutputBus extends MTEHatchOutputBusME {
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity tile) {
         return new MixedOutputBus(mName, mTier, mDescriptionArray, mTextures);
+    }
+
+    @Override
+    public ITexture[] getTexturesActive(ITexture base) {
+        return new ITexture[] { base, TextureFactory.of(BlockIcons.OVERLAY_ME_HATCH_ACTIVE),
+            TextureFactory.of(BlockIcons.OVERLAY_PIPE_OUT) };
+    }
+
+    @Override
+    public ITexture[] getTexturesInactive(ITexture base) {
+        return new ITexture[] { base, TextureFactory.of(BlockIcons.OVERLAY_ME_HATCH),
+            TextureFactory.of(BlockIcons.OVERLAY_PIPE_OUT) };
     }
 
     @Override
@@ -108,25 +133,31 @@ public final class MixedOutputBus extends MTEHatchOutputBusME {
     }
 
     public ItemStack fluidCell() {
-        return fluidCell(mInventory[0]) ? mInventory[0] : null;
-    }
-
-    @Override
-    public ItemStack getCellStack() {
-        return fluidCell(mInventory[0]) ? null : mInventory[0];
+        return mInventory[FLUID_SLOT];
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && stack != null
-            && (fluidCell(stack) || stack.getItem() instanceof ItemBasicStorageCell
-                || stack.getItem() instanceof ItemVoidStorageCell);
+        if (index == FLUID_SLOT) return fluidCell(stack);
+        return index == ITEM_SLOT && stack != null
+            && (stack.getItem() instanceof ItemBasicStorageCell || stack.getItem() instanceof ItemVoidStorageCell);
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 1;
+    }
+
+    @Override
+    public boolean allowPutStack(IGregTechTileEntity tile, int index, ForgeDirection side, ItemStack stack) {
+        return side == tile.getFrontFacing() && isItemValidForSlot(index, stack);
     }
 
     @Override
     public void onContentsChanged(int slot) {
-        super.onContentsChanged(slot);
-        if (fluids != null) fluids.onContentsChanged(slot);
+        if (slot == ITEM_SLOT) super.onContentsChanged(0);
+        // Each native provider numbers its own cell slot as zero.
+        if (slot == FLUID_SLOT) fluids.onContentsChanged(0);
     }
 
     @Override
@@ -159,6 +190,11 @@ public final class MixedOutputBus extends MTEHatchOutputBusME {
 
     @Override
     public void loadNBTData(NBTTagCompound tag) {
+        // GT restores its inventory before loading either provider. Preserve the original cell including its NBT.
+        if (mInventory[FLUID_SLOT] == null && fluidCell(mInventory[ITEM_SLOT])) {
+            mInventory[FLUID_SLOT] = mInventory[ITEM_SLOT];
+            mInventory[ITEM_SLOT] = null;
+        }
         super.loadNBTData(tag);
         fluids.loadNBTData(tag.getCompoundTag("dualFluidOutput"));
     }
@@ -175,6 +211,53 @@ public final class MixedOutputBus extends MTEHatchOutputBusME {
         if (!super.pasteCopiedData(player, tag)) return false;
         if (tag.hasKey("dualFluidOutput", 10)) fluids.pasteCopiedData(player, tag.getCompoundTag("dualFluidOutput"));
         return true;
+    }
+
+    @Override
+    public ItemStack getVisual() {
+        return getStackForm(1);
+    }
+
+    @Override
+    public void getWailaNBTData(net.minecraft.entity.player.EntityPlayerMP player,
+        net.minecraft.tileentity.TileEntity tile, NBTTagCompound tag, net.minecraft.world.World world, int x, int y,
+        int z) {
+        super.getWailaNBTData(player, tile, tag, world, x, y, z);
+        NBTTagCompound fluid = new NBTTagCompound();
+        fluids.getWailaNBTData(player, tile, fluid, world, x, y, z);
+        fluid.setLong("buffered", fluids.getCachedAmount());
+        tag.setTag("hnFluidView", fluid);
+    }
+
+    @Override
+    @cpw.mods.fml.relauncher.SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
+    public void getWailaBody(ItemStack item, List<String> lines, IWailaDataAccessor accessor,
+        IWailaConfigHandler config) {
+        super.getWailaBody(item, lines, accessor, config);
+        NBTTagCompound fluid = accessor.getNBTData()
+            .getCompoundTag("hnFluidView");
+        lines.add(
+            tr("fluids") + "  "
+                + NumberFormatUtil.formatNumber(fluid.getLong("buffered"))
+                + " / "
+                + NumberFormatUtil.formatNumber(fluid.getLong("cacheCapacity"))
+                + " mB");
+        hn$fluidLines(lines, fluid, "stacks");
+        if (fluid.getInteger("cacheCount") > 0) {
+            lines.add(tr("cellContents"));
+            hn$fluidLines(lines, fluid, "cacheStacks");
+        }
+    }
+
+    @cpw.mods.fml.relauncher.SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
+    private static void hn$fluidLines(List<String> lines, NBTTagCompound data, String key) {
+        NBTTagList list = data.getTagList(key, 10);
+        for (int i = 0; i < list.tagCount(); i++) {
+            NBTTagCompound row = list.getCompoundTagAt(i);
+            IAEFluidStack stack = AEFluidStack.loadFluidStackFromNBT(row);
+            if (stack != null)
+                lines.add(stack.getDisplayName() + "  " + NumberFormatUtil.formatNumber(row.getLong("Amount")) + " mB");
+        }
     }
 
     @Override

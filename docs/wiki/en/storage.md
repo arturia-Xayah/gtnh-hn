@@ -92,7 +92,7 @@ LRU entry and byte budgets are in `config/gtnh-modernization.cfg`. Restart the g
 
 ## Moving and backups
 
-Normal harvesting retains the controller UUID; replacement reconnects the same inventory. Duplicate controllers cannot mount one UUID together. External files are `<world>/data/aestoragevault/<UUID>.snapshot` and `.wal`. Always back up and restore the complete stopped world including chunks and players. Missing/corrupt files lock rather than replace stock. Keep files/logs and restore a complete backup. Migration receipts prevent duplicate capacity credit; ordinary cross-container transfers are not a distributed transaction with all other mods. Partial rollback or abrupt power loss can still create inconsistencies.
+Normal harvesting retains the controller UUID; replacement reconnects the same inventory. Duplicate controllers cannot mount one UUID together. External files are `<world>/data/aestoragevault/<UUID>.snapshot` and `.wal`. Use ServerUtilities online backups or a stopped-world copy and restore the complete world, including chunks and players. Missing/corrupt files lock rather than replace stock. Keep files/logs and restore a complete backup. Migration receipts prevent duplicate capacity credit; ordinary cross-container transfers are not a distributed transaction with all other mods. Partial rollback or abrupt power loss can still create inconsistencies.
 
 ---
 

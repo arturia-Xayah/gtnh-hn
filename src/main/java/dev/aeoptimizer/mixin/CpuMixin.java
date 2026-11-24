@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,6 +44,8 @@ import dev.aeoptimizer.dispatch.BatchContext;
 import dev.aeoptimizer.dispatch.BatchLimitSettings;
 import dev.aeoptimizer.dispatch.BatchLimits;
 import dev.aeoptimizer.dispatch.OrderOrigin;
+import dev.aeoptimizer.dispatch.TunnelDispatch;
+import dev.aeoptimizer.dispatch.TunnelShare;
 
 /** Bulk exact processing; unsupported crafting/receiver semantics stay in the untouched native loop. */
 @Mixin(value = CraftingCPUCluster.class, remap = false)
@@ -105,6 +110,8 @@ public abstract class CpuMixin implements CpuBatchStats {
     private final OrderOrigin aeo$origin = new OrderOrigin();
     @Unique
     private boolean aeo$wasBusy;
+    @Unique
+    private boolean hn$hadRoutes;
 
     @Inject(method = "submitJob", at = @At("HEAD"))
     private void aeo$beforeSubmit(IGrid grid, appeng.api.networking.crafting.ICraftingJob job,
@@ -123,13 +130,34 @@ public abstract class CpuMixin implements CpuBatchStats {
     }
 
     @Inject(method = "writeToNBT", at = @At("RETURN"))
-    private void aeo$saveOrigin(net.minecraft.nbt.NBTTagCompound nbt, CallbackInfo ci) {
+    private void aeo$saveOrigin(NBTTagCompound nbt, CallbackInfo ci) {
         aeo$origin.write(nbt);
+        NBTTagList rows = nbt.getTagList("tasks", 10);
+        int row = 0;
+        for (TaskProgress task : tasks.values()) {
+            TunnelShare share = ((ProgressAccess) (Object) task).hn$share(false);
+            if (share != null) share.write(rows.getCompoundTagAt(row));
+            row++;
+        }
     }
 
     @Inject(method = "readFromNBT", at = @At("RETURN"))
-    private void aeo$loadOrigin(net.minecraft.nbt.NBTTagCompound nbt, CallbackInfo ci) {
+    private void aeo$loadOrigin(NBTTagCompound nbt, CallbackInfo ci) {
         aeo$origin.read(nbt);
+        NBTTagList rows = nbt.getTagList("tasks", 10);
+        for (int i = 0; i < rows.tagCount(); i++) {
+            NBTTagCompound row = rows.getCompoundTagAt(i);
+            if (!row.hasKey("hnShares")) continue;
+            hn$hadRoutes = true;
+            appeng.api.storage.data.IAEItemStack stack = appeng.util.item.AEItemStack.loadItemStackFromNBT(row);
+            if (stack == null || !(stack.getItem() instanceof appeng.api.implementations.ICraftingPatternItem))
+                continue;
+            TaskProgress task = tasks.get(
+                ((appeng.api.implementations.ICraftingPatternItem) stack.getItem())
+                    .getPatternForItem(stack.getItemStack(), getWorld()));
+            if (task != null) ((ProgressAccess) (Object) task).hn$share(true)
+                .read(row);
+        }
     }
 
     @Unique
@@ -148,7 +176,18 @@ public abstract class CpuMixin implements CpuBatchStats {
 
     @Inject(method = "executeCrafting", at = @At("HEAD"))
     private void aeo$dispatch(IEnergyGrid energy, CraftingGridCache cache, CallbackInfo ci) {
-        if (suspended || !aeo$origin.enabled(getGrid())) return;
+        if (suspended) return;
+        if (!aeo$origin.enabled(getGrid())) {
+            if (hn$hadRoutes) {
+                for (TaskProgress task : tasks.values()) {
+                    TunnelShare share = ((ProgressAccess) (Object) task).hn$share(false);
+                    if (share != null) share.clear();
+                }
+                hn$hadRoutes = false;
+                markDirty();
+            }
+            return;
+        }
         long tick = getWorld().getTotalWorldTime();
         if (tick != aeo$tick) {
             aeo$tick = tick;
@@ -183,8 +222,12 @@ public abstract class CpuMixin implements CpuBatchStats {
             List<IAEStack<?>> inputs = getExpandedCondensedInputs(pattern, cache);
             List<IAEStack<?>> slots = getExpandedInputs(pattern, cache);
             if (inputs == null || slots == null) throw new IllegalStateException("AEO input-only expansion failed");
+            TunnelDispatch route = TunnelDispatch.inspect(mediums, progress);
+            hn$hadRoutes |= route != null;
+            boolean extended = false;
             while (progress.aeo$get() > 0 && remainingOperations > 0 && aeo$transactions < 64) {
                 long max = Math.min(progress.aeo$get(), Math.max(1, Math.min(4096, accelerator)));
+                long funded = progress.aeo$get();
                 double unitEnergy = 0;
                 for (IAEStack<?> input : inputs) {
                     if (input.getStackSize() <= 0) throw new IllegalStateException("AEO invalid input amount");
@@ -192,8 +235,10 @@ public abstract class CpuMixin implements CpuBatchStats {
                         input.copy()
                             .setStackSize(Long.MAX_VALUE),
                         Actionable.SIMULATE);
-                    max = Math.min(max, (available == null ? 0 : available.getStackSize()) / input.getStackSize());
+                    funded = Math
+                        .min(funded, (available == null ? 0 : available.getStackSize()) / input.getStackSize());
                 }
+                max = Math.min(max, funded);
                 for (IAEStack<?> slot : slots) if (slot != null) {
                     unitEnergy += (double) slot.getStackSize() / slot.getAmountPerUnit();
                     max = Math.min(max, Integer.MAX_VALUE / slot.getStackSize());
@@ -206,11 +251,12 @@ public abstract class CpuMixin implements CpuBatchStats {
                 }
                 boolean accepted = false;
                 int firstMedium = aeo$nextMedium.getOrDefault(pattern, 0) % mediums.size();
-                for (int offset = 0; offset < mediums.size(); offset++) {
+                List<ICraftingMedium> ordered = route == null ? mediums : route.order(firstMedium);
+                for (int offset = 0; offset < ordered.size(); offset++) {
                     int mediumIndex = (firstMedium + offset) % mediums.size();
-                    ICraftingMedium medium = mediums.get(mediumIndex);
-                    if (medium.isBusy()) continue;
-                    long count = max;
+                    ICraftingMedium medium = route == null ? mediums.get(mediumIndex) : ordered.get(offset);
+                    long count = route == null ? max : route.allowance(medium, max, tick);
+                    if (count <= 0 || medium.isBusy()) continue;
                     BatchLimitSettings limits = medium instanceof BatchLimitSettings ? (BatchLimitSettings) medium
                         : null;
                     boolean limited = limits != null && limits.hasBatchLimitCard();
@@ -277,6 +323,10 @@ public abstract class CpuMixin implements CpuBatchStats {
                                 input.copy()
                                     .setStackSize(Math.multiplyExact(input.getStackSize(), count)),
                                 machineSrc);
+                            if (route != null) {
+                                route.accepted(medium, count);
+                                mediumIndex = mediums.indexOf(medium);
+                            }
                             aeo$nextMedium.put(pattern, (mediumIndex + 1) % mediums.size());
                             reasonProvider.remove(pattern);
                             remainingOperations--;
@@ -295,7 +345,11 @@ public abstract class CpuMixin implements CpuBatchStats {
                     }
                     if (accepted) break;
                 }
-                if (!accepted) break;
+                if (!accepted) {
+                    if (extended || route == null || !route.extend(max, funded)) break;
+                    extended = true;
+                    markDirty();
+                } else extended = false;
             }
             if (progress.aeo$get() == 0) {
                 tasks.remove(pattern);

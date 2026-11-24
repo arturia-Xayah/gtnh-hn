@@ -39,16 +39,22 @@ final class MixedOutputGui extends MTEHatchBaseGui<MixedOutputBus> {
     @Override
     protected ParentWidget<?> createContentSection(ModularPanel panel, PanelSyncManager sync) {
         ParentWidget<?> area = getEmptyContent();
-        area.child(
-            new ItemSlot().pos(0, 0)
-                .slot(new ModularSlot(machine.inventoryHandler, 0).singletonSlotGroup())
-                .addTooltipLine(MixedOutputBus.tr("cell")));
-        area.child(
-            new TextWidget<>(IKey.str(MixedOutputBus.tr("cell.short"))).pos(22, 0)
-                .size(170, 18));
+        cellSlot(area, MixedOutputBus.ITEM_SLOT, "itemCell", 0);
+        cellSlot(area, MixedOutputBus.FLUID_SLOT, "fluidCell", 98);
         row(area, machine.getProvider(), "items", 22);
         row(area, machine.fluids, "fluids", 62);
         return area;
+    }
+
+    private void cellSlot(ParentWidget<?> area, int slot, String label, int x) {
+        String name = MixedOutputBus.tr(label);
+        area.child(
+            new ItemSlot().pos(x, 0)
+                .slot(new ModularSlot(machine.inventoryHandler, slot).singletonSlotGroup())
+                .addTooltipLine(name));
+        area.child(
+            new TextWidget<>(IKey.str(name)).pos(x + 20, 0)
+                .size(76, 18));
     }
 
     private void row(ParentWidget<?> area, MTEHatchOutputMEBase<?> provider, String channel, int y) {

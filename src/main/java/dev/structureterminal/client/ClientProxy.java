@@ -18,11 +18,6 @@ public final class ClientProxy extends CommonProxy {
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, net.minecraft.world.World world, int x, int y,
         int z) {
-        if (id == dev.structureterminal.stocking.MixedInputs.GUI) {
-            dev.structureterminal.stocking.MixedInputBus bus = dev.structureterminal.stocking.MixedInputs
-                .at(world, x, y, z);
-            return bus == null ? null : new MixedInputScreen(player, bus);
-        }
         if (id == dev.structureterminal.projection.ProjectorMenu.ID) {
             dev.structureterminal.projection.ProjectorMenu menu = dev.structureterminal.projection.ProjectorMenu
                 .at(world, x, y, z);

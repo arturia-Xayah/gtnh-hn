@@ -87,6 +87,20 @@ public final class VaultConstructable implements IMultiblockInfoContainer<TileCo
 
     private ExtendedFacing facing(TileController tile, ExtendedFacing fallback) {
         World world = tile.getWorldObj();
+        // BlockRenderer places an ItemBlock with damage zero and does not call onBlockPlacedBy.
+        if (world.getClass()
+            .getName()
+            .equals("blockrenderer6343.client.world.TrackedDummyWorld")) {
+            if (world.getBlock(tile.xCoord, tile.yCoord, tile.zCoord) == VaultMod.CONTROLLER)
+                world.setBlockMetadataWithNotify(
+                    tile.xCoord,
+                    tile.yCoord,
+                    tile.zCoord,
+                    fallback.getDirection()
+                        .ordinal(),
+                    2);
+            return fallback;
+        }
         return world.getBlock(tile.xCoord, tile.yCoord, tile.zCoord) == VaultMod.CONTROLLER ? ExtendedFacing.of(
             net.minecraftforge.common.util.ForgeDirection
                 .getOrientation(world.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord)))

@@ -19,7 +19,7 @@ import dev.structureterminal.Tags;
 
 @Mod(
     modid = OrderOptimizer.ID,
-    name = "GTNH-HN · AE下单优化",
+    name = dev.structureterminal.StructureTerminal.DISPLAY_NAME,
     version = Tags.VERSION,
     dependencies = "required-after:structureterminal;required-after:appliedenergistics2;required-after:unimixins",
     acceptedMinecraftVersions = "[1.7.10]")
@@ -36,11 +36,13 @@ public final class OrderOptimizer {
     @Mod.EventHandler
     public void preInit(cpw.mods.fml.common.event.FMLPreInitializationEvent event) {
         dev.aeoptimizer.dispatch.ItemBatchLimitCard.register();
+        dev.aeoptimizer.storage.ItemDualStorageBus.register();
     }
 
     @Mod.EventHandler
     public void postInit(cpw.mods.fml.common.event.FMLPostInitializationEvent event) {
         dev.aeoptimizer.dispatch.ItemBatchLimitCard.registerHosts();
+        dev.aeoptimizer.storage.ItemDualStorageBus.setup();
     }
 
     @Mod.EventHandler

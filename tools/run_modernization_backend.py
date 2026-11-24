@@ -12,6 +12,7 @@ from summarize_pack_validation import classify
 
 EXCLUDED = ('structureterminal','aeorderoptimizer','aeoptimizer','aeorderbench','plasmaforgepower','aestoragevault','gtnh-modernization','gtnh-hn')
 SUITES = {
+    "dual_bus": ("dual-bus-validation", ["-Dstructureterminal.dualBusTests=true"], ["dual-bus-tests.json"]),
     "multi_output": ("multi-output-validation", ["-Dstructureterminal.multiOutputTests=true"], ["multi-output-tests.json"]),
     "mixed_output": ("mixed-output-validation", ["-Dstructureterminal.mixedOutputTests=true"], ["mixed-output-tests.json"]),
     'smart_blocking': ('smart-blocking-validation', ['-Dstructureterminal.smartBlockingTests=true'], ['smart-blocking-tests.json']),

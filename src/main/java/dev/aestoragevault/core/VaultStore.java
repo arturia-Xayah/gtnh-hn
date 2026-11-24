@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -53,7 +52,7 @@ public final class VaultStore implements Closeable {
     private final Map<UUID, PendingReturn> pendingReturns = new HashMap<>();
     private BigInteger returnedBytes = BigInteger.ZERO;
     private final RandomAccessFile wal;
-    private FileLock lock;
+    private final VaultWriterLock writer;
     private boolean needsFlush;
     private BigInteger used = BigInteger.ZERO;
     private final Map<String, BigInteger> channelUnits = new HashMap<>();
@@ -67,21 +66,35 @@ public final class VaultStore implements Closeable {
     public VaultStore(Path folder, UUID id, boolean create) throws IOException {
         this.id = id;
         Files.createDirectories(folder);
+        folder = folder.toRealPath();
         snapshot = folder.resolve(id + ".snapshot");
         journal = folder.resolve(id + ".wal");
-        if (!create && (!Files.exists(snapshot) || !Files.exists(journal)))
-            throw new IOException("Missing external inventory " + id + "; refusing to create an empty replacement");
-        if (Files.exists(snapshot)) readSnapshot();
-        wal = new RandomAccessFile(journal.toFile(), "rw");
+        Path locks = folder.resolve(".writer-locks");
+        if (folder.endsWith(java.nio.file.Paths.get("data", "aestoragevault"))) {
+            // A normal world backup can open and close every file inside the world in this JVM.
+            Path world = folder.getParent()
+                .getParent();
+            if (world.getFileName() != null) {
+                locks = world.resolveSibling(".gtnh-hn-vault-locks")
+                    .resolve(world.getFileName());
+            }
+        }
+        writer = VaultWriterLock.acquire(locks.resolve(id + ".lock"));
         try {
-            lock = wal.getChannel()
-                .tryLock();
-            if (lock == null) throw new IOException("Inventory is already open in another process");
-            replay();
-            pendingBytes = wal.length();
-            if (create && !Files.exists(snapshot)) checkpoint();
-        } catch (IOException | RuntimeException e) {
-            wal.close();
+            if (!create && (!Files.exists(snapshot) || !Files.exists(journal)))
+                throw new IOException("Missing external inventory " + id + "; refusing to create an empty replacement");
+            if (Files.exists(snapshot)) readSnapshot();
+            wal = new RandomAccessFile(journal.toFile(), "rw");
+            try {
+                replay();
+                pendingBytes = wal.length();
+                if (create && !Files.exists(snapshot)) checkpoint();
+            } catch (IOException | RuntimeException | Error e) {
+                wal.close();
+                throw e;
+            }
+        } catch (IOException | RuntimeException | Error e) {
+            writer.close();
             throw e;
         }
     }
@@ -632,7 +645,11 @@ public final class VaultStore implements Closeable {
                 .sync();
         } finally {
             failed = true;
-            wal.close();
+            try {
+                wal.close();
+            } finally {
+                writer.close();
+            }
         }
     }
 

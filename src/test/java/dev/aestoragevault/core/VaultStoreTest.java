@@ -510,6 +510,43 @@ public class VaultStoreTest {
     }
 
     @Test
+    public void onlineBackupCanReadWalWhileAnotherWriterIsExcluded() throws Exception {
+        Path live = folder().resolve("live/data/aestoragevault");
+        Path copy = folder().resolve("restore/data/aestoragevault");
+        Files.createDirectories(copy);
+        try (VaultStore s = new VaultStore(live, id, true)) {
+            s.absorb(UUID.randomUUID(), 120, Collections.emptyMap());
+            s.insert(item(1), 13, false);
+            s.insert(fluid(2), 1000, false);
+            s.flush();
+            Path wal = live.resolve(id + ".wal");
+            try (java.nio.channels.FileChannel reader = java.nio.channels.FileChannel.open(wal);
+                java.nio.channels.FileLock readable = reader.tryLock(0, Files.size(wal), true)) {
+                assertTrue(readable != null && readable.isValid());
+                Files.copy(wal, copy.resolve(wal.getFileName()));
+            }
+            Files.copy(live.resolve(id + ".snapshot"), copy.resolve(id + ".snapshot"));
+            // Reading and closing all world files must not release exclusive ownership of the original.
+            try (java.util.stream.Stream<Path> files = Files.list(live)) {
+                assertEquals(2, files.count());
+            }
+            try (VaultStore restored = new VaultStore(copy, id, false)) {
+                assertEquals(BigInteger.valueOf(120), restored.capacity());
+                assertEquals(13, restored.amount(item(1)));
+                assertEquals(1000, restored.amount(fluid(2)));
+            }
+            try {
+                new VaultStore(live, id, false);
+                fail("backup released live writer lock");
+            } catch (java.nio.channels.OverlappingFileLockException expected) {}
+            assertEquals(2, s.insert(item(1), 2, false));
+        }
+        try (VaultStore reopened = new VaultStore(live, id, false)) {
+            assertEquals(15, reopened.amount(item(1)));
+        }
+    }
+
+    @Test
     public void secondFileHandleCannotMountSameInventory() throws Exception {
         try (VaultStore s = create(1)) {
             try {

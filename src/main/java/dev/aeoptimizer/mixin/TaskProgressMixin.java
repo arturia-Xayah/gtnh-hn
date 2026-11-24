@@ -7,11 +7,13 @@ import java.util.Map;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import appeng.me.cluster.implementations.CraftingCPUCluster.TaskProgress;
 import appeng.me.cluster.implementations.CraftingCPUCluster.TaskProgress.SessionCraftCount;
 import appeng.me.diagnostics.CraftingDiagnosticSessionId;
 import dev.aeoptimizer.api.ProgressAccess;
+import dev.aeoptimizer.dispatch.TunnelShare;
 
 @Mixin(value = TaskProgress.class, remap = false)
 public abstract class TaskProgressMixin implements ProgressAccess {
@@ -21,6 +23,14 @@ public abstract class TaskProgressMixin implements ProgressAccess {
     @Shadow
     @Final
     protected LinkedList<SessionCraftCount> diagnosticSessionCrafts;
+
+    @Unique
+    private TunnelShare hn$shares;
+
+    public TunnelShare hn$share(boolean create) {
+        if (hn$shares == null && create) hn$shares = new TunnelShare();
+        return hn$shares;
+    }
 
     public long aeo$get() {
         return value;

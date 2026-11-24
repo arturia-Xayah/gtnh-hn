@@ -141,7 +141,7 @@ public final class MixedOutputChecks {
             .check(reactor, world, x + 2, y, z);
     }
 
-    private void structures() {
+    private void structures() throws Exception {
         HatchElementBuilder<MTEMultiBlockBase> busPosition = GTStructureUtility.<MTEMultiBlockBase>buildHatchAdder()
             .anyOf(HatchElement.OutputBus)
             .casingIndex(176)
@@ -216,12 +216,48 @@ public final class MixedOutputChecks {
                     .contains(formed.fluidEndpoint),
             "formed native endpoint discovery");
         check(
+            !formed.getProxy()
+                .isActive(),
+            "LCR output offline");
+        formed.inventoryHandler.setStackInSlot(
+            MixedOutputBus.FLUID_SLOT,
+            new ItemStack(com.glodblock.github.loader.ItemAndBlockHolder.CELL16384KM));
+        formed.fluids.updateCell();
+        FluidStack acid = gregtech.api.enums.Materials.HydrochloricAcid.getFluid(1000);
+        java.lang.reflect.Method finishFluids = MTEMultiBlockBase.class
+            .getDeclaredMethod("addFluidOutputs", FluidStack[].class);
+        finishFluids.setAccessible(true);
+        check(
+            (boolean) finishFluids.invoke(reactor, (Object) new FluidStack[] { acid.copy() }),
+            "offline LCR acid ejection");
+        formed.fluids.flushCachedStack();
+        NBTTagCompound hud = new NBTTagCompound();
+        formed.getWailaNBTData(
+            player,
+            (net.minecraft.tileentity.TileEntity) formed.getBaseMetaTileEntity(),
+            hud,
+            world,
+            x,
+            y,
+            z);
+        NBTTagCompound fluidHud = hud.getCompoundTag("hnFluidView");
+        NBTTagCompound acidRow = fluidHud.getTagList("stacks", 10)
+            .getCompoundTagAt(0);
+        check(
+            hud.getInteger("stackCount") == 0 && fluidHud.getLong("buffered") == 1000
+                && acidRow.getLong("Amount") == 1000
+                && AEFluidStack.loadFluidStackFromNBT(acidRow)
+                    .getFluid() == acid.getFluid(),
+            "Waila distinguishes empty items and 1000 mB acid offline");
+        tests.add(
+            "Offline formed LCR, 16384k multi-fluid cell: 1000 mB hydrochloric acid retained after flush and listed in Waila");
+        check(
             reactor.addItemOutputs(new ItemStack[] { new ItemStack(Items.gold_ingot, 13) }),
             "LCR native item ejection");
         check(reactor.addOutputAtomic(new FluidStack(FluidRegistry.LAVA, 123)), "LCR native fluid ejection");
         check(
             formed.getProvider()
-                .getCachedAmount() == 13 && formed.fluids.getCachedAmount() == 123,
+                .getCachedAmount() == 13 && formed.fluids.getCachedAmount() == 1123,
             "native LCR conserves both outputs");
         tests.add("real LCR construction/forms/independent native item + fluid ejection");
     }
@@ -307,11 +343,70 @@ public final class MixedOutputChecks {
         tests.add("NBT round trip preserves both overfull caches, channel settings, and a single AE node");
     }
 
+    private void cellPersistence(ItemStack itemCell, ItemStack fluidCell) {
+        MixedOutputBus isolated = (MixedOutputBus) place(MixedOutputs.bus.getStackForm(1), x + 7, y, z);
+        isolated.inventoryHandler.setStackInSlot(0, itemCell.copy());
+        isolated.inventoryHandler.setStackInSlot(1, fluidCell.copy());
+        check(
+            !isolated.getProxy()
+                .isActive(),
+            "dual-cell capacity test offline");
+        for (int i = 0; i < 32; i++) {
+            check(isolated.storePartial(new ItemStack(Items.diamond, 64), false), "offline item output");
+        }
+        check(
+            isolated.fluidEndpoint.storePartial(new FluidStack(FluidRegistry.WATER, 256000), false),
+            "offline fluid output");
+        check(
+            isolated.getProvider()
+                .getCachedAmount() == 2048 && isolated.fluids.getCachedAmount() == 256000,
+            "simultaneously buffer more than both native defaults");
+        net.minecraft.tileentity.TileEntity tile = world.getTileEntity(x + 7, y, z);
+        NBTTagCompound saved = new NBTTagCompound();
+        tile.writeToNBT(saved);
+        tile.readFromNBT(saved);
+        MixedOutputBus restored = (MixedOutputBus) ((IGregTechTileEntity) tile).getMetaTileEntity();
+        check(
+            ItemStack.areItemStacksEqual(itemCell, restored.getCellStack())
+                && ItemStack.areItemStacksEqual(fluidCell, restored.fluidCell()),
+            "both physical cells survive GT inventory reload");
+        check(restored.isFiltered() && restored.fluids.isFiltered(), "both partitions survive reload");
+        check(
+            restored.getProvider()
+                .getCachedAmount() == 2048 && restored.fluids.getCachedAmount() == 256000,
+            "all buffered outputs survive world reload");
+        tests.add("Disconnected dual output retains 2,048 items and 256,000 mB across a GT tile reload");
+        // Recreate the previous format by removing the item cell and storing the complete fluid cell in slot zero.
+        net.minecraft.nbt.NBTTagList old = new net.minecraft.nbt.NBTTagList();
+        NBTTagCompound entry = new NBTTagCompound();
+        fluidCell.writeToNBT(entry);
+        entry.setInteger("IntSlot", 0);
+        old.appendTag(entry);
+        saved.setTag("Inventory", old);
+        tile.readFromNBT(saved);
+        restored = (MixedOutputBus) ((IGregTechTileEntity) tile).getMetaTileEntity();
+        check(
+            restored.getCellStack() == null && ItemStack.areItemStacksEqual(fluidCell, restored.fluidCell())
+                && restored.fluids.isFiltered(),
+            "old shared slot moves the entire partitioned fluid cell");
+        NBTTagCompound migrated = new NBTTagCompound();
+        tile.writeToNBT(migrated);
+        check(
+            migrated.getTagList("Inventory", 10)
+                .tagCount() == 1
+                && migrated.getTagList("Inventory", 10)
+                    .getCompoundTagAt(0)
+                    .getInteger("IntSlot") == 1,
+            "migrated world saves exactly one fluid cell in slot one");
+        world.setBlockToAir(x + 7, y, z);
+        tests.add("GT tile save/load preserves both cells and migrates the old shared slot without duplication");
+    }
+
     private void filters() throws Exception {
         ItemStack itemCell = AEApi.instance()
             .definitions()
             .items()
-            .cell1k()
+            .cell64k()
             .maybeStack(1)
             .get();
         ((appeng.api.storage.ICellWorkbenchItem) itemCell.getItem()).getConfigAEInventory(itemCell)
@@ -329,13 +424,21 @@ public final class MixedOutputChecks {
             "item partition does not filter fluids");
         check(bus.fluids.getCacheCapacity() == 16000, "item cell affects only item capacity");
         Item fluidItem = (Item) Class.forName("com.glodblock.github.loader.ItemAndBlockHolder")
-            .getField("CELL1K")
+            .getField("CELL16384KM")
             .get(null);
         ItemStack fluidCell = new ItemStack(fluidItem);
         ((appeng.api.storage.ICellWorkbenchItem) fluidItem).getConfigAEInventory(fluidCell)
             .putAEStackInSlot(0, AEFluidStack.create(new FluidStack(FluidRegistry.WATER, 1)));
-        bus.inventoryHandler.setStackInSlot(0, fluidCell);
-        bus.onContentsChanged(0);
+        check(bus.getSizeInventory() == 2 && bus.inventoryHandler.getSlots() == 2, "two native inventory slots");
+        MetaTileEntity nativeBus = place(ItemList.Hatch_Output_Bus_ME.get(1), x + 9, y, z);
+        check(nativeBus.getSizeInventory() == 1, "unmodified GT bus retains one slot");
+        world.setBlockToAir(x + 9, y, z);
+        check(
+            bus.inventoryHandler.isItemValid(0, itemCell) && bus.inventoryHandler.isItemValid(1, fluidCell)
+                && !bus.inventoryHandler.isItemValid(1, itemCell)
+                && !bus.inventoryHandler.isItemValid(0, fluidCell),
+            "GUI slots enforce channel type");
+        bus.inventoryHandler.setStackInSlot(1, fluidCell);
         bus.getProvider()
             .updateCell();
         bus.fluids.updateCell();
@@ -346,12 +449,30 @@ public final class MixedOutputChecks {
         check(
             bus.fluidEndpoint.storePartial(new FluidStack(FluidRegistry.WATER, 1), true),
             "partition accepts matching fluid in simulation");
-        check(bus.storePartial(new ItemStack(Items.gold_ingot, 1), true), "fluid partition does not filter items");
+        check(
+            bus.isFiltered() && !bus.storePartial(new ItemStack(Items.gold_ingot, 1), true),
+            "adding fluid cell preserves item partition");
         check(
             bus.getProvider()
-                .getCacheCapacity() == 16000,
-            "fluid cell affects only fluid capacity");
+                .getCacheCapacity() > 16000 && bus.fluids.getCacheCapacity() > 16000,
+            "both capacities upgraded simultaneously");
+        bus.getProvider()
+            .setCacheMode(true);
         bus.fluids.setCacheMode(true);
+        check(
+            bus.getCellArray(appeng.api.storage.StorageChannel.ITEMS)
+                .size() == 1,
+            "item cache exposed alongside fluid cache");
+        cellPersistence(itemCell, fluidCell);
+        bus.inventoryHandler.setStackInSlot(0, null);
+        check(
+            bus.getProvider()
+                .getCacheCapacity() == 16000 && bus.fluids.getCacheCapacity() > 16000
+                && bus.fluids.isFiltered(),
+            "removing only the item cell leaves fluid capacity and partition intact");
+        check(bus.storePartial(new ItemStack(Items.gold_ingot, 1), true), "item channel accepts again after removal");
+        bus.getProvider()
+            .setCacheMode(false);
         check(
             bus.getCellArray(appeng.api.storage.StorageChannel.FLUIDS)
                 .size() == 1,
@@ -361,14 +482,13 @@ public final class MixedOutputChecks {
                 .isEmpty(),
             "no phantom item cache cell");
         bus.fluids.setCacheMode(false);
-        bus.inventoryHandler.setStackInSlot(0, null);
-        bus.onContentsChanged(0);
+        bus.inventoryHandler.setStackInSlot(1, null);
         bus.getProvider()
             .updateCell();
         bus.fluids.updateCell();
         conservation(0);
         tests.add(
-            "12 upgrade/filter checks: native item/fluid partitions, optimizer retains filters, channel isolation and AE fluid cache exposure");
+            "Dual cell slots: simultaneous expansion, filters, AE cache exposure, removal isolation and native bus compatibility");
     }
 
     private void performance() {

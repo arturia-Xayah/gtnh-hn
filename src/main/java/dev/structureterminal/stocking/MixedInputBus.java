@@ -7,6 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.glodblock.github.common.item.ItemFluidPacket;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.storage.StorageName;
@@ -19,17 +25,22 @@ import appeng.tile.inventory.IIAEStackInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
-import dev.structureterminal.StructureTerminal;
+import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity.SkipGenerateDescription;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.MTEMultiBlockBase;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.SimpleCheckRecipeResult;
+import gregtech.api.render.TextureFactory;
+import gregtech.api.util.GTUtility;
 import gregtech.api.util.shutdown.ShutDownReasonRegistry;
+import gregtech.common.gui.modularui.hatch.MTEHatchInputBusMEGui;
 import gregtech.common.tileentities.machines.MTEHatchInputBusME;
 
 /** Native stocking bus with one shared set of sixteen item/fluid filters. */
+@SkipGenerateDescription
 public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStackInventory {
 
     public final IAEStackInventory filters = new IAEStackInventory(this, SLOT_COUNT, StorageName.CONFIG);
@@ -53,22 +64,57 @@ public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStack
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[] { net.minecraft.util.StatCollector.translateToLocal("mixed.input.description"),
-            net.minecraft.util.StatCollector
-                .translateToLocal(autoPullAvailable ? "mixed.input.advanced" : "mixed.input.basic") };
+    public ITexture[] getTexturesActive(ITexture base) {
+        return new ITexture[] { base, TextureFactory.of(BlockIcons.OVERLAY_ME_INPUT_FLUID_HATCH_ACTIVE),
+            TextureFactory.of(BlockIcons.OVERLAY_PIPE_IN) };
     }
 
     @Override
-    public boolean onRightclick(IGregTechTileEntity base, EntityPlayer player) {
-        if (base.isServerSide()) player.openGui(
-            StructureTerminal.instance,
-            MixedInputs.GUI,
-            base.getWorld(),
-            base.getXCoord(),
-            base.getYCoord(),
-            base.getZCoord());
-        return true;
+    public ITexture[] getTexturesInactive(ITexture base) {
+        return new ITexture[] { base, TextureFactory.of(BlockIcons.OVERLAY_ME_INPUT_FLUID_HATCH),
+            TextureFactory.of(BlockIcons.OVERLAY_PIPE_IN) };
+    }
+
+    @Override
+    public String[] getDescription() {
+        return new String[] { net.minecraft.util.StatCollector.translateToLocal("mixed.input.description"),
+            net.minecraft.util.StatCollector
+                .translateToLocal(autoPullAvailable ? "mixed.input.advanced" : "mixed.input.basic"),
+            net.minecraft.util.StatCollector.translateToLocal("mixed.input.reset") };
+    }
+
+    private long lastGuiPoll = Long.MIN_VALUE;
+    private final Slot[] guiSlots = new Slot[SLOT_COUNT];
+
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager sync, UISettings settings) {
+        if (getBaseMetaTileEntity().isServerSide()) {
+            updateGuiSnapshot();
+            sync.onServerTick(this::updateGuiSnapshot);
+        }
+        return new MTEHatchInputBusMEGui(this, guiSlots).build(data, sync, settings);
+    }
+
+    private void updateGuiSnapshot() {
+        long tick = getBaseMetaTileEntity().getWorld()
+            .getTotalWorldTime();
+        if (lastGuiPoll != Long.MIN_VALUE && tick >= lastGuiPoll && tick - lastGuiPoll < 10) return;
+        lastGuiPoll = tick;
+        if (!processingRecipe) updateAllInformationSlots();
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            IAEStack<?> filter = filters.getAEStackInSlot(i);
+            if (!(filter instanceof IAEFluidStack)) {
+                guiSlots[i] = slots[i];
+                continue;
+            }
+            FluidStack fluid = ((IAEFluidStack) filter).getFluidStack();
+            ItemStack icon = fluid.tag == null ? GTUtility.getFluidDisplayStack(fluid, false)
+                : ItemFluidPacket.newStack(fluid);
+            Slot view = new Slot(icon);
+            view.extractedAmount = fluidAmounts[i];
+            view.extracted = view.extractedAmount == 0 ? null : icon;
+            guiSlots[i] = view;
+        }
     }
 
     public void setFilter(int index, IAEStack<?> stack) {
@@ -95,6 +141,7 @@ public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStack
             IAEStack<?> stack = filters.getAEStackInSlot(i);
             super.setSlotConfig(i, stack instanceof IAEItemStack ? ((IAEItemStack) stack).getItemStack() : null);
         }
+        lastGuiPoll = Long.MIN_VALUE;
         bindWatcher();
         markDirty();
         notifyWatchers();
@@ -119,7 +166,11 @@ public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStack
 
     @Override
     public void setSlotConfig(int index, ItemStack config) {
-        setFilter(index, config == null ? null : AEItemStack.create(config));
+        FluidStack fluid = config != null && config.getItem() instanceof ItemFluidPacket
+            ? ItemFluidPacket.getFluidStack(config)
+            : GTUtility.getFluidFromDisplayStack(config);
+        if (fluid != null && fluid.amount <= 0) fluid.amount = 1;
+        setFilter(index, fluid == null ? AEItemStack.create(config) : AEFluidStack.create(fluid));
     }
 
     private void replaceFilters(IAEStack<?>[] next) {
@@ -185,7 +236,9 @@ public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStack
         super.updateAllInformationSlots();
         Arrays.fill(fluids, null);
         Arrays.fill(fluidAmounts, 0);
-        if (!isAllowedToWork()) return;
+        if (!isAllowedToWork()) {
+            return;
+        }
         try {
             for (int i = 0; i < SLOT_COUNT; i++) {
                 IAEStack<?> stack = filters.getAEStackInSlot(i);
@@ -262,15 +315,6 @@ public final class MixedInputBus extends MTEHatchInputBusME implements IIAEStack
             }
         }
         return 0;
-    }
-
-    public void refreshDisplay() {
-        if (!processingRecipe) updateAllInformationSlots();
-    }
-
-    public long displayedAmount(int slot) {
-        if (filters.getAEStackInSlot(slot) instanceof IAEFluidStack) return fluidAmounts[slot];
-        return slots[slot] == null ? 0 : slots[slot].extractedAmount;
     }
 
     @Override

@@ -9,6 +9,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -18,12 +19,13 @@ import dev.structureterminal.server.BuildService;
 
 @Mod(
     modid = StructureTerminal.ID,
-    name = "GTNH: Handy & Nimble",
+    name = StructureTerminal.DISPLAY_NAME,
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies = "required-after:structurelib@[1.4.45,);required-after:appliedenergistics2;required-after:unimixins;required-after:gregtech;required-after:modularui2")
 public final class StructureTerminal {
 
+    public static final String DISPLAY_NAME = "GTNH-HN";
     public static final String ID = "structureterminal";
     @Mod.Instance(ID)
     public static StructureTerminal instance;
@@ -70,6 +72,11 @@ public final class StructureTerminal {
         Item projector = GameRegistry.findItem("structurelib", "item.structurelib.constructableTrigger");
         if (projector != null) GameRegistry
             .addShapelessRecipe(new ItemStack(item), new ItemStack(projector), Items.ender_pearl, Items.book);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        dev.structureterminal.stocking.MixedInputs.registerRecipes();
     }
 
     @Mod.EventHandler

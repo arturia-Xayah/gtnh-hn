@@ -6,7 +6,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('compileJava', JavaCompile) { options.release = 8 }
 tasks.named('compileTestJava', JavaCompile) { options.release = 8 }
 tasks.named('compileInjectedTagsJava', JavaCompile) { options.release = 8 }
-version = '0.4.1'
+version = '0.4.2'
 
 
 ext.modVersion = version
@@ -103,7 +103,7 @@ tasks.register('verifyDistribution') {
             if (!zip.getEntry('dev/structureterminal/update/UpdateInstaller.class'))
                 throw new GradleException('Missing standalone update helper')
             def mods = new groovy.json.JsonSlurper().parse(zip.getInputStream(zip.getEntry('mcmod.info'))).modList
-            if (!mods.every { it.modid == 'structureterminal' ? it.name == 'GTNH: Handy & Nimble' : it.name.startsWith('GTNH-HN ·') })
+            if (!mods.every { it.name == 'GTNH-HN' })
                 throw new GradleException('GTNH-HN display names are inconsistent')
             if (!mods.every { it.url == 'https://github.com/arturia-Xayah/gtnh-hn' })
                 throw new GradleException('GTNH-HN project URL is inconsistent')

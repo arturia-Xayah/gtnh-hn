@@ -4,7 +4,7 @@
 
 [Project home](../../README.en.md) · [简体中文](README.md)
 
-This guide covers **GTNH-HN 0.4.1 / GTNH 2.9.1**. Features have separate pages and language switches; the documentation is versioned with the repository. Start with [Installation and upgrading](en/installation.md).
+This guide covers **GTNH-HN 0.4.2 / GTNH 2.9.1**. Features have separate pages and language switches; the documentation is versioned with the repository. Start with [Installation and upgrading](en/installation.md).
 
 [Installation and updates](#installation-and-updates) · [Building and machine controls](#building-and-machine-controls) · [AE networks and automation](#ae-networks-and-automation) · [ME storage](#me-storage) · [Portals and scenes](#portals-and-scenes) · [Compatibility and configuration](#compatibility-and-configuration) · [Project resources](#project-resources)
 
@@ -32,6 +32,7 @@ Pattern editing, device packing, crafting dispatch and stock monitoring.
 - [ME Packing Tape](en/packing-tape.md)
 - [AE order optimization](en/ae-ordering.md)
 - [ME Advanced Level Emitter](en/level-emitter.md)
+- [ME Dual Storage Bus](en/dual-storage-bus.md)
 - [Dual ME Stocking Input Bus](en/dual-input-bus.md)
 - [Dual ME Output Bus](en/dual-output-bus.md)
 

@@ -3,7 +3,7 @@
   "modList": [
     {
       "modid": "structureterminal",
-      "name": "GTNH: Handy & Nimble",
+      "name": "GTNH-HN",
       "description": "结构终端、AE下单优化、原料合成标记、锻炉与聚变功率控制、ME容量仓库。",
       "version": "${modVersion}",
       "mcversion": "${minecraftVersion}",
@@ -17,7 +17,7 @@
     },
     {
       "modid": "aeorderoptimizer",
-      "name": "GTNH-HN · AE下单优化",
+      "name": "GTNH-HN",
       "description": "按网络启用下单计算与批量发配。",
       "version": "${modVersion}",
       "mcversion": "${minecraftVersion}",
@@ -31,7 +31,7 @@
     },
     {
       "modid": "plasmaforgepower",
-      "name": "GTNH-HN · 功率控制",
+      "name": "GTNH-HN",
       "description": "锻炉、普通聚变及压缩聚变的分色功率预算。",
       "version": "${modVersion}",
       "mcversion": "${minecraftVersion}",
@@ -45,7 +45,7 @@
     },
     {
       "modid": "aestoragevault",
-      "name": "GTNH-HN · ME容量仓库",
+      "name": "GTNH-HN",
       "description": "吸收存储元件扩容、迁移库存并使用外部存储文件。",
       "version": "${modVersion}",
       "mcversion": "${minecraftVersion}",

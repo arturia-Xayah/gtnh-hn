@@ -36,11 +36,7 @@ public final class BundleChecks {
                 .get(id);
             check(container != null, "missing module " + id);
             check(Tags.VERSION.equals(container.getVersion()), "module version mismatch " + id);
-            check(
-                ("structureterminal".equals(id) ? "GTNH: Handy & Nimble".equals(container.getName())
-                    : container.getName()
-                        .startsWith("GTNH-HN ·")),
-                "old display name " + id);
+            check("GTNH-HN".equals(container.getName()), "display name mismatch " + id);
             check(
                 "assets/structureterminal/textures/items/structure_terminal_logo.png"
                     .equals(container.getMetadata().logoFile),
@@ -90,6 +86,9 @@ public final class BundleChecks {
         if (Boolean.getBoolean("structureterminal.smartBlockingTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
             .bus()
             .register(new SmartBlockingChecks());
+        if (Boolean.getBoolean("structureterminal.dualBusTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new DualBusChecks());
         if (Boolean.getBoolean("structureterminal.emitterTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
             .bus()
             .register(new EmitterChecks());

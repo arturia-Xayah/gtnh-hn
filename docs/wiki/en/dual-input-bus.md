@@ -6,7 +6,16 @@
 
 ## Crafting and slots
 
-The basic and advanced variants each combine the corresponding native ME stocking item bus and fluid hatch in a shapeless recipe. Both share 16 item-or-fluid filter slots, with available amounts shown on the right, and retain the manual item slot, circuit slot, colouring and configuration copying.
+Both recipes run in the Assembler at EV (1,920 EU/t). Use unhoused ME storage components and any IV-tier circuit.
+
+| Output | Ingredients | Base duration |
+|---|---|---|
+| Dual ME Stocking Input Bus | 1 Stocking Input Bus (ME), 4 IV circuits, 16 16k item storage components and 16 16k fluid storage components | 60 seconds |
+| Advanced Dual ME Stocking Input Bus | 1 basic Dual ME Stocking Input Bus, 16 IV circuits, 8 64k item storage components and 8 64k fluid storage components | 120 seconds |
+
+Place a configured dual input bus alone in the inventory crafting grid or a crafting table. Take the same tier of bus to reset filters, virtual circuit, colour, connection sides and auto-pull settings. The custom name, covers, upgrades and manual-slot items are retained.
+
+Both share 16 item-or-fluid filter slots, with available amounts shown on the right, and retain the manual item slot, circuit slot, colouring and configuration copying.
 
 ## Auto-pull and machine support
 

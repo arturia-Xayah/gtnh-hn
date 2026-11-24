@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import appeng.api.implementations.tiles.ICraftingMachine;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.helpers.DualityInterface;
+import appeng.parts.p2p.PartP2PInterface;
 import dev.aeoptimizer.dispatch.BatchContext;
 import dev.aeoptimizer.dispatch.BatchLimitSettings;
 import dev.aeoptimizer.dispatch.BatchLimits;
@@ -49,8 +50,10 @@ public abstract class DualityMixin implements BatchLimitSettings {
     }
 
     public boolean hasBatchLimitCard() {
-        return ItemBatchLimitCard.TYPE != null
-            && ((DualityInterface) (Object) this).getInstalledUpgrades(ItemBatchLimitCard.TYPE) > 0;
+        DualityInterface duality = (DualityInterface) (Object) this;
+        if (ItemBatchLimitCard.TYPE == null || duality.getInstalledUpgrades(ItemBatchLimitCard.TYPE) == 0) return false;
+        Object host = duality.getHost();
+        return !(host instanceof PartP2PInterface) || ((PartP2PInterface) host).isOutput();
     }
 
     public void setBatchLimits(long items, long fluids) {

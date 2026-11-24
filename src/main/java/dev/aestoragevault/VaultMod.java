@@ -34,7 +34,7 @@ import dev.structureterminal.Tags;
 
 @Mod(
     modid = VaultMod.ID,
-    name = "GTNH-HN · ME容量仓库",
+    name = dev.structureterminal.StructureTerminal.DISPLAY_NAME,
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies = "required-after:structureterminal;required-after:gregtech;required-after:appliedenergistics2")

@@ -3,16 +3,22 @@ package dev.modernization.packtest;
 import java.util.List;
 
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.glodblock.github.loader.ItemAndBlockHolder;
+
 import appeng.api.AEApi;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.container.ContainerNull;
 import appeng.tile.storage.TileDrive;
 import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
@@ -28,6 +34,8 @@ import gregtech.api.interfaces.IOutputTransaction;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.MTEMultiBlockBase;
+import gregtech.api.recipe.RecipeMaps;
+import gregtech.api.util.GTRecipe;
 import gregtech.api.util.GTUtility;
 import gregtech.common.tileentities.machines.outputme.MTEHatchOutputBusME;
 import gregtech.common.tileentities.machines.outputme.MTEHatchOutputME;
@@ -52,6 +60,36 @@ final class MachineChecks {
         this.y = y;
         this.z = z;
         this.tests = tests;
+        checkAssemblerRecipe(
+            ItemList.Hatch_Input_Bus_ME.get(1),
+            MixedInputs.basic,
+            AEApi.instance()
+                .definitions()
+                .materials()
+                .cell16kPart()
+                .maybeStack(16)
+                .get(),
+            new ItemStack(ItemAndBlockHolder.CELL_PART, 16, 2),
+            new ItemStack(ItemAndBlockHolder.CELL16K, 16),
+            4,
+            1200);
+        checkAssemblerRecipe(
+            MixedInputs.basic.getStackForm(1),
+            MixedInputs.advanced,
+            AEApi.instance()
+                .definitions()
+                .materials()
+                .cell64kPart()
+                .maybeStack(8)
+                .get(),
+            new ItemStack(ItemAndBlockHolder.CELL_PART, 8, 3),
+            new ItemStack(ItemAndBlockHolder.CELL64K, 8),
+            16,
+            2400);
+        tests.add("EV assembler consumes four stacks including the exact number of storage components at both tiers");
+        checkCraftingReset(MixedInputs.basic, 2, world);
+        checkCraftingReset(MixedInputs.advanced, 3, world);
+        tests.add("2x2 and 3x3 reset for both tiers, retaining the name, cover, upgrade and manual slot");
         subnet = drive.getProxy()
             .getStorage();
         drive.getInternalInventory()
@@ -76,6 +114,78 @@ final class MachineChecks {
             .loadNBTData(config);
         fluidOutput.getProvider()
             .loadNBTData(config);
+    }
+
+    private static void checkAssemblerRecipe(ItemStack bus, MixedInputBus output, ItemStack itemPart,
+        ItemStack fluidPart, ItemStack finishedFluidCell, int circuits, int ticks) {
+        ItemStack[] inputs = { bus, ItemList.Circuit_Elitenanocomputer.get(circuits), itemPart, fluidPart };
+        GTRecipe recipe = RecipeMaps.assemblerRecipes.findRecipeQuery()
+            .items(inputs)
+            .voltage(2048)
+            .find();
+        check(recipe != null && recipe.mOutputs[0].isItemEqual(output.getStackForm(1)), "find mixed input recipe");
+        check(
+            recipe.mDuration == ticks && recipe.mEUt == 1920 && recipe.mFluidInputs.length == 0,
+            "mixed input assembler time, power and fluids");
+        FluidStack[] dry = new FluidStack[0];
+        fluidPart.stackSize--;
+        check(!recipe.isRecipeInputEqual(false, false, dry, inputs), "one missing fluid component");
+        fluidPart.stackSize++;
+        inputs[3] = finishedFluidCell;
+        check(!recipe.isRecipeInputEqual(false, false, dry, inputs), "finished cell cannot replace a component");
+        inputs[3] = fluidPart;
+        check(recipe.isRecipeInputEqual(true, false, dry, inputs), "consume mixed input recipe");
+        for (ItemStack stack : inputs) check(stack.stackSize == 0, "exact mixed input ingredient counts");
+    }
+
+    private static void checkCraftingReset(MixedInputBus type, int size, WorldServer world) {
+        InventoryCrafting grid = new InventoryCrafting(new ContainerNull(), size, size);
+        ItemStack bus = type.getStackForm(1);
+        int pos = grid.getSizeInventory() - 1;
+        grid.setInventorySlotContents(pos, bus);
+        CraftingManager manager = CraftingManager.getInstance();
+        check(manager.findMatchingRecipe(grid, world) == null, "clean bus has no reset loop");
+        NBTTagCompound config = new NBTTagCompound();
+        config.setTag("mixedFilters", new NBTTagCompound());
+        config.setBoolean("autoStock", true);
+        config.setInteger("refreshTime", 800);
+        config.setByte("mColor", (byte) 12);
+        bus.setTagCompound(config);
+        ItemStack reset = manager.findMatchingRecipe(grid, world);
+        check(ItemStack.areItemStacksEqual(reset, type.getStackForm(1)), "reset yields plain bus of same tier");
+        check(config.getBoolean("autoStock") && config.hasKey("mixedFilters"), "preview changed source");
+        bus.setStackDisplayName("Assembly");
+        config.setByte("mOtherUpgrades", (byte) 1);
+        config.setTag("mCoverData", new NBTTagCompound());
+        config.setInteger("version", 1);
+        config.setBoolean("migrationCircuitSlot", true);
+        NBTTagList slots = new NBTTagList();
+        NBTTagCompound manual = new ItemStack(Items.diamond, 3).writeToNBT(new NBTTagCompound());
+        manual.setInteger("IntSlot", 1);
+        slots.appendTag(manual);
+        NBTTagCompound circuit = GTUtility.getIntegratedCircuit(12)
+            .writeToNBT(new NBTTagCompound());
+        circuit.setInteger("IntSlot", 0);
+        slots.appendTag(circuit);
+        config.setTag("Inventory", slots);
+        reset = manager.findMatchingRecipe(grid, world);
+        check(reset != null && reset.stackSize == 1 && reset.isItemEqual(bus), "decorated bus reset");
+        NBTTagCompound kept = reset.getTagCompound();
+        check(
+            reset.getDisplayName()
+                .equals("Assembly") && kept.getByte("mOtherUpgrades") == 1
+                && kept.hasKey("mCoverData")
+                && !kept.hasKey("mixedFilters")
+                && !kept.hasKey("autoStock")
+                && !kept.hasKey("refreshTime")
+                && !kept.hasKey("mColor"),
+            "only bus configuration removed");
+        NBTTagList remaining = kept.getTagList("Inventory", 10);
+        check(
+            remaining.tagCount() == 1 && manual.equals(remaining.getCompoundTagAt(0)) && slots.tagCount() == 2,
+            "real item retained and virtual circuit cleared");
+        grid.setInventorySlotContents(0, new ItemStack(Items.apple));
+        check(manager.findMatchingRecipe(grid, world) == null, "extra input rejected");
     }
 
     private static void check(boolean value, String message) {
@@ -249,13 +359,27 @@ final class MachineChecks {
                         + advanced.isAutoPullItemList());
                 tests.add("advanced dual input auto-pull selects both item and fluid types");
                 player.setPosition(x + 7.5, y + .5, z + .5);
-                dev.structureterminal.stocking.MixedInputContainer menu = new dev.structureterminal.stocking.MixedInputContainer(
-                    player,
-                    advanced);
-                check(menu.canInteractWith(player), "stocking menu stays open");
-                check(menu.canDragIntoSlot(menu.getSlot(1)), "manual slot supports native AE dragging");
-                menu.detectAndSendChanges();
-                tests.add("mixed stocking server container opens, synchronizes and supports manual-slot dragging");
+                advanced.buildUI(
+                    new com.cleanroommc.modularui.factory.PosGuiData(
+                        player,
+                        advanced.getBaseMetaTileEntity()
+                            .getXCoord(),
+                        advanced.getBaseMetaTileEntity()
+                            .getYCoord(),
+                        advanced.getBaseMetaTileEntity()
+                            .getZCoord()),
+                    new com.cleanroommc.modularui.value.sync.PanelSyncManager(
+                        new com.cleanroommc.modularui.value.sync.ModularSyncManager(false),
+                        false),
+                    new com.cleanroommc.modularui.screen.UISettings(
+                        com.cleanroommc.modularui.api.RecipeViewerSettings.DUMMY));
+                mixed.setSlotConfig(
+                    1,
+                    gregtech.api.util.GTUtility.getFluidDisplayStack(new FluidStack(FluidRegistry.WATER, 1), false));
+                check(
+                    mixed.filters.getAEStackInSlot(1) instanceof appeng.api.storage.data.IAEFluidStack,
+                    "native ghost slot retains fluid identity");
+                tests.add("native GT stocking ModularUI builds with dual filters");
                 NBTTagCompound copied = mixed.getCopiedData(player);
                 check(advanced.pasteCopiedData(player, copied), "copy mixed configuration");
                 check(

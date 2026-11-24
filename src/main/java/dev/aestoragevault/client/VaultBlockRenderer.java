@@ -35,29 +35,39 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int model,
         RenderBlocks renderer) {
-        if (skinOwner(world, x, y, z) != null) renderShell(world, x, y, z, block, renderer);
-        else renderer.renderStandardBlock(block, x, y, z);
-        int metadata = world.getBlockMetadata(x, y, z);
-        for (int side = 0; side < 6; side++) {
-            IIcon icon = overlay(block, side, metadata);
-            if (icon == null) continue;
-            ForgeDirection normal = ForgeDirection.getOrientation(side);
-            if (!block.shouldSideBeRendered(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ, side))
-                continue;
-            Tessellator.instance.setBrightness(
-                block.getMixedBrightnessForBlock(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ));
-            float light = side == 0 ? .5f : side == 1 ? 1f : side < 4 ? .8f : .6f;
-            Tessellator.instance.setColorOpaque_F(light, light, light);
-            face(
-                renderer,
-                block,
-                side,
-                x + normal.offsetX * .001,
-                y + normal.offsetY * .001,
-                z + normal.offsetZ * .001,
-                icon);
+        boolean allFaces = renderer.renderAllFaces;
+        if (world.getClass()
+            .getName()
+            .equals("blockrenderer6343.client.world.TrackedDummyWorld")) renderer.renderAllFaces = true;
+        try {
+            if (skinOwner(world, x, y, z) != null) renderShell(world, x, y, z, block, renderer);
+            else renderer.renderStandardBlock(block, x, y, z);
+            int metadata = world.getBlockMetadata(x, y, z);
+            for (int side = 0; side < 6; side++) {
+                IIcon icon = overlay(block, side, metadata);
+                if (icon == null) continue;
+                ForgeDirection normal = ForgeDirection.getOrientation(side);
+                if (!renderer.renderAllFaces && !block
+                    .shouldSideBeRendered(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ, side))
+                    continue;
+                Tessellator.instance.setBrightness(
+                    block
+                        .getMixedBrightnessForBlock(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ));
+                float light = side == 0 ? .5f : side == 1 ? 1f : side < 4 ? .8f : .6f;
+                Tessellator.instance.setColorOpaque_F(light, light, light);
+                face(
+                    renderer,
+                    block,
+                    side,
+                    x + normal.offsetX * .001,
+                    y + normal.offsetY * .001,
+                    z + normal.offsetZ * .001,
+                    icon);
+            }
+            return true;
+        } finally {
+            renderer.renderAllFaces = allFaces;
         }
-        return true;
     }
 
     @Override
@@ -96,7 +106,9 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
     }
 
     private static TileController skinOwner(IBlockAccess world, int x, int y, int z) {
-        TileController owner = VaultCasingSkin.owner(x, y, z);
+        TileController owner = world instanceof net.minecraft.world.World
+            ? VaultCasingSkin.owner((net.minecraft.world.World) world, x, y, z)
+            : VaultCasingSkin.owner(x, y, z);
         return owner != null ? owner : VaultStructure.formedOwner(world, x, y, z);
     }
 
@@ -110,7 +122,7 @@ public final class VaultBlockRenderer implements ISimpleBlockRenderingHandler {
         try {
             for (int side = 0; side < 6; side++) {
                 ForgeDirection normal = ForgeDirection.getOrientation(side);
-                if (!block
+                if (!renderer.renderAllFaces && !block
                     .shouldSideBeRendered(world, x + normal.offsetX, y + normal.offsetY, z + normal.offsetZ, side))
                     continue;
                 int tile = VaultGeometry.tile(

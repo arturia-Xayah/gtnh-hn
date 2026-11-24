@@ -174,6 +174,13 @@ final class AssemblyLineRenamePackChecks {
             ItemUtils.writeItemStackToNBT(
                 GTUtility.getFluidDisplayStack(new FluidStack(FluidRegistry.WATER, 2000), true),
                 1));
+        if (AssemblyLineRenamer.RECIPE_ID.equals(source) && suite.optimizer != null && suite.optimizer.autoRename) {
+            NBTTagCompound separate = (NBTTagCompound) input.copy();
+            input.setTag("hnAssemblySlots", separate);
+            input.setTag("#0", ItemUtils.writeItemStackToNBT(foil(), 10128));
+            input.removeTag("#1");
+            input.removeTag("#2");
+        }
         output.setTag("Outputs0", ItemUtils.writeItemStackToNBT(new ItemStack(Items.paper), 1));
         PacketNEIPatternRecipe outbound = new PacketNEIPatternRecipe(input, output);
         PacketNEIPatternRecipe inbound = new PacketNEIPatternRecipe();

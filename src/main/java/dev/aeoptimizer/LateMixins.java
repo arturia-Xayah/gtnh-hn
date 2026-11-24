@@ -31,10 +31,14 @@ public final class LateMixins implements ILateMixinLoader {
                 "MixedOutputAliasMixin",
                 "MixedOutputBuilderMixin",
                 "MixedOutputMachineMixin",
+                "MixedOutputSlotsMixin",
                 "AdvancedEmitterMixin",
                 "EmitterContainerMixin",
+                "DualBusPartitionMixin",
                 "BatchLimitContainerMixin",
                 "BatchLimitUpgradeMixin",
+                "P2PBatchLimitSlotMixin",
+                "P2PBatchLimitRebindMixin",
                 "PackedPartMixin",
                 "IntegratedPatternDualityMixin",
                 "IntegratedPatternSlotMixin",
@@ -55,8 +59,12 @@ public final class LateMixins implements ILateMixinLoader {
         }
         if (FMLLaunchHandler.side()
             .isClient()) {
+            if (mods.contains("NotEnoughItems")) mixins.add("client.MachineOwnerNEIMixin");
+            if (mods.contains("Waila")) mixins.add("client.MachineOwnerWailaMixin");
             mixins.add("client.EmitterScreenMixin");
+            mixins.add("client.DualBusScreenMixin");
             mixins.add("client.BatchLimitScreenMixin");
+            mixins.add("client.InterfaceDispatchButtonsMixin");
             mixins.add("client.BatchLimitUpgradeTooltipMixin");
             mixins.add("client.TerminalRepoAccessor");
             mixins.add("client.IntegratedPatternViewMixin");

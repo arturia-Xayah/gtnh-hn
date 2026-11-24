@@ -20,7 +20,11 @@ The **same structure position must permit both an output bus and an output hatch
 
 ## Caches and overflow
 
-The shared upgrade/filter slot accepts an item or fluid cell, upgrading and filtering only its channel. The other retains its native default capacity: 1,600 items or 128,000 mB. The bus works without an optimizer; enabling ME output overflow in its network’s optimizer protects both channels. Both caches are saved with the world and use their native output intervals.
+Install an item cell in the left slot and a fluid cell in the right slot. Both slots can expand capacity and apply partition filters at the same time. An empty slot uses the native default capacity of 1,600 items or 128,000 mB. Existing buses move an installed fluid cell to the right slot when loaded. The bus works without an optimizer; enabling ME output overflow in its network’s optimizer protects both channels. Both caches are saved with the world and use their native output intervals.
+
+For example, a new bus with a five-type fluid cell can receive hydrochloric acid and gold ingots from the same reactor. The acid uses the fluid channel and the ingots use the built-in 1,600-item buffer. For long-term storage of both, connect the bus to an ME network with storage available on both channels.
+
+Look at the bus to see item and fluid storage separately in Waila. The fluid section shows buffered quantity, capacity and fluid names in mB, including when the bus is offline. In cell-cache mode, fluids stored in the cell appear separately.
 
 ---
 

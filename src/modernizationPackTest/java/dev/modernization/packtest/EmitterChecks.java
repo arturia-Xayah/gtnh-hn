@@ -3,7 +3,6 @@ package dev.modernization.packtest;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +32,14 @@ import appeng.api.definitions.IParts;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartHost;
+import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageName;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AEColor;
 import appeng.container.implementations.ContainerAdvancedLevelEmitter;
 import appeng.me.cache.NetworkMonitor;
+import appeng.me.storage.NetworkInventoryHandler;
 import appeng.parts.automation.PartAdvancedLevelEmitter;
 import appeng.tile.storage.TileDrive;
 import appeng.util.item.AEFluidStack;
@@ -215,14 +216,29 @@ public final class EmitterChecks {
     }
 
     private void checkSharedScans() {
-        int[] reads = { 0 };
+        int[] reads = { 0, 0 };
         long[] displayed = { -1, -1 };
         IItemList<IAEItemStack> stock = AEItemStackType.ITEM_STACK_TYPE.createList();
         stock.add(
             AEItemStack.create(new ItemStack(Items.iron_ingot))
                 .setStackSize(Long.MAX_VALUE));
         stock.add(AEItemStack.create(new ItemStack(Items.apple, 5)));
+        NetworkInventoryHandler<IAEItemStack> handler = new NetworkInventoryHandler<IAEItemStack>(
+            AEItemStackType.ITEM_STACK_TYPE,
+            null) {
+
+            @Override
+            public IAEItemStack getAvailableItem(IAEItemStack key, int iteration) {
+                reads[1]++;
+                return stock.findPrecise(key);
+            }
+        };
         NetworkMonitor<IAEItemStack> monitor = new NetworkMonitor<IAEItemStack>(null, AEItemStackType.ITEM_STACK_TYPE) {
+
+            @Override
+            public IMEInventoryHandler<IAEItemStack> getHandler() {
+                return handler;
+            }
 
             @Override
             public IItemList<IAEItemStack> getStorageList() {
@@ -238,21 +254,30 @@ public final class EmitterChecks {
         total.subscribe(second);
         for (int i = 0; i < 1000; i++) total.flush(monitor);
         require(reads[0] == 1 && displayed[0] == Long.MAX_VALUE && displayed[1] == Long.MAX_VALUE, "shared baseline");
-        total.change(false, Collections.singletonList(AEItemStack.create(new ItemStack(Items.iron_ingot, 8))));
+        IAEItemStack iron = AEItemStack.create(new ItemStack(Items.iron_ingot));
+        stock.findPrecise(iron)
+            .setStackSize(Long.MAX_VALUE - 8);
+        for (int i = 0; i < 100; i++) total.changedKey(iron);
         total.flush(monitor);
         require(
-            reads[0] == 1 && displayed[0] == Long.MAX_VALUE - 3 && displayed[1] == displayed[0],
-            "signed delta after saturation");
-        total.invalidate();
-        total.flush(monitor);
-        require(reads[0] == 2 && displayed[0] == Long.MAX_VALUE, "forced resync");
+            reads[0] == 1 && reads[1] == 1 && displayed[0] == Long.MAX_VALUE - 3 && displayed[1] == displayed[0],
+            "duplicate notifications use one absolute quantity after saturation");
+        stock.findPrecise(iron)
+            .setStackSize(0);
+        total.changedKey(iron);
+        for (int i = 0; i < 5; i++) total.flush(monitor);
+        require(reads[0] == 1 && reads[1] == 2 && displayed[0] == 5, "last item of a type removed");
+        for (int i = 0; i < 50; i++) {
+            total.invalidate();
+            total.flush(monitor);
+        }
+        require(reads[0] == 11 && displayed[0] == 5, "50 consecutive topology updates coalesced");
         total.unsubscribe(first);
         total.unsubscribe(second);
         total.invalidate();
-        total.flush(monitor);
-        require(reads[0] == 2, "unobserved channel");
-        tests.add(
-            "counting storage monitor: 2 subscribers, 1000 idle flushes and a removal delta shared 1 inventory read; forced resync added 1; unobserved channel added 0");
+        for (int i = 0; i < 10; i++) total.flush(monitor);
+        require(reads[0] == 11 && reads[1] == 2, "unobserved channel");
+        tests.add("shared totals: saturation, repeated keys, removal, idle ticks and bounded topology reads");
     }
 
     private void runStep() throws Exception {

@@ -21,12 +21,15 @@ import appeng.container.sync.handlers.BooleanSyncHandler;
 import appeng.container.sync.handlers.LongSyncHandler;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
+import appeng.parts.p2p.PartP2PInterface;
 import appeng.util.Platform;
 import dev.aeoptimizer.dispatch.BatchLimitSettings;
+import dev.aeoptimizer.dispatch.TunnelPolicy;
 import io.netty.buffer.ByteBuf;
 
 @Mixin(value = ContainerInterface.class, remap = false)
-public abstract class BatchLimitContainerMixin extends AEBaseContainer implements BatchLimitSettings {
+public abstract class BatchLimitContainerMixin extends AEBaseContainer
+    implements BatchLimitSettings, TunnelPolicy.Menu {
 
     @Shadow
     @Final
@@ -38,12 +41,44 @@ public abstract class BatchLimitContainerMixin extends AEBaseContainer implement
     @Unique
     private ActionHandler<long[]> modernization$applyLimits;
 
+    @Unique
+    private LongSyncHandler hn$routeMode;
+    @Unique
+    private ActionHandler<Void> hn$routeAction;
+
+    @Unique
+    private PartP2PInterface hn$input() {
+        Object host = myDuality.getHost();
+        if (host instanceof PartP2PInterface && !((PartP2PInterface) host).isOutput()) return (PartP2PInterface) host;
+        return null;
+    }
+
+    public int hn$mode() {
+        return (int) hn$routeMode.get() - 1;
+    }
+
+    public void hn$cycle() {
+        if (!Platform.isServer()) {
+            hn$routeAction.send(null);
+            return;
+        }
+        PartP2PInterface part = hn$input();
+        if (part == null || !modernization$allowed()) return;
+        TunnelPolicy policy = ((TunnelPolicy.Host) part).hn$policy();
+        policy.setMode((policy.mode + 1) % 3);
+        part.getTileEntity()
+            .markDirty();
+    }
+
     private BatchLimitContainerMixin(InventoryPlayer ip, Object anchor) {
         super(ip, anchor);
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void modernization$init(InventoryPlayer ip, IInterfaceHost host, CallbackInfo ci) {
+        hn$routeMode = syncRegistrar().longS2C("hnP2PMode");
+        hn$routeAction = syncRegistrar().actionC2S("hnP2PCycle")
+            .onServerAction(ignored -> hn$cycle());
         modernization$items = syncRegistrar().longS2C("modernizationBatchItems");
         modernization$fluids = syncRegistrar().longS2C("modernizationBatchFluids");
         modernization$card = syncRegistrar().booleanS2C("modernizationBatchCard");
@@ -68,24 +103,30 @@ public abstract class BatchLimitContainerMixin extends AEBaseContainer implement
 
     @Unique
     private void modernization$apply(long items, long fluids) {
+        if (items < 0 || fluids < 0
+            || !((BatchLimitSettings) myDuality).hasBatchLimitCard()
+            || !modernization$allowed()) return;
+        ((BatchLimitSettings) myDuality).setBatchLimits(items, fluids);
+    }
+
+    @Unique
+    private boolean modernization$allowed() {
         EntityPlayer player = getInventoryPlayer().player;
         TileEntity tile = myDuality.getHost()
             .getTile();
-        if (items < 0 || fluids < 0
-            || !((BatchLimitSettings) myDuality).hasBatchLimitCard()
-            || player.openContainer != (Object) this
-            || !canInteractWith(player)
+        return !(player.openContainer != (Object) this || !canInteractWith(player)
             || !hasAccess(SecurityPermissions.BUILD, false)
             || tile == null
             || tile.isInvalid()
             || tile.getWorldObj() != player.worldObj
-            || player.getDistanceSq(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5) > 64) return;
-        ((BatchLimitSettings) myDuality).setBatchLimits(items, fluids);
+            || player.getDistanceSq(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5) > 64);
     }
 
     @Inject(method = { "detectAndSendChanges", "func_75142_b" }, at = @At("HEAD"))
     private void modernization$sync(CallbackInfo ci) {
         if (!Platform.isServer()) return;
+        PartP2PInterface part = hn$input();
+        hn$routeMode.set(part == null ? 0 : ((TunnelPolicy.Host) part).hn$policy().mode + 1);
         BatchLimitSettings settings = (BatchLimitSettings) myDuality;
         modernization$items.set(settings.batchItemLimit());
         modernization$fluids.set(settings.batchFluidLimit());

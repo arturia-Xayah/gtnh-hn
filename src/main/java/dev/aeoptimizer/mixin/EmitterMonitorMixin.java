@@ -4,10 +4,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEStack;
 import appeng.me.cache.NetworkMonitor;
 import dev.aeoptimizer.emitter.ChannelTotal;
@@ -23,15 +22,16 @@ public abstract class EmitterMonitorMixin implements ChannelTotal.Monitor {
         return modernization$total;
     }
 
-    // Hook after AE's nested-operation guards. Cell-provider removals use add=false and positive amounts.
-    @Inject(
+    // Observe the keys AE actually processes, including repeated and re-forwarded notifications.
+    @ModifyArg(
         method = "postChange",
         at = @At(
             value = "INVOKE",
-            target = "Lappeng/me/cache/NetworkMonitor;notifyListenersOfChange(Ljava/lang/Iterable;Lappeng/api/networking/security/BaseActionSource;)V"))
-    private void modernization$delta(boolean add, Iterable<IAEStack<?>> changes, BaseActionSource source,
-        CallbackInfo ci) {
-        if (modernization$total != null) modernization$total.change(add, changes);
+            target = "Lappeng/me/helpers/GenericInterestManager;containsKey(Lappeng/api/storage/data/IAEStack;)Z"),
+        index = 0)
+    private IAEStack<?> modernization$changedKey(IAEStack<?> key) {
+        if (modernization$total != null) modernization$total.changedKey(key);
+        return key;
     }
 
     @Inject(method = "forceUpdate", at = @At("HEAD"))
@@ -41,6 +41,6 @@ public abstract class EmitterMonitorMixin implements ChannelTotal.Monitor {
 
     @Inject(method = "onTick", at = @At("RETURN"))
     private void modernization$flush(CallbackInfo ci) {
-        if (modernization$total != null) modernization$total.flush((IMEMonitor<?>) (Object) this);
+        if (modernization$total != null) modernization$total.flush((NetworkMonitor<?>) (Object) this);
     }
 }

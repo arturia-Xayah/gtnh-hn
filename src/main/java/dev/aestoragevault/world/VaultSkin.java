@@ -22,7 +22,8 @@ public final class VaultSkin {
     @SideOnly(Side.CLIENT)
     public static void register(net.minecraft.client.renderer.texture.IIconRegister registry) {
         IIcon face = registry.registerIcon("aestoragevault:formed_shell_smooth");
-        whole = face;
+        // A single unformed casing uses the pale AE quartz pillar panel; only a formed face uses the 3x3 artwork.
+        whole = registry.registerIcon("appliedenergistics2:BlockQuartzPillar");
         icons = new IIcon[9];
         for (int tile = 0; tile < icons.length; tile++) icons[tile] = new FaceRegion(face, tile);
     }

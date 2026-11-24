@@ -1,8 +1,5 @@
 package dev.aeoptimizer.mixin.client;
 
-import java.util.Collections;
-
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -20,7 +17,7 @@ import dev.aeoptimizer.dispatch.BatchLimitSettings;
 import dev.aeoptimizer.ui.client.BatchLimitPanel;
 
 @Mixin(value = AEBaseGui.class, remap = false)
-public abstract class BatchLimitScreenMixin extends GuiContainer {
+public abstract class BatchLimitScreenMixin extends GuiContainer implements BatchLimitPanel.Host {
 
     @Unique
     private BatchLimitPanel modernization$panel;
@@ -34,25 +31,13 @@ public abstract class BatchLimitScreenMixin extends GuiContainer {
         return modernization$panel != null && modernization$panel.open;
     }
 
+    public void hn$openLimits() {
+        modernization$panel = new BatchLimitPanel((BatchLimitSettings) inventorySlots, width, height);
+    }
+
     @Inject(method = { "drawScreen", "func_73863_a" }, at = @At("RETURN"))
     private void modernization$draw(int mx, int my, float partial, CallbackInfo ci) {
-        if (!(inventorySlots instanceof BatchLimitSettings)) return;
-        BatchLimitSettings settings = (BatchLimitSettings) inventorySlots;
-        if (!settings.hasBatchLimitCard()) {
-            modernization$panel = null;
-            return;
-        }
-        if (modernization$open()) {
-            modernization$panel.draw(mx, my, width, height);
-            return;
-        }
-        GuiButton button = new GuiButton(0, guiLeft - 36, guiTop + 26, 16, 16, "≤");
-        button.drawButton(mc, mx, my);
-        if (button.mousePressed(mc, mx, my)) drawHoveringText(
-            Collections.singletonList(BatchLimitPanel.tr(settings.batchLimitBlocked() ? "blocked" : "title")),
-            mx,
-            my,
-            fontRendererObj);
+        if (modernization$open()) modernization$panel.draw(mx, my, width, height);
     }
 
     @Inject(method = { "mouseClicked", "func_73864_a" }, at = @At("HEAD"), cancellable = true)
@@ -61,15 +46,6 @@ public abstract class BatchLimitScreenMixin extends GuiContainer {
             modernization$panel.click(mx, my, button);
             ci.cancel();
             return;
-        }
-        if (button == 0 && inventorySlots instanceof BatchLimitSettings
-            && ((BatchLimitSettings) inventorySlots).hasBatchLimitCard()
-            && mx >= guiLeft - 36
-            && mx < guiLeft - 20
-            && my >= guiTop + 26
-            && my < guiTop + 42) {
-            modernization$panel = new BatchLimitPanel((BatchLimitSettings) inventorySlots, width, height);
-            ci.cancel();
         }
     }
 

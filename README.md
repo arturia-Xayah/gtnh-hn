@@ -17,7 +17,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 
 **GTNH-HN** 是面向 **GT New Horizons** 的轻量功能扩展与体验优化，重点是减少日常游玩中的重复操作。它提供更方便的多方块建造、AE 样板与下单工具，以及机器功率、集中存储和传送管理。
 
-**[使用手册](docs/wiki/README.md)** · [下载 JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.4.1-GTNH-2.9.1/gtnh-hn-0.4.1-GTNH-2.9.1.jar) · [更新日志](CHANGELOG.md)
+**[使用手册](docs/wiki/README.md)** · [下载 JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.4.2-GTNH-2.9.1/gtnh-hn-0.4.2-GTNH-2.9.1.jar) · [更新日志](CHANGELOG.md)
 
 ## 目录
 
@@ -33,7 +33,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 
 ## 快速安装
 
-当前版本 **0.4.1**，适配 **GTNH 2.9.1 / Minecraft 1.7.10**。
+当前版本 **0.4.2**，适配 **GTNH 2.9.1 / Minecraft 1.7.10**。
 
 1. 从 [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases) 下载对应 GTNH 版本的 JAR，放入 `mods`；联机客户端和服务器使用相同版本。
 2. 替换旧版 GTNH-HN／GTNH现代化升级／结构终端 JAR，并移除重复安装的独立 AE Order Optimizer、Plasma Forge Power、AE Storage Vault。

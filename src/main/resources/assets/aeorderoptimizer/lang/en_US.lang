@@ -36,12 +36,12 @@ aeorderoptimizer.emitter.switch=Click to change the detection target.
 aeorderoptimizer.emitter.count.1=Network inventory: %s items
 aeorderoptimizer.emitter.count.2=Network inventory: %s mB
 item.aeorderoptimizer.batch_limit_card.name=Batch Dispatch Limit Card
-aeoptimizer.batch.card.install=§7Install in the §bsending ME interface§7; maximum §f1 §7card.
+aeoptimizer.batch.card.install=§7Install in the §bsending ME interface§7; maximum §f1 §7card. Configure each P2P output separately.
 aeoptimizer.batch.card.require=§7Requires an optimizer on the §bordering network§7.
 aeoptimizer.batch.card.limit=§7Caps each §bitem type / fluid type§7 per batch.
 aeoptimizer.batch.card.why=§7Match receiver capacity to reduce oversized batches filling its tanks.
 aeoptimizer.batch.card.strict=§7Strict Blocking sends a batch, then follows native waiting rules.
-aeoptimizer.batch.card.configure=§7Click the left §b≤§7 button. §f0§7 = unlimited; fluids use §fmB§7.
+aeoptimizer.batch.card.configure=§7Click the §bquantity icon§7 on the left. §f0§7 = unlimited; fluids use §fmB§7.
 aeoptimizer.batch.card.more=§8Hold §fShift §8for details and supported devices.
 aeoptimizer.batch.detail.same=§7Repeated ingredients are added before calculating the batch size.
 aeoptimizer.batch.detail.smart=§7Smart Blocking checks emptiness on the first push or a recipe change.
@@ -57,3 +57,10 @@ aeoptimizer.batch.apply=Apply
 aeoptimizer.batch.cancel=Cancel
 aeoptimizer.batch.invalid=Enter 0 to 9223372036854775807
 aeoptimizer.batch.blocked=One recipe exceeds the limit; paused
+aeoptimizer.batch.p2p.0=P2P default dispatch (click to cycle)
+aeoptimizer.batch.p2p.1=P2P even split (whole crafts, independent queues)
+aeoptimizer.batch.p2p.2=P2P round robin (one output per batch, 10 ticks between rounds)
+aeoptimizer.rename.slots=The separate assembly-line inputs exceed this terminal’s available slots.
+
+item.aeorderoptimizer.dual_storage_bus.name=ME Dual Storage Bus
+item.aeorderoptimizer.dual_storage_bus.tip=Access items and fluids on the adjacent face using one channel. Filter slots accept either type.
