@@ -86,6 +86,9 @@ public final class BundleChecks {
         if (Boolean.getBoolean("structureterminal.smartBlockingTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
             .bus()
             .register(new SmartBlockingChecks());
+        if (Boolean.getBoolean("structureterminal.kindLimitTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
+            .bus()
+            .register(new KindLimitChecks());
         if (Boolean.getBoolean("structureterminal.dualBusTests")) cpw.mods.fml.common.FMLCommonHandler.instance()
             .bus()
             .register(new DualBusChecks());

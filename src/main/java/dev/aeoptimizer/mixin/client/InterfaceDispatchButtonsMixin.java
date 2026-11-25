@@ -19,11 +19,11 @@ import dev.aeoptimizer.ui.client.BatchLimitPanel;
 @Mixin(value = GuiInterface.class, remap = false)
 public abstract class InterfaceDispatchButtonsMixin extends GuiContainer {
 
-    // AE states atlas: sort by amount, blocking, default scheduling, divide, round robin.
+    // AE states atlas: sort by amount, blocking, default scheduling, divide, round robin, ascending order.
     @Unique
     private static final int hn$amount = 65, hn$blocked = 21;
     @Unique
-    private static final int[] hn$routeIcons = { 240, 73, 241 };
+    private static final int[] hn$routeIcons = { 240, 73, 241, 48 };
     @Unique
     private GuiSimpleImgButton hn$limit, hn$route;
 
@@ -66,7 +66,8 @@ public abstract class InterfaceDispatchButtonsMixin extends GuiContainer {
         if (routed && (hn$route.getIconIndex() != hn$routeIcons[mode] || hn$route.getTooltip()
             .isEmpty())) {
             hn$route.setIconIndex(hn$routeIcons[mode]);
-            hn$route.setTooltip(BatchLimitPanel.tr("p2p." + mode));
+            String key = "p2p." + mode;
+            hn$route.setTooltip(BatchLimitPanel.tr(key) + "\n" + BatchLimitPanel.tr(key + ".hint"));
         }
     }
 

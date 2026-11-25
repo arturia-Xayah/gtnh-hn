@@ -40,6 +40,7 @@ public final class StructureTerminal {
     public void preInit(FMLPreInitializationEvent event) {
         configFile = event.getSuggestedConfigurationFile();
         TerminalConfig.load(configFile);
+        TerminalConfig.loadRecipes(event.getModConfigurationDirectory());
         dev.structureterminal.projection.ProjectorBlock.register();
         FMLCommonHandler.instance()
             .bus()
@@ -64,6 +65,7 @@ public final class StructureTerminal {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        dev.structureterminal.projection.ProjectorBlock.recipe();
         dev.structureterminal.stocking.MixedInputs.register();
         dev.structureterminal.output.MixedOutputs.register();
         dev.structureterminal.packing.PackingItems.recipe();

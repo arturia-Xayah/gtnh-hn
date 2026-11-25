@@ -57,10 +57,23 @@ aeoptimizer.batch.apply=应用
 aeoptimizer.batch.cancel=取消
 aeoptimizer.batch.invalid=请输入有效非负整数，最大为 long 上限
 aeoptimizer.batch.blocked=单套原料超过上限，发配已暂停
-aeoptimizer.batch.p2p.0=P2P 默认发配 · 点击切换
-aeoptimizer.batch.p2p.1=P2P 批次均分 · 按完整配方分摊，满口单独等待
-aeoptimizer.batch.p2p.2=P2P 批次轮询 · 每批一个出口，每轮间隔 10 tick
+aeoptimizer.batch.p2p.0=P2P 默认发配
+aeoptimizer.batch.p2p.0.hint=沿用原有的接口发配顺序。
+aeoptimizer.batch.p2p.1=P2P 批次均分
+aeoptimizer.batch.p2p.1.hint=按整套配方均分。忙碌出口的份额单独等待。
+aeoptimizer.batch.p2p.2=P2P 批次轮询（接续上次）
+aeoptimizer.batch.p2p.2.hint=每批从上次尝试的下一个出口继续。跳过忙碌出口，每轮间隔 10 tick。
+aeoptimizer.batch.p2p.3=P2P 批次轮询（顺序优先）
+aeoptimizer.batch.p2p.3.hint=每批都从首个出口开始。当前出口不能接收时，依次尝试后面的出口。
 aeoptimizer.rename.slots=装配线分槽输入超过当前样板终端的槽位数。
 
 item.aeorderoptimizer.dual_storage_bus.name=ME 二合一存储总线
 item.aeorderoptimizer.dual_storage_bus.tip=通过一个频道访问相邻面的物品与流体，过滤槽支持两者。
+
+item.aeorderoptimizer.kind_limit_card.name=种类限制卡
+aeoptimizer.kind_limit.tip.1=装入物品、流体或二合一 ME 存储总线的升级槽，每根限一张。
+aeoptimizer.kind_limit.tip.2=只限制写入。目标为空时接收首种原料，之后只收同种。
+aeoptimizer.kind_limit.tip.3=目标混有多种时暂停进料；取至一种后恢复，清空后可换料。
+aeoptimizer.kind_limit.tip.4=二合一总线的物品与流体共用一个名额。改名物品分别计算。
+aeoptimizer.kind_limit.tip.5=所有编号的 GT 编程电路均不占名额，可正常通过。
+aeoptimizer.kind_limit.tip.6=按目标对总线可见的实际库存判断。拒收的余料可流向低优先级。

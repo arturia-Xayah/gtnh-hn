@@ -110,6 +110,15 @@ public final class Projection {
         return t * t * (3 - 2 * t);
     }
 
+    public void draw(Path path, double ticks, int transparency, Quad out) {
+        if (transparency >= 100) return;
+        if (transparency <= 0) draw(path, ticks, out);
+        else draw(path, ticks, (ax, ay, bx, by, cx, cy, dx, dy, rgba) -> {
+            int alpha = ((rgba & 255) * (100 - transparency) + 50) / 100;
+            out.draw(ax, ay, bx, by, cx, cy, dx, dy, (rgba & ~255) | alpha);
+        });
+    }
+
     /** Draw from bottom centre along both edges, then reveal the membrane behind the rim. */
     public void draw(Path path, double ticks, Quad out) {
         double trace = smooth(ticks / 31), fill = smooth((ticks - 31) / (OPEN_TICKS - 31));
@@ -194,9 +203,9 @@ public final class Projection {
         }
     }
 
-    private double halfWidth(double t) {
+    double halfWidth(double t) {
         if (shape == Shape.RECTANGLE) return width * .5;
-        if (shape == Shape.DISC) return width * Math.sqrt(Math.max(0, t * (1 - t)));
+        if (isRound(shape)) return width * Math.sqrt(Math.max(0, t * (1 - t)));
         double index = t * (ROWS - 1);
         int row = (int) index;
         return width * .05 * (profile[row] + (profile[Math.min(row + 1, ROWS - 1)] - profile[row]) * (index - row));

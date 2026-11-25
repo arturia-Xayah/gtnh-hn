@@ -21,7 +21,8 @@ public final class ProjectorScreen extends GuiContainer {
     long started;
     private boolean colors, editAccent, connection;
     private String channel, station;
-    private boolean showDestination, sceneEnabled, snapshot;
+    private boolean showDestination, sceneEnabled, snapshot, muteTravel;
+    int transparency;
     private net.minecraft.client.gui.GuiTextField stationField;
 
     boolean previewLabel() {
@@ -45,6 +46,8 @@ public final class ProjectorScreen extends GuiContainer {
         channel = menu.tile.frequency;
         sceneEnabled = menu.tile.sceneEnabled;
         snapshot = menu.tile.snapshot;
+        muteTravel = menu.tile.muteTravel;
+        transparency = menu.tile.transparency;
         station = menu.tile.stationName;
         showDestination = menu.tile.showDestination;
         facing = menu.tile.exitFacing;
@@ -136,6 +139,8 @@ public final class ProjectorScreen extends GuiContainer {
             }
         }
         if (colors && !inWorld) {
+            button(35, l + 208, t + 156, 22, "−", transparency > 0);
+            button(36, l + 263, t + 156, 22, "+", transparency < 100);
             button(30, l + 175, t + 32, 53, tr("primary"), editAccent);
             button(31, l + 232, t + 32, 53, tr("secondary"), !editAccent);
         }
@@ -144,6 +149,7 @@ public final class ProjectorScreen extends GuiContainer {
             button(28, l + 130, t + 111, 151, tr(showDestination ? "labelOn" : "labelOff"), true);
             button(32, l + 15, t + 133, 130, tr(sceneEnabled ? "sceneOn" : "sceneOff"), true);
             button(33, l + 150, t + 133, 131, tr(snapshot ? "snapshot" : "live"), sceneEnabled);
+            button(34, l + 15, t + 156, 130, tr(muteTravel ? "soundOff" : "soundOn"), true);
             button(27, l + 150, t + 156, 131, tr(menu.tile.open ? "close" : "saveClosed"), true);
         }
         boolean valid = !colors || parseColor(hex.getText()) >= 0;
@@ -180,6 +186,8 @@ public final class ProjectorScreen extends GuiContainer {
             cmd.setString("frequency", channel);
             cmd.setBoolean("sceneEnabled", sceneEnabled);
             cmd.setBoolean("snapshot", snapshot);
+            cmd.setBoolean("muteTravel", muteTravel);
+            cmd.setInteger("transparency", transparency);
             cmd.setString("stationName", station);
             cmd.setBoolean("showDestination", showDestination);
             cmd.setInteger("exitFacing", facing);
@@ -204,6 +212,9 @@ public final class ProjectorScreen extends GuiContainer {
             stationField.setFocused(false);
         }
         if (id == 32) sceneEnabled = !sceneEnabled;
+        if (id == 34) muteTravel = !muteTravel;
+        if (id == 35) transparency = Math.max(0, transparency - 10);
+        if (id == 36) transparency = Math.min(100, transparency + 10);
         if (id == 33) snapshot = !snapshot;
         if (id == 28) showDestination = !showDestination;
         if (id == 26) facing = (facing + 1) % 5;
@@ -271,7 +282,7 @@ public final class ProjectorScreen extends GuiContainer {
             channelField.drawTextBox();
             fontRendererObj.drawString(tr("exitFacing"), l + 15, t + 99, 0xb7dfec);
             if (channel.trim()
-                .isEmpty()) fontRendererObj.drawString(tr("sceneEmpty"), l + 15, t + 162, 0xffc577);
+                .isEmpty()) fontRendererObj.drawString(tr("sceneEmpty"), l + 15, t + 175, 0xffc577);
             return;
         }
         int right = colors ? l + 164 : l + 290;
@@ -293,13 +304,16 @@ public final class ProjectorScreen extends GuiContainer {
                 draft,
                 path,
                 menu.tile.getWorldObj()
-                    .getTotalWorldTime() - started + partial);
+                    .getTotalWorldTime() - started + partial,
+                transparency);
         } finally {
             GL11.glPopMatrix();
         }
         drawRect(originX() - 10, originY() + 1, originX() + 10, originY() + 5, 0xff9ab6c4);
         drawRect(originX() - 6, originY(), originX() + 6, originY() + 2, 0xff9bfaff);
         if (colors) {
+            fontRendererObj.drawString(tr("transparency"), l + 15, t + 162, 0xb7dfec);
+            drawCenteredString(fontRendererObj, transparency + "%", l + 246, t + 161, 0xffffff);
             drawRect(l + 176, t + 53, l + 227, t + 58, 0xff000000 | draft.primary);
             drawRect(l + 233, t + 53, l + 284, t + 58, 0xff000000 | draft.secondary);
             for (int i = 0; i < SWATCHES.length; i++) {

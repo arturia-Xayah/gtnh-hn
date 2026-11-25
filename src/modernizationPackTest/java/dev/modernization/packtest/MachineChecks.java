@@ -24,6 +24,7 @@ import appeng.util.item.AEFluidStack;
 import appeng.util.item.AEItemStack;
 import dev.aeoptimizer.OrderOptimizer;
 import dev.aeoptimizer.dispatch.OutputOverflow;
+import dev.structureterminal.TerminalConfig;
 import dev.structureterminal.stocking.MixedInputBus;
 import dev.structureterminal.stocking.MixedInputs;
 import gregtech.api.enums.ItemList;
@@ -86,7 +87,18 @@ final class MachineChecks {
             new ItemStack(ItemAndBlockHolder.CELL64K, 8),
             16,
             2400);
-        tests.add("EV assembler consumes four stacks including the exact number of storage components at both tiers");
+        checkInputPair(world, ItemList.Hatch_Input_Bus_ME, ItemList.Hatch_Input_ME, MixedInputs.basic);
+        checkInputPair(
+            world,
+            ItemList.Hatch_Input_Bus_ME_Advanced,
+            ItemList.Hatch_Input_ME_Advanced,
+            MixedInputs.advanced);
+        checkInputPair(world, ItemList.Hatch_Input_Bus_ME, ItemList.Hatch_Input_ME_Advanced, null);
+        checkInputPair(world, ItemList.Hatch_Input_Bus_ME_Advanced, ItemList.Hatch_Input_ME, null);
+        tests.add(
+            TerminalConfig.shapelessDualMEInputs
+                ? "Shapeless: both same-tier pairs craft in both orders; mixed tiers and former assembler recipes rejected"
+                : "Default: both EV assembler recipes consume exact quantities; no shapeless input pairs");
         checkCraftingReset(MixedInputs.basic, 2, world);
         checkCraftingReset(MixedInputs.advanced, 3, world);
         tests.add("2x2 and 3x3 reset for both tiers, retaining the name, cover, upgrade and manual slot");
@@ -116,6 +128,22 @@ final class MachineChecks {
             .loadNBTData(config);
     }
 
+    private static void checkInputPair(WorldServer world, ItemList bus, ItemList hatch, MixedInputBus output) {
+        for (int size : new int[] { 2, 3 }) {
+            InventoryCrafting grid = new InventoryCrafting(new ContainerNull(), size, size);
+            for (boolean swapped : new boolean[] { false, true }) {
+                grid.setInventorySlotContents(0, (swapped ? hatch : bus).get(1));
+                grid.setInventorySlotContents(size * size - 1, (swapped ? bus : hatch).get(1));
+                ItemStack result = CraftingManager.getInstance()
+                    .findMatchingRecipe(grid, world);
+                if (output != null && TerminalConfig.shapelessDualMEInputs) check(
+                    ItemStack.areItemStacksEqual(result, output.getStackForm(1)),
+                    "same-tier pair crafting result");
+                else check(result == null || !MixedInputs.owns(result), "unexpected dual bus from input pair");
+            }
+        }
+    }
+
     private static void checkAssemblerRecipe(ItemStack bus, MixedInputBus output, ItemStack itemPart,
         ItemStack fluidPart, ItemStack finishedFluidCell, int circuits, int ticks) {
         ItemStack[] inputs = { bus, ItemList.Circuit_Elitenanocomputer.get(circuits), itemPart, fluidPart };
@@ -123,6 +151,12 @@ final class MachineChecks {
             .items(inputs)
             .voltage(2048)
             .find();
+        if (TerminalConfig.shapelessDualMEInputs) {
+            check(
+                recipe == null || !recipe.mOutputs[0].isItemEqual(output.getStackForm(1)),
+                "old assembler recipe still present");
+            return;
+        }
         check(recipe != null && recipe.mOutputs[0].isItemEqual(output.getStackForm(1)), "find mixed input recipe");
         check(
             recipe.mDuration == ticks && recipe.mEUt == 1920 && recipe.mFluidInputs.length == 0,

@@ -23,7 +23,13 @@ public final class ProjectorRenderer extends TileEntitySpecialRenderer {
         t.addVertex(dx, dy, 0);
     };
 
-    static void draw(Projection gate, Projection.Path path, double age) {
+    static void draw(Projection gate, Projection.Path path, double age, int transparency) {
+        draw(gate, path, age, transparency, null, 0);
+    }
+
+    private static void draw(Projection gate, Projection.Path path, double age, int transparency, ProjectorTile tile,
+        double now) {
+        if (transparency >= 100) return;
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         try {
             OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
@@ -37,7 +43,9 @@ public final class ProjectorRenderer extends TileEntitySpecialRenderer {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glDepthMask(false);
             Tessellator.instance.startDrawingQuads();
-            gate.draw(path, age, BATCH);
+            GL11.glDepthFunc(GL11.GL_LEQUAL);
+            gate.draw(path, age, transparency, BATCH);
+            if (tile != null) tile.drawRipples(now, BATCH);
             Tessellator.instance.draw();
         } finally {
             GL11.glPopAttrib();
@@ -90,8 +98,21 @@ public final class ProjectorRenderer extends TileEntitySpecialRenderer {
             double dx = net.minecraft.client.renderer.ActiveRenderInfo.objectX - x - .5;
             double dz = net.minecraft.client.renderer.ActiveRenderInfo.objectZ - z - .5;
             double cameraZ = turn == 0 ? dz : turn == 1 ? dx : turn == 2 ? -dz : -dx;
-            if (!draft && age >= Projection.OPEN_TICKS) SceneClient.INSTANCE.visit(t, partial, cameraZ < 0);
-            draw(gate, draft ? editor.path : t.path, Math.max(0, age));
+            int transparency = draft ? editor.transparency : t.transparency;
+            boolean back = cameraZ < 0;
+            boolean hasScene = !draft && transparency < 100
+                && age >= Projection.OPEN_TICKS
+                && SceneClient.INSTANCE.visit(t, partial, back);
+            draw(
+                gate,
+                draft ? editor.path : t.path,
+                Math.max(0, age),
+                transparency,
+                draft ? null : t,
+                t.getWorldObj()
+                    .getTotalWorldTime() + partial);
+            // Seal opaque apertures only after the coplanar waves and rim have been blended.
+            if (hasScene && transparency == 0) SceneOptics.writeApertureDepth(gate, t.path, back);
             if (age >= Projection.OPEN_TICKS && !t.destinationName.isEmpty()
                 && (draft ? editor.previewLabel() : t.showDestination)) {
                 stationLabel(t.destinationName, gate, cameraZ < 0);

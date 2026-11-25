@@ -15,10 +15,24 @@ public final class ProjectorTile extends TileEntity {
     public boolean open;
     public String frequency = "", stationName = "";
     public boolean showDestination = true;
-    public boolean sceneEnabled, snapshot;
+    public boolean sceneEnabled, snapshot, muteTravel;
+    public int transparency;
     public String scenePeer = "";
     // Derived from the server directory when sending a tile update. Never written to the world save.
     public String destinationName = "";
+    private PortalRipples ripples;
+
+    public void drawRipples(double now, Projection.Quad out) {
+        if (ripples != null) ripples.draw(gate, now, transparency, out);
+    }
+
+    public void showRipple(int contact) {
+        if (open && worldObj.isRemote) {
+            if (ripples == null) ripples = new PortalRipples();
+            ripples.add(contact, worldObj.getTotalWorldTime());
+        }
+    }
+
     // 0 follows this projector; 1..4 are south, west, north, east (Minecraft yaw order).
     public int exitFacing;
 
@@ -37,6 +51,11 @@ public final class ProjectorTile extends TileEntity {
 
     public String configure(Projection draft, String channel, int facing, boolean enable, String name, boolean show,
         boolean view, boolean still) {
+        return configure(draft, channel, facing, enable, name, show, view, still, muteTravel, transparency);
+    }
+
+    public String configure(Projection draft, String channel, int facing, boolean enable, String name, boolean show,
+        boolean view, boolean still, boolean mute, int transparentPercent) {
         String station = name.trim();
         if (station.length() > 32 || station.indexOf('§') >= 0
             || station.chars()
@@ -46,14 +65,19 @@ public final class ProjectorTile extends TileEntity {
         if (cleaned.length() > 32 || cleaned.chars()
             .anyMatch(Character::isISOControl) || facing < 0 || facing > 4) return "invalid";
         GateDirectory directory = GateDirectory.get();
+        String result = "";
         if (enable) {
-            String failure = directory.open(this, draft, cleaned, station);
-            if (!failure.isEmpty()) return failure;
-        } else directory.remove(this);
+            result = directory.open(this, draft, cleaned, station);
+            if ("overlap".equals(result)) enable = false;
+            else if (!result.isEmpty()) return result;
+        }
+        if (!enable) directory.remove(this);
         open = enable;
         frequency = cleaned;
         sceneEnabled = view;
         snapshot = still;
+        muteTravel = mute;
+        transparency = Math.max(0, Math.min(100, transparentPercent));
         stationName = station;
         showDestination = show;
         exitFacing = facing;
@@ -62,7 +86,7 @@ public final class ProjectorTile extends TileEntity {
         started = worldObj.getTotalWorldTime();
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        return "";
+        return result;
     }
 
     public static void encode(Projection g, NBTTagCompound n) {
@@ -100,22 +124,47 @@ public final class ProjectorTile extends TileEntity {
         frequency = n.getString("frequency");
         sceneEnabled = n.getBoolean("sceneEnabled");
         snapshot = n.getBoolean("snapshot");
+        muteTravel = n.getBoolean("muteTravel");
+        transparency = Math.max(0, Math.min(100, n.getInteger("transparency")));
         stationName = n.getString("stationName");
         showDestination = !n.hasKey("showDestination") || n.getBoolean("showDestination");
         exitFacing = Math.max(0, Math.min(4, n.getInteger("exitFacing")));
     }
 
-    private NBTTagCompound writeProjection(NBTTagCompound n) {
+    public String applyPreset(NBTTagCompound n) {
+        if (n.getIntArray("profile").length != Projection.ROWS || !n.hasKey("shape", 3)
+            || n.getInteger("shape") < 0
+            || n.getInteger("shape") >= Projection.Shape.values().length) return "noPreset";
+        return configure(
+            decode(n),
+            frequency,
+            n.getInteger("exitFacing"),
+            open,
+            n.getString("stationName"),
+            n.getBoolean("showDestination"),
+            n.getBoolean("sceneEnabled"),
+            n.getBoolean("snapshot"),
+            n.getBoolean("muteTravel"),
+            n.getInteger("transparency"));
+    }
+
+    NBTTagCompound writePreset(NBTTagCompound n) {
         encode(gate, n);
-        n.setLong("started", started);
-        n.setBoolean("open", open);
-        n.setString("frequency", frequency);
         n.setBoolean("sceneEnabled", sceneEnabled);
         n.setBoolean("snapshot", snapshot);
+        n.setBoolean("muteTravel", muteTravel);
+        n.setInteger("transparency", transparency);
         n.setString("stationName", stationName);
         n.setBoolean("showDestination", showDestination);
         n.setInteger("exitFacing", exitFacing);
         return n;
+    }
+
+    private NBTTagCompound writeProjection(NBTTagCompound n) {
+        n.setLong("started", started);
+        n.setBoolean("open", open);
+        n.setString("frequency", frequency);
+        return writePreset(n);
     }
 
     @Override
@@ -148,6 +197,7 @@ public final class ProjectorTile extends TileEntity {
     @cpw.mods.fml.relauncher.SideOnly(cpw.mods.fml.relauncher.Side.CLIENT)
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound data = packet.func_148857_g();
+        if (!data.getBoolean("open") || data.getLong("started") != started) ripples = null;
         readProjection(data);
         scenePeer = data.getString("scenePeer");
         destinationName = data.getString("destinationName");

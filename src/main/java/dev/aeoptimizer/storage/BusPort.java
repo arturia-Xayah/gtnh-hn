@@ -103,7 +103,7 @@ final class BusPort<T extends IAEStack<T>> implements IMEMonitorHandlerReceiver<
         } else if (inv instanceof MEMonitorPassThrough) {
             ((MEMonitorPassThrough<?>) inv).setMode(visibility);
         }
-        handler = new StorageBusInventoryHandler<>(inv, type, bus::getReshuffleAccess, target);
+        handler = KindLimitedHandler.create(bus, inv, type, bus::getReshuffleAccess, target);
         AccessRestriction access = (AccessRestriction) bus.getConfigManager()
             .getSetting(Settings.ACCESS);
         handler.setBaseAccess(access);

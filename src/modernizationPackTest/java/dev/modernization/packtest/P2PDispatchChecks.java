@@ -293,10 +293,63 @@ final class P2PDispatchChecks {
             "set routing through GUI");
     }
 
+    void prepareFirstAvailable(ItemStack secondPattern) {
+        reset();
+        for (int i = 0; i < outputs.length; i++) {
+            buses[i].setInventorySlotContents(0, null);
+            DualityInterface port = outputs[i].getInterfaceDuality();
+            port.getUpgrades()
+                .setInventorySlotContents(0, new ItemStack(ItemBatchLimitCard.INSTANCE));
+            ((BatchLimitSettings) port).setBatchLimits(0, 0);
+            port.getConfigManager()
+                .putSetting(Settings.BLOCK, YesNo.YES);
+            port.getConfigManager()
+                .putSetting(Settings.SMART_BLOCK, YesNo.YES);
+        }
+        input.getInterfaceDuality()
+            .getPatterns()
+            .setInventorySlotContents(1, secondPattern);
+        mode(dev.aeoptimizer.dispatch.TunnelPolicy.FIRST_AVAILABLE);
+    }
+
+    int onlyFilledPort() {
+        int first = -1;
+        for (int i = 0; i < buses.length; i++) {
+            if (buses[i].getStackInSlot(0) == null) continue;
+            check(first == -1, "first batch stayed together");
+            first = i;
+        }
+        check(first != -1, "first batch reached a port");
+        return first;
+    }
+
+    void expectFirstAvailable(String label, int first, int firstCount, int otherCount) {
+        int[] counts = new int[buses.length];
+        int total = 0;
+        for (int i = 0; i < buses.length; i++) {
+            ItemStack stack = buses[i].getStackInSlot(0);
+            if (stack != null) {
+                check(stack.getItem() == Items.iron_ingot, "received recipe ingredient");
+                counts[i] = stack.stackSize;
+                total += stack.stackSize;
+                if (i != first) check(stack.stackSize == otherCount, "one fallback destination");
+            }
+            List<?> waiting = outputs[i].getInterfaceDuality()
+                .getWaitingToSend();
+            check(waiting == null || waiting.isEmpty(), "no leftover input at port " + i);
+        }
+        check(counts[first] == firstCount && total == firstCount + otherCount, label + " " + Arrays.toString(counts));
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("mode", label);
+        row.put("iron_per_destination", counts);
+        observations.add(row);
+    }
+
     void checkRebind() {
         PartP2PInterface old = outputs[0];
         PartP2PInterface replacement = (PartP2PInterface) old
             .convertToOutput(null, dualTunnel.copy(), input.getFrequency());
+        outputs[0] = replacement;
         check(replacement != old && replacement.isOutput(), "memory card rebind replaces endpoint");
         BatchLimitSettings limits = (BatchLimitSettings) replacement.getInterfaceDuality();
         check(limits.hasBatchLimitCard() && limits.batchItemLimit() == 32, "rebind preserves local card and limits");

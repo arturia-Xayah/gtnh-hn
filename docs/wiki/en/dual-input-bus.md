@@ -6,12 +6,21 @@
 
 ## Crafting and slots
 
-Both recipes run in the Assembler at EV (1,920 EU/t). Use unhoused ME storage components and any IV-tier circuit.
+By default, both recipes run in the Assembler at EV (1,920 EU/t). Use unhoused ME storage components and any IV-tier circuit.
 
 | Output | Ingredients | Base duration |
 |---|---|---|
 | Dual ME Stocking Input Bus | 1 Stocking Input Bus (ME), 4 IV circuits, 16 16k item storage components and 16 16k fluid storage components | 60 seconds |
 | Advanced Dual ME Stocking Input Bus | 1 basic Dual ME Stocking Input Bus, 16 IV circuits, 8 64k item storage components and 8 64k fluid storage components | 120 seconds |
+
+After the first launch, set `B:shapelessDualMEInputs=true` in the `recipes` section of `config/gtnh-hn-recipes.cfg` to replace both assembler recipes. Use the same setting on the client and server, then restart.
+
+| Ingredients (one of each, in any two crafting slots) | Output |
+|---|---|
+| Stocking Input Bus (ME) + Stocking Input Hatch (ME) | 1 Dual ME Stocking Input Bus |
+| Advanced Stocking Input Bus (ME) + Advanced Stocking Input Hatch (ME) | 1 Advanced Dual ME Stocking Input Bus |
+
+Both ingredients must be of the same tier. The resulting bus has no configuration.
 
 Place a configured dual input bus alone in the inventory crafting grid or a crafting table. Take the same tier of bus to reset filters, virtual circuit, colour, connection sides and auto-pull settings. The custom name, covers, upgrades and manual-slot items are retained.
 

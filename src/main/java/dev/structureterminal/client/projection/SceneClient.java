@@ -86,7 +86,7 @@ public final class SceneClient implements net.minecraft.client.resources.IResour
         }
         view.seen = frame;
         if (view.image.rendered) {
-            view.image.draw(t.gate, t.path, back);
+            view.image.draw(t.gate, t.path, back, t.transparency);
             return true;
         }
         return false;

@@ -43,6 +43,17 @@ public final class MixedInputs {
             "after:minecraft:shapeless");
         GameRegistry.addRecipe(new ClearMixedInputRecipe(basic.getStackForm(1)));
         GameRegistry.addRecipe(new ClearMixedInputRecipe(advanced.getStackForm(1)));
+        if (TerminalConfig.shapelessDualMEInputs) {
+            GameRegistry.addShapelessRecipe(
+                basic.getStackForm(1),
+                ItemList.Hatch_Input_Bus_ME.get(1),
+                ItemList.Hatch_Input_ME.get(1));
+            GameRegistry.addShapelessRecipe(
+                advanced.getStackForm(1),
+                ItemList.Hatch_Input_Bus_ME_Advanced.get(1),
+                ItemList.Hatch_Input_ME_Advanced.get(1));
+            return;
+        }
         GTValues.RA.stdBuilder()
             .itemInputs(
                 ItemList.Hatch_Input_Bus_ME.get(1),

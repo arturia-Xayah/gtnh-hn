@@ -17,7 +17,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 
 **GTNH-HN** is a lightweight collection of practical additions and quality-of-life improvements for **GT New Horizons**. It makes everyday multiblock building, AE pattern and crafting work, machine power control, storage and travel easier to manage.
 
-**[User guide](docs/wiki/README.en.md)** · [Download JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.4.2-GTNH-2.9.1/gtnh-hn-0.4.2-GTNH-2.9.1.jar) · [Changelog](CHANGELOG.md)
+**[User guide](docs/wiki/README.en.md)** · [Download JAR](https://github.com/arturia-Xayah/gtnh-hn/releases/download/v0.4.3-GTNH-2.9.1/gtnh-hn-0.4.3-GTNH-2.9.1.jar) · [Changelog](CHANGELOG.md)
 
 ## Contents
 
@@ -33,7 +33,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 
 ## Quick installation
 
-Current version: **0.4.2**, for **GTNH 2.9.1 / Minecraft 1.7.10**.
+Current version: **0.4.3**, for **GTNH 2.9.1 / Minecraft 1.7.10**.
 
 1. Download the JAR for your GTNH version from [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases) and place it in `mods`. Multiplayer clients and servers need the same version.
 2. Replace the previous merged mod JAR and remove duplicate standalone AE Order Optimizer, Plasma Forge Power and AE Storage Vault JARs.

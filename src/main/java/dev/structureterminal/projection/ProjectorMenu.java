@@ -46,10 +46,12 @@ public final class ProjectorMenu extends Container {
             n.hasKey("stationName") ? n.getString("stationName") : t.stationName,
             n.hasKey("showDestination") ? n.getBoolean("showDestination") : t.showDestination,
             n.hasKey("sceneEnabled") ? n.getBoolean("sceneEnabled") : t.sceneEnabled,
-            n.hasKey("snapshot") ? n.getBoolean("snapshot") : t.snapshot);
+            n.hasKey("snapshot") ? n.getBoolean("snapshot") : t.snapshot,
+            n.hasKey("muteTravel", 1) ? n.getBoolean("muteTravel") : t.muteTravel,
+            n.hasKey("transparency", 3) ? n.getInteger("transparency") : t.transparency);
         if (!problem.isEmpty()) {
             p.addChatMessage(new net.minecraft.util.ChatComponentTranslation("projector.error." + problem));
-            return;
+            if (!"overlap".equals(problem)) return;
         }
         p.closeScreen();
         if (t.open && t.frequency.isEmpty())

@@ -6,16 +6,19 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import time
 
 from summarize_pack_validation import classify
 
 EXCLUDED = ('structureterminal','aeorderoptimizer','aeoptimizer','aeorderbench','plasmaforgepower','aestoragevault','gtnh-modernization','gtnh-hn')
 SUITES = {
+    "kind_limit": ("kind-limit-validation", ["-Dstructureterminal.kindLimitTests=true"], ["kind-limit-tests.json"]),
     "dual_bus": ("dual-bus-validation", ["-Dstructureterminal.dualBusTests=true"], ["dual-bus-tests.json"]),
     "multi_output": ("multi-output-validation", ["-Dstructureterminal.multiOutputTests=true"], ["multi-output-tests.json"]),
     "mixed_output": ("mixed-output-validation", ["-Dstructureterminal.mixedOutputTests=true"], ["mixed-output-tests.json"]),
     'smart_blocking': ('smart-blocking-validation', ['-Dstructureterminal.smartBlockingTests=true'], ['smart-blocking-tests.json']),
+    'shapeless_inputs': ('shapeless-input-validation', ['-Dstructureterminal.emitterTests=true'], ['emitter-tests.json']),
     'emitter': ('emitter-validation', ['-Dstructureterminal.emitterTests=true'], ['emitter-tests.json']),
     'projector': ('projector-validation', ['-Dstructureterminal.projectorTests=true'], ['projector-tests.json']),
     'bc_range': ('bc-range-validation', ['-Dstructureterminal.bcRangeTests=true'], ['bc-range-tests.json']),
@@ -48,8 +51,10 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--pack',type=Path,required=True);ap.add_argument('--java',type=Path,required=True)
     ap.add_argument('--fixture',type=Path,required=True);ap.add_argument('--run-dir',type=Path,required=True)
+    ap.add_argument('--cores', type=int, default=2, help='JVM processor budget (default 2)')
     ap.add_argument('--pack-version',default='2.9.1')
     ap.add_argument('--suites',nargs='+',choices=SUITES,default=list(SUITES));a=ap.parse_args()
+    if a.cores < 1: ap.error('--cores must be positive')
     pack,target,fixture,java=(p.resolve() for p in (a.pack,a.run_dir,a.fixture,a.java))
     if target.exists() or pack==target or pack in target.parents: ap.error('Use a new directory outside the source pack')
     for p in (pack/'mods',pack/'java9args.txt',pack/'lwjgl3ify-forgePatches.jar',fixture,java):
@@ -57,10 +62,16 @@ def main():
     target.mkdir(parents=True); rows=[]
     for suite in a.suites:
         world,flags,reports=SUITES[suite];folder=target/suite;prepare(pack,folder,fixture,world)
+        if suite == 'shapeless_inputs':
+            (folder/'config/gtnh-hn-recipes.cfg').write_text("recipes {\n    B:shapelessDualMEInputs=true\n}\n")
         if suite == 'cache_config':
             (folder/'config/gtnh-modernization.cfg').write_text("storagecache {\n S:keyMaxEntries=2\n S:keyMaxBytes=1024\n S:prototypeMaxEntries=2\n S:prototypeMaxBytes=4096\n S:outputMaxEntries=1\n S:outputMaxBytes=2048\n S:maxEntryBytes=-1\n S:globalMaxBytes=8192\n}\n")
         for stage,name in enumerate(reports,1):
-            cmd=[str(java),'-Xms1G','-Xmx6G','-XX:+UseG1GC','-Dmodernization.tests=true','-Dmodernization.packVersion='+a.pack_version,*flags,'-Djava.awt.headless=true','-Duser.language=en','-Dfml.readTimeout=180','@java9args.txt','-jar','lwjgl3ify-forgePatches.jar','nogui']
+            # Background QoS prefers efficiency cores on Apple Silicon. nice also works on Linux.
+            prefix = ['nice', '-n', '10'] if shutil.which('nice') else []
+            if sys.platform == 'darwin' and shutil.which('taskpolicy'):
+                prefix = ['taskpolicy', '-b', *prefix]
+            cmd=prefix + [str(java),f'-XX:ActiveProcessorCount={a.cores}','-Xms1G','-Xmx6G','-XX:+UseG1GC','-Dmodernization.tests=true','-Dmodernization.packVersion='+a.pack_version,*flags,'-Djava.awt.headless=true','-Duser.language=en','-Dfml.readTimeout=180','@java9args.txt','-jar','lwjgl3ify-forgePatches.jar','nogui']
             with (folder/f'server-{stage}.log').open('w') as log:
                 process=subprocess.Popen(cmd,cwd=folder,stdout=log,stderr=subprocess.STDOUT);deadline=time.monotonic()+1200
                 while process.poll() is None:

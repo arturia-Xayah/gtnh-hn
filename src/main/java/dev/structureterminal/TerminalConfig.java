@@ -18,7 +18,21 @@ public final class TerminalConfig {
     public static int sceneFps = 30;
     public static int mixedInputId = 31990, mixedAdvancedInputId = 31991, mixedOutputId = 31992;
 
+    public static boolean shapelessDualMEInputs;
+
     private TerminalConfig() {}
+
+    public static void loadRecipes(File configDirectory) {
+        Configuration recipes = new Configuration(new File(configDirectory, "gtnh-hn-recipes.cfg"));
+        recipes.load();
+        shapelessDualMEInputs = recipes.getBoolean(
+            "shapelessDualMEInputs",
+            "recipes",
+            false,
+            "Replace both Dual ME Stocking Input Bus assembler recipes with shapeless crafting: "
+                + "one ME stocking input bus and one ME stocking input hatch of the same tier. Restart to apply.");
+        if (recipes.hasChanged()) recipes.save();
+    }
 
     public static void load(File file) {
         Configuration c = new Configuration(file);

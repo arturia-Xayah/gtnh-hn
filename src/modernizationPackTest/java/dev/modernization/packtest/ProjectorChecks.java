@@ -181,12 +181,35 @@ final class ProjectorChecks {
             "nearby visual gate");
         expect(
             b.configure(gate.resized(Projection.Shape.DISC, 8, 8, 1, gate.profile()), "changed", 0, true)
-                .equals("overlap") && b.gate.width == 4
-                && b.frequency.equals(channel)
-                && b.exitFacing == 4,
-            "atomic resize rejection");
+                .equals("overlap") && !b.open
+                && b.gate.width == 8
+                && b.frequency.equals("changed")
+                && b.exitFacing == 0
+                && neighbor.open
+                && sync(a).getString("destinationName")
+                    .isEmpty(),
+            "overlapping resize saves new settings and unlinks only the edited gate");
         w.setBlockToAir(bx + 3, y, z);
-        tests.add("pair_catalog_reload_and_rejected_resize_keeps_original_gate");
+        expect(
+            b.configure(b.gate, b.frequency, b.exitFacing, true)
+                .isEmpty() && b.gate.width == 8,
+            "can open saved shape when area clears");
+        b.configure(gate, channel, 4, true);
+        w.setBlock(bx + 3, y, z, block);
+        neighbor = (ProjectorTile) w.getTileEntity(bx + 3, y, z);
+        neighbor.configure(gate.resized(Projection.Shape.DISC, 2, 2, 1, gate.profile()), "", 0, true);
+        NBTTagCompound pasted = new NBTTagCompound();
+        ProjectorTile.encode(gate.resized(Projection.Shape.DISC, 8, 8, 1, gate.profile()), pasted);
+        pasted.setString("frequency", "foreign");
+        expect(
+            "overlap".equals(b.applyPreset(pasted)) && !b.open
+                && b.frequency.equals(channel)
+                && b.gate.width == 8
+                && neighbor.open,
+            "overlapping flash preset saves and closes, frequency retained");
+        w.setBlockToAir(bx + 3, y, z);
+        b.configure(gate, channel, 4, true);
+        tests.add("overlapping_resize_and_preset_save_new_shape_close_gate_and_release_pair");
         tests.add("paired_frequency_limit_and_overlap_rejection");
 
         dev.structureterminal.projection.GateTravel travel = new dev.structureterminal.projection.GateTravel();
@@ -202,16 +225,53 @@ final class ProjectorChecks {
         travel = new dev.structureterminal.projection.GateTravel();
         p.setPosition(x - 2, y + 1, z + .5);
         travel.sample(p);
-        p.setPosition(x + 3, y + 1, z + .5);
-        travel.sample(p);
-        expect(p.posX == bx + .5 && p.posY == y + 1 && p.rotationYaw == 270, "swept transfer and exit facing");
-        travel.sample(p);
-        expect(p.posX == bx + .5, "no bounce");
-        p.setPosition(bx + .5, y + 1, z + 2);
-        travel.sample(p);
-        p.setPosition(bx + .5, y + 1, z + .5);
-        travel.sample(p);
-        expect(p.posX == x + .5 && p.rotationYaw == 90, "return using default facing");
+        List<String> sounds = new ArrayList<>();
+        net.minecraft.world.IWorldAccess listener = (net.minecraft.world.IWorldAccess) java.lang.reflect.Proxy
+            .newProxyInstance(
+                ProjectorChecks.class.getClassLoader(),
+                new Class<?>[] { net.minecraft.world.IWorldAccess.class },
+                (proxy, method, args) -> {
+                    if (method.getName()
+                        .equals("equals")) return proxy == args[0];
+                    if (args != null && args.length > 0
+                        && args[0] instanceof String
+                        && ((String) args[0]).startsWith("portal.")) sounds.add((String) args[0]);
+                    return null;
+                });
+        w.addWorldAccess(listener);
+        try {
+            p.setPosition(x + 3, y + 1, z + .5);
+            travel.sample(p);
+            expect(sounds.isEmpty(), "muted source suppresses both sounds");
+            expect(p.posX == bx + .5 && p.posY == y + 1 && p.rotationYaw == 270, "swept transfer and exit facing");
+            travel.sample(p);
+            expect(p.posX == bx + .5, "no bounce");
+            p.setPosition(bx + .5, y + 1, z + 2);
+            travel.sample(p);
+            p.setPosition(bx + .5, y + 1, z + .5);
+            travel.sample(p);
+            expect(p.posX == x + .5 && p.rotationYaw == 90, "return using default facing");
+            expect(
+                sounds.equals(Arrays.asList("portal.trigger")),
+                "muted destination suppresses arrival only: " + sounds);
+            a.muteTravel = false;
+            sounds.clear();
+            p.setPosition(x + 3, y + 1, z + .5);
+            travel.sample(p);
+            p.setPosition(x + .5, y + 1, z + .5);
+            travel.sample(p);
+            expect(
+                sounds.size() == 2 && sounds.contains("portal.trigger") && sounds.contains("portal.travel"),
+                "default audible endpoints: " + sounds);
+            p.setPosition(bx + .5, y + 1, z + 2);
+            travel.sample(p);
+            p.setPosition(bx + .5, y + 1, z + .5);
+            travel.sample(p);
+            expect(p.posX == x + .5, "return to source before cross-dimensional checks");
+        } finally {
+            w.removeWorldAccess(listener);
+        }
+        tests.add("travel_sounds_both_ends_source_mute_and_destination_mute");
         tests.add("same_dimension_swept_travel_blocked_exit_facing_and_return");
         w.setBlockToAir(bx, y, z);
         expect(
@@ -328,6 +388,28 @@ final class ProjectorChecks {
             block.onBlockPlacedBy(w, x, y, z, p, new ItemStack(block));
             ProjectorTile tile = (ProjectorTile) w.getTileEntity(x, y, z);
             expect(tile != null && !tile.canUpdate() && tile.getBlockMetadata() == 1, "orientation");
+            net.minecraft.inventory.InventoryCrafting grid = new net.minecraft.inventory.InventoryCrafting(
+                new appeng.container.ContainerNull(),
+                3,
+                3);
+            appeng.api.definitions.IBlocks blocks = appeng.api.AEApi.instance()
+                .definitions()
+                .blocks();
+            for (int i = 0; i < 9; i++) grid.setInventorySlotContents(
+                i,
+                i == 4 ? blocks.quantumLink()
+                    .maybeStack(1)
+                    .get()
+                    : (i % 2 == 1 ? blocks.quantumRing()
+                        .maybeStack(1)
+                        .get() : gregtech.api.enums.ItemList.Circuit_Elitenanocomputer.get(1)));
+            expect(
+                ItemStack.areItemStacksEqual(
+                    net.minecraft.item.crafting.CraftingManager.getInstance()
+                        .findMatchingRecipe(grid, w),
+                    new ItemStack(block)),
+                "portal crafting result");
+            tests.add("quantum_link_chamber_four_rings_four_IV_circuits_craft_projector");
             tests.add("dedicated_registration_and_placement");
             ProjectorMenu menu = (ProjectorMenu) dev.structureterminal.StructureTerminal.proxy
                 .getServerGuiElement(ProjectorMenu.ID, p, w, x, y, z);
@@ -346,9 +428,13 @@ final class ProjectorChecks {
             command.setString("frequency", "  ");
             command.setString("stationName", "主基地");
             command.setBoolean("showDestination", false);
+            command.setBoolean("muteTravel", true);
+            command.setInteger("transparency", 40);
             command.setInteger("window", menu.windowId + 1);
             ProjectorMenu.apply(p, command);
-            expect(tile.gate.shape == Projection.Shape.DISC, "stale editor");
+            expect(
+                tile.gate.shape == Projection.Shape.DISC && !tile.muteTravel && tile.transparency == 0,
+                "stale editor");
             command.setInteger("window", menu.windowId);
             ProjectorMenu.apply(p, command);
             expect(
@@ -362,6 +448,50 @@ final class ProjectorChecks {
                 "single successful empty-frequency notice: " + chat);
             tests.add("blank_frequency_menu_feedback");
             tests.add("apply_uses_live_editor");
+            int copyX = x + 16;
+            w.setBlock(copyX, y, z, block);
+            ProjectorTile copy = (ProjectorTile) w.getTileEntity(copyX, y, z);
+            copy.configure(Projection.DEFAULT, "keep-this", 0, false);
+            ItemStack stick = gregtech.api.enums.ItemList.Tool_DataStick.get(1);
+            stick.setTagCompound(new NBTTagCompound());
+            stick.getTagCompound()
+                .setString("unrelated", "retained");
+            p.inventory.setInventorySlotContents(p.inventory.currentItem, stick);
+            net.minecraftforge.event.entity.player.PlayerInteractEvent click = new net.minecraftforge.event.entity.player.PlayerInteractEvent(
+                p,
+                net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.LEFT_CLICK_BLOCK,
+                x,
+                y,
+                z,
+                1,
+                w);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(click);
+            expect(
+                click.isCanceled() && stick.getTagCompound()
+                    .hasKey("structureterminal:portalPreset", 10)
+                    && !stick.getTagCompound()
+                        .getCompoundTag("structureterminal:portalPreset")
+                        .hasKey("frequency")
+                    && stick.getTagCompound()
+                        .getString("unrelated")
+                        .equals("retained"),
+                "data stick copy operation");
+            p.setPosition(copyX + .5, y, z + 2);
+            block.onBlockActivated(w, copyX, y, z, p, 1, .5f, 1, .5f);
+            expect(
+                copy.frequency.equals("keep-this") && !copy.open
+                    && copy.gate.shape == custom.shape
+                    && Arrays.equals(copy.gate.profile(), custom.profile())
+                    && copy.gate.secondary == custom.secondary
+                    && copy.stationName.equals("主基地")
+                    && copy.muteTravel
+                    && copy.transparency == 40
+                    && !copy.showDestination,
+                "data stick applies source preset without retuning or opening target");
+            w.setBlockToAir(copyX, y, z);
+            p.inventory.setInventorySlotContents(p.inventory.currentItem, null);
+            p.setPosition(x + .5, y, z + 2);
+            tests.add("GT_data_stick_left_copy_right_paste_preserves_target_frequency_and_state");
             NBTTagCompound saved = new NBTTagCompound();
             tile.writeToNBT(saved);
             ProjectorTile loaded = (ProjectorTile) TileEntity.createAndLoadEntity(saved);
@@ -373,6 +503,8 @@ final class ProjectorChecks {
                     && loaded.gate.innerQuarters == 7
                     && loaded.started == tile.started
                     && loaded.stationName.equals("主基地")
+                    && loaded.muteTravel
+                    && loaded.transparency == 40
                     && !loaded.showDestination,
                 "save/load");
             NBTTagCompound payload = sync(tile);
@@ -382,9 +514,22 @@ final class ProjectorChecks {
                     && synced.secondary == custom.secondary
                     && synced.innerQuarters == custom.innerQuarters
                     && payload.getLong("started") == tile.started
+                    && payload.getBoolean("muteTravel")
+                    && payload.getInteger("transparency") == 40
                     && !payload.getBoolean("showDestination")
                     && "主基地".equals(payload.getString("stationName")),
                 "sync payload");
+            saved.removeTag("transparency");
+            saved.removeTag("muteTravel");
+            loaded.readFromNBT(saved);
+            expect(loaded.transparency == 0 && !loaded.muteTravel, "old gate keeps original visuals and sounds");
+            saved.setInteger("transparency", 125);
+            loaded.readFromNBT(saved);
+            expect(loaded.transparency == 100, "transparency upper bound");
+            saved.setInteger("transparency", -35);
+            loaded.readFromNBT(saved);
+            expect(loaded.transparency == 0, "transparency lower bound");
+            tests.add("mute_and_transparency_menu_save_sync_legacy_and_range");
             NBTTagCompound old = new NBTTagCompound();
             old.setInteger("width", 4);
             old.setInteger("height", 4);

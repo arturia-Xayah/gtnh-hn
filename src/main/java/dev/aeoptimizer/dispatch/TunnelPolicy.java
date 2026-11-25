@@ -5,13 +5,13 @@ import net.minecraft.nbt.NBTTagCompound;
 /** Shared by all crafting CPUs using this particular input. Accessed on the server thread. */
 public final class TunnelPolicy {
 
-    public static final int DEFAULT = 0, EVEN = 1, ROUND = 2, DELAY = 10;
+    public static final int DEFAULT = 0, EVEN = 1, ROUND = 2, FIRST_AVAILABLE = 3, DELAY = 10;
     public int mode;
     private int remainder, next;
     private long resume;
 
     public void setMode(int value) {
-        int valid = value >= DEFAULT && value <= ROUND ? value : DEFAULT;
+        int valid = value >= DEFAULT && value <= FIRST_AVAILABLE ? value : DEFAULT;
         if (valid != mode) {
             mode = valid;
             remainder = next = 0;

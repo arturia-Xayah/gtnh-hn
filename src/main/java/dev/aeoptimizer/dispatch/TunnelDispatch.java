@@ -126,7 +126,8 @@ public final class TunnelDispatch {
     public long allowance(ICraftingMedium m, long max, long tick) {
         Group g = membership.get(m);
         if (!share.owner.isEmpty() && (g == null || !g.key.equals(share.owner))) return 0;
-        if (g == null) return max;
+        // order() starts at the first linked output on every batch in FIRST_AVAILABLE mode.
+        if (g == null || g.policy.mode == TunnelPolicy.FIRST_AVAILABLE) return max;
         int size = g.ports.size();
         if (g.policy.mode == TunnelPolicy.ROUND) {
             if (!g.policy.visit(indices.get(m), size, tick)) return 0;

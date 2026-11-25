@@ -31,7 +31,8 @@ public abstract class BatchLimitUpgradeMixin {
     private static void modernization$addUpgrade(CallbackInfo ci) {
         int count = $VALUES.length;
         Upgrades next = modernization$newUpgrade("MODERNIZATION_BATCH_LIMIT", count, 1);
-        $VALUES = Arrays.copyOf($VALUES, count + 1);
+        $VALUES = Arrays.copyOf($VALUES, count + 2);
         $VALUES[count] = next;
+        $VALUES[count + 1] = modernization$newUpgrade("HN_KIND_LIMIT", count + 1, 1);
     }
 }

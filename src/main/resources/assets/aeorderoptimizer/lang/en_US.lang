@@ -57,10 +57,23 @@ aeoptimizer.batch.apply=Apply
 aeoptimizer.batch.cancel=Cancel
 aeoptimizer.batch.invalid=Enter 0 to 9223372036854775807
 aeoptimizer.batch.blocked=One recipe exceeds the limit; paused
-aeoptimizer.batch.p2p.0=P2P default dispatch (click to cycle)
-aeoptimizer.batch.p2p.1=P2P even split (whole crafts, independent queues)
-aeoptimizer.batch.p2p.2=P2P round robin (one output per batch, 10 ticks between rounds)
+aeoptimizer.batch.p2p.0=P2P Default dispatch
+aeoptimizer.batch.p2p.0.hint=Use the existing interface dispatch order.
+aeoptimizer.batch.p2p.1=P2P Even split
+aeoptimizer.batch.p2p.1.hint=Split whole crafts evenly. Each busy output waits for its own share.
+aeoptimizer.batch.p2p.2=P2P Batch round robin (resume)
+aeoptimizer.batch.p2p.2.hint=Start each batch at the next output. Skip busy outputs and wait 10 ticks between rounds.
+aeoptimizer.batch.p2p.3=P2P Batch round robin (first available)
+aeoptimizer.batch.p2p.3.hint=Start every batch at the first output. Try later outputs in order until one accepts.
 aeoptimizer.rename.slots=The separate assembly-line inputs exceed this terminal’s available slots.
 
 item.aeorderoptimizer.dual_storage_bus.name=ME Dual Storage Bus
 item.aeorderoptimizer.dual_storage_bus.tip=Access items and fluids on the adjacent face using one channel. Filter slots accept either type.
+
+item.aeorderoptimizer.kind_limit_card.name=Type Limit Card
+aeoptimizer.kind_limit.tip.1=Install one in an item, fluid or dual ME Storage Bus upgrade slot.
+aeoptimizer.kind_limit.tip.2=Insertion only. An empty target accepts the first type, then only more of that type.
+aeoptimizer.kind_limit.tip.3=Mixed targets block insertion. Extract down to one type to resume, or empty to switch.
+aeoptimizer.kind_limit.tip.4=Dual buses share one type across items and fluids. Custom names count separately.
+aeoptimizer.kind_limit.tip.5=GT programmed circuits of every setting pass through and do not count.
+aeoptimizer.kind_limit.tip.6=Checks stored contents visible at the target. Remainders can reach lower priorities.

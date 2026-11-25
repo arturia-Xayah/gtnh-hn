@@ -49,7 +49,8 @@ Open the **input** ME Interface and click the mode button on the left. Standard 
 | --- | --- |
 | Default | Keeps the existing dispatch order. |
 | Even split | Divides whole crafts among linked outputs and rotates the remainder. Ten crafts across four ports give two ports three crafts and two ports two. A blocked port waits independently. |
-| Round robin | Sends each batch to one port, skips busy ports, and waits 10 ticks after a complete pass. |
+| Batch round robin (resume) | Starts each batch at the next output, skips busy ports, and waits 10 ticks after a complete pass. |
+| Batch round robin (first available) | Starts each batch at the first output and tries subsequent outputs until one accepts. With smart blocking, the first output can take the same pattern again. A different pattern can pass to a later output while ingredients remain at the first. |
 
 Each output retains its own limit card and blocking rules. Ingredients remain in the CPU until accepted. Changing mode or adding or removing ports redistributes outstanding crafts.
 

@@ -37,12 +37,14 @@ public final class OrderOptimizer {
     public void preInit(cpw.mods.fml.common.event.FMLPreInitializationEvent event) {
         dev.aeoptimizer.dispatch.ItemBatchLimitCard.register();
         dev.aeoptimizer.storage.ItemDualStorageBus.register();
+        dev.aeoptimizer.storage.KindLimitCard.register();
     }
 
     @Mod.EventHandler
     public void postInit(cpw.mods.fml.common.event.FMLPostInitializationEvent event) {
         dev.aeoptimizer.dispatch.ItemBatchLimitCard.registerHosts();
         dev.aeoptimizer.storage.ItemDualStorageBus.setup();
+        dev.aeoptimizer.storage.KindLimitCard.setup();
     }
 
     @Mod.EventHandler

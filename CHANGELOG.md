@@ -1,5 +1,23 @@
 # 更新日志 / Changelog
 
+## 0.4.3 — GTNH 2.9.1 · 2026-11-25
+
+### 中文
+
+- 新增 **种类限制卡**，可装入 ME 物品、流体和二合一存储总线。首种写入的材料占用名额，清空后可自动换料。二合一总线的物品和流体共用一个名额，各编号的 GT 编程电路均可通过。修复二合一总线连接 ME 接口时对子网库存的识别。
+- ME 接口 P2P 新增 **批次轮询（顺序优先）**，每批都从首选出口尝试，遇忙顺延。原轮询更名为 **批次轮询（接续上次）**，各模式均有悬停说明。
+- 普通和进阶二合一 ME 输入总线新增可选无序配方。在 `config/gtnh-hn-recipes.cfg` 中启用 `shapelessDualMEInputs` 并重启，即可用同档 ME 物品输入总线和流体输入仓合成。默认沿用 EV 组装机配方。
+- 传送门投影主机新增工作台配方，中央放 ME 量子链接仓，四边放 ME 量子环，四角放任意 IV 级电路。用 GT 闪存左键复制设置、右键粘贴，目标保留自己的频率。应用或粘贴的门形若与已开启的门重叠，主机会保存新设置并关闭本门。
+- 穿门时，入口与出口会从接触点泛起水纹。主机可设置传送静音和 0–100% 透明度。调整目的地画面与门面特效的绘制顺序，修复边缘和波纹重叠处的闪烁。
+
+### English
+
+- Added the **Type Limit Card** for item, fluid and dual ME storage buses. The first material written claims the destination until it empties. A dual bus shares one slot across items and fluids. All GT programmed circuits pass freely. Fixed subnet inventory detection when a dual bus connects to an ME interface.
+- Added a preferred-output round-robin mode for ME Interface P2P. Each batch starts at the first output and skips busy outputs. The existing round-robin mode resumes where the previous batch left off. Hover over any mode for its routing rules.
+- Both dual ME input bus tiers can now be crafted from a matching ME item input bus and fluid input hatch. Enable `shapelessDualMEInputs` in `config/gtnh-hn-recipes.cfg` and restart to switch from the default EV assembler recipes.
+- Craft a Portal Projector with an ME Quantum Link Chamber in the center, four ME Quantum Rings on the edges and four IV-tier circuits in the corners. Left-click with a GT Data Stick to copy settings and right-click to paste. The target keeps its frequency. Applying or pasting an overlapping shape saves the new settings and closes the affected gate.
+- Portal crossings send ripples across both gate surfaces. Each projector now has a mute option and 0–100% transparency. Updated scene and effect layering to fix flicker where the destination view met the rim or ripples.
+
 ## 0.4.2 — GTNH 2.9.1 · 2026-11-24
 
 ### 中文

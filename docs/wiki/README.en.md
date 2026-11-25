@@ -4,7 +4,7 @@
 
 [Project home](../../README.en.md) · [简体中文](README.md)
 
-This guide covers **GTNH-HN 0.4.2 / GTNH 2.9.1**. Features have separate pages and language switches; the documentation is versioned with the repository. Start with [Installation and upgrading](en/installation.md).
+This guide covers **GTNH-HN 0.4.3 / GTNH 2.9.1**. Features have separate pages and language switches; the documentation is versioned with the repository. Start with [Installation and upgrading](en/installation.md).
 
 [Installation and updates](#installation-and-updates) · [Building and machine controls](#building-and-machine-controls) · [AE networks and automation](#ae-networks-and-automation) · [ME storage](#me-storage) · [Portals and scenes](#portals-and-scenes) · [Compatibility and configuration](#compatibility-and-configuration) · [Project resources](#project-resources)
 

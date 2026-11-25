@@ -35,6 +35,7 @@ public final class LateMixins implements ILateMixinLoader {
                 "AdvancedEmitterMixin",
                 "EmitterContainerMixin",
                 "DualBusPartitionMixin",
+                "KindLimitBusMixin",
                 "BatchLimitContainerMixin",
                 "BatchLimitUpgradeMixin",
                 "P2PBatchLimitSlotMixin",

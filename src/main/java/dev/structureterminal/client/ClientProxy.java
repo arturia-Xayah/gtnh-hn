@@ -137,6 +137,16 @@ public final class ClientProxy extends CommonProxy {
     public void receive(NBTTagCompound tag) {
         queue.add(() -> {
             Minecraft mc = Minecraft.getMinecraft();
+            if (tag.getBoolean("portalRipple")) {
+                int x = tag.getInteger("x"), y = tag.getInteger("y"), z = tag.getInteger("z");
+                if (mc.theWorld != null && mc.theWorld.provider.dimensionId == tag.getInteger("dim")
+                    && mc.theWorld.blockExists(x, y, z)) {
+                    net.minecraft.tileentity.TileEntity tile = mc.theWorld.getTileEntity(x, y, z);
+                    if (tile instanceof dev.structureterminal.projection.ProjectorTile)
+                        ((dev.structureterminal.projection.ProjectorTile) tile).showRipple(tag.getInteger("contact"));
+                }
+                return;
+            }
             if (tag.getBoolean("gateTravel")) {
                 dev.structureterminal.client.projection.TransitEffect.begin(tag);
                 return;

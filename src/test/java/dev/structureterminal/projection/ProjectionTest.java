@@ -10,6 +10,35 @@ import org.junit.Test;
 public class ProjectionTest {
 
     @Test
+    public void impactRipplesExpandFromContactAndRespectRingHoleExpiryAndOpacity() {
+        PortalRipples impacts = new PortalRipples();
+        impacts.add(PortalRipples.pack(-1, .75), 100);
+        double[] reach = { 0, 0 };
+        for (int frame = 0; frame < 2; frame++) {
+            final int i = frame;
+            impacts.draw(Projection.DEFAULT, 102 + frame * 3, 0, (a, b, c, d, e, f, g, h, color) -> {
+                assertTrue((color & 255) > 0);
+                reach[i] = Math.max(reach[i], Math.hypot(a + 1, b - .75));
+            });
+        }
+        assertTrue(reach[0] > 0 && reach[1] > reach[0] + .3);
+        Projection ring = new Projection(Projection.Shape.RING, 6, 6, 8, Projection.DEFAULT.profile());
+        int[] quads = { 0 };
+        impacts.draw(ring, 109, 0, (a, b, c, d, e, f, g, h, color) -> {
+            quads[0]++;
+            double[] xs = { a, c, e, g }, ys = { b, d, f, h };
+            for (int k = 0; k < 4; k++) {
+                double r = Math.hypot(xs[k], ys[k] - 3);
+                assertTrue(r >= ring.innerRadius() - 1e-8 && r <= ring.radius() + 1e-8);
+            }
+        });
+        assertTrue(quads[0] > 0);
+        Projection.Quad invisible = (a, b, c, d, e, f, g, h, color) -> fail("hidden ripple");
+        impacts.draw(ring, 140, 0, invisible);
+        impacts.draw(ring, 109, 100, invisible);
+    }
+
+    @Test
     public void shapesStartAtEmitterAndMeetAtCrown() {
         for (Projection.Shape shape : Projection.Shape.values()) {
             Projection g = new Projection(shape, 6, 4, 8, Projection.DEFAULT.profile());

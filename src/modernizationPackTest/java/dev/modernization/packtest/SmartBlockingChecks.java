@@ -59,6 +59,7 @@ public final class SmartBlockingChecks {
     private final int x = world.getSpawnPoint().posX, y = 100, z = world.getSpawnPoint().posZ;
     private TileInterface sender, receiver;
     private P2PDispatchChecks tunnels;
+    private ICraftingPatternDetails secondP2pPattern;
     private final Tanks tanks = new Tanks();
     private final Fluid[] fluids = { FluidRegistry.WATER, FluidRegistry.LAVA, FluidRegistry.getFluid("oxygen") };
     private final BaseActionSource action = new BaseActionSource();
@@ -134,7 +135,7 @@ public final class SmartBlockingChecks {
                     .get());
     }
 
-    private static ItemStack encode(Item item, IAEStack<?>[] in) throws Exception {
+    static ItemStack encode(Item item, IAEStack<?>[] in) throws Exception {
         Class<?> cls = Class.forName("com.glodblock.github.util.FluidPatternDetails");
         Object builder = cls.getConstructor(ItemStack.class)
             .newInstance(new ItemStack(item));
@@ -314,6 +315,28 @@ public final class SmartBlockingChecks {
                     tunnels.checkRebind();
                     tests.add(
                         "Linked dual P2P outputs, per-output limits, four destinations: subnet/GT bus inventories and sender queues conserved");
+                    break;
+                case 405:
+                    ItemStack second = encode(
+                        encoded.getItem(),
+                        new IAEStack<?>[] { AEItemStack.create(new ItemStack(Items.iron_ingot, 8)) });
+                    secondP2pPattern = ((appeng.api.implementations.ICraftingPatternItem) second.getItem())
+                        .getPatternForItem(second, world);
+                    check(secondP2pPattern.hashCode() != pattern.hashCode(), "distinct smart-blocking pattern keys");
+                    tunnels.prepareFirstAvailable(second);
+                    break;
+                case 445:
+                    cpuDispatch("first available A", 10, 64, 10, 1);
+                    int first = tunnels.onlyFilledPort();
+                    tunnels.expectFirstAvailable("first available: first A", first, 40, 0);
+                    cpuDispatch("first available A again", 2, 64, 2, 1);
+                    tunnels.expectFirstAvailable("first available: repeated A", first, 48, 0);
+                    pattern = secondP2pPattern;
+                    cpuDispatch("first available B", 1, 64, 1, 1);
+                    tunnels.expectFirstAvailable("first available: B skips occupied A", first, 48, 8);
+                    tunnels.mode(0);
+                    tests.add(
+                        "First available mode: A and A use the same port, B uses another; GUI cycles back to default");
                     finish(null);
                     break;
                 default:

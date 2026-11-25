@@ -49,19 +49,27 @@ public final class TransitEffect {
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glColor4f(
-                (secondary >> 16 & 255) / 255f,
-                (secondary >> 8 & 255) / 255f,
-                (secondary & 255) / 255f,
-                (float) (.3 * fade));
-            GL11.glBegin(GL11.GL_QUAD_STRIP);
-            double radius = .1 + 1.1 * t;
-            for (int i = 0; i <= 96; i++) {
-                double a = Math.PI * 2 * i / 96;
-                GL11.glVertex2d(w * (.5 + Math.cos(a) * radius), h * (.5 + Math.sin(a) * radius));
-                GL11.glVertex2d(w * (.5 + Math.cos(a) * (radius + .035)), h * (.5 + Math.sin(a) * (radius + .035)));
+            // Concentric crests follow the entry flash; use screen pixels to keep them circular on ultrawide displays.
+            double scale = Math.hypot(w, h) * .5;
+            for (int crest = 0; crest < 3; crest++) {
+                double age = t - crest * .085;
+                if (age <= 0) continue;
+                double radius = scale * (.04 + 1.20 * age);
+                double band = scale * (.012 + .012 * age);
+                int rgb = crest == 1 ? primary : secondary;
+                GL11.glColor4f(
+                    (rgb >> 16 & 255) / 255f,
+                    (rgb >> 8 & 255) / 255f,
+                    (rgb & 255) / 255f,
+                    (float) (.32 * fade / (1 + crest * .4)));
+                GL11.glBegin(GL11.GL_QUAD_STRIP);
+                for (int i = 0; i <= 96; i++) {
+                    double angle = Math.PI * 2 * i / 96, dx = Math.cos(angle), dy = Math.sin(angle);
+                    GL11.glVertex2d(w * .5 + dx * radius, h * .5 + dy * radius);
+                    GL11.glVertex2d(w * .5 + dx * (radius + band), h * .5 + dy * (radius + band));
+                }
+                GL11.glEnd();
             }
-            GL11.glEnd();
         } finally {
             GL11.glPopAttrib();
         }

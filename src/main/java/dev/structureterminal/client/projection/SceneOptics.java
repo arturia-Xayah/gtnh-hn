@@ -1,6 +1,7 @@
 package dev.structureterminal.client.projection;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import dev.structureterminal.projection.Projection;
 
@@ -34,6 +35,47 @@ final class SceneOptics {
             .flip();
         GL11.glClipPlane(GL11.GL_CLIP_PLANE0, plane);
         GL11.glEnable(GL11.GL_CLIP_PLANE0);
+    }
+
+    static void drawDestination(Projection g, Projection.Path path, boolean back, int transparency) {
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
+        GL11.glDepthMask(false);
+        if (transparency == 0) {
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_REPLACE);
+        } else {
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            // The FBO alpha depends on the terrain and entities it contains. Use only its RGB.
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_RGB, GL11.GL_REPLACE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_RGB, GL11.GL_TEXTURE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_RGB, GL11.GL_SRC_COLOR);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_COMBINE_ALPHA, GL11.GL_REPLACE);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_SOURCE0_ALPHA, GL13.GL_PRIMARY_COLOR);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL13.GL_OPERAND0_ALPHA, GL11.GL_SRC_ALPHA);
+        }
+        GL11.glColor4f(1, 1, 1, 1 - transparency * .01f);
+        aperture(g, path, back);
+    }
+
+    static void writeApertureDepth(Projection g, Projection.Path path, boolean back) {
+        GL11.glPushAttrib(
+            GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_CURRENT_BIT);
+        try {
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glDepthFunc(GL11.GL_LEQUAL);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glDisable(GL11.GL_ALPHA_TEST);
+            GL11.glDepthMask(true);
+            GL11.glColorMask(false, false, false, false);
+            aperture(g, path, back);
+        } finally {
+            GL11.glPopAttrib();
+        }
     }
 
     static void aperture(Projection g, Projection.Path path, boolean back) {

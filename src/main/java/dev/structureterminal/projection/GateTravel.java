@@ -85,10 +85,16 @@ public final class GateTravel {
             if (!ready(source)) continue;
             WorldServer departure = (WorldServer) p.worldObj;
             double sx = p.posX, sy = p.posY, sz = p.posZ;
-            String failure = travel(p, dest);
+            String failure = travel(p, dest, source.muteTravel);
             if (failure == null) {
-                departure.playSoundEffect(sx, sy, sz, "portal.trigger", .5f, 1.3f);
-                p.worldObj.playSoundEffect(p.posX, p.posY, p.posZ, "portal.travel", .45f, 1.2f);
+                int turn = e.turn;
+                double n0 = e.surface.acrossX ? oz : ox, n1 = e.surface.acrossX ? z : x;
+                double hit = n0 == n1 ? 1 : Math.max(0, Math.min(1, (e.surface.plane - n0) / (n1 - n0)));
+                double dx = ox + (x - ox) * hit - e.x - .5, dz = oz + (z - oz) * hit - e.z - .5;
+                double u = turn == 0 ? dx : turn == 1 ? -dz : turn == 2 ? -dx : dz;
+                ripple(departure, e, u, oy + (y - oy) * hit + h * .5 - e.y - 1.02);
+                ripple((WorldServer) p.worldObj, dest, 0, p.boundingBox.minY + h * .5 - dest.y - 1.02);
+                if (!source.muteTravel) departure.playSoundEffect(sx, sy, sz, "portal.trigger", .5f, 1.3f);
                 net.minecraft.nbt.NBTTagCompound effect = new net.minecraft.nbt.NBTTagCompound();
                 effect.setBoolean("gateTravel", true);
                 effect.setInteger("primary", source.gate.primary);
@@ -112,6 +118,24 @@ public final class GateTravel {
         m.arrived = stillInside;
     }
 
+    private static void ripple(WorldServer world, GateDirectory.Entry gate, double u, double v) {
+        net.minecraft.nbt.NBTTagCompound msg = new net.minecraft.nbt.NBTTagCompound();
+        msg.setBoolean("portalRipple", true);
+        msg.setInteger("dim", gate.dim);
+        msg.setInteger("x", gate.x);
+        msg.setInteger("y", gate.y);
+        msg.setInteger("z", gate.z);
+        msg.setInteger("contact", PortalRipples.pack(u, v));
+        dev.structureterminal.net.TerminalNetwork.channel.sendToAllAround(
+            new dev.structureterminal.net.TerminalNetwork.Reply(msg),
+            new cpw.mods.fml.common.network.NetworkRegistry.TargetPoint(
+                world.provider.dimensionId,
+                gate.x + .5,
+                gate.y + 1,
+                gate.z + .5,
+                64));
+    }
+
     private static boolean ready(ProjectorTile t) {
         return t != null && t.getWorldObj()
             .getTotalWorldTime() - t.started >= Projection.OPEN_TICKS;
@@ -126,7 +150,7 @@ public final class GateTravel {
         return gate.open && gate.frequency.equals(e.channel) && (gate.getBlockMetadata() & 3) == e.turn ? gate : null;
     }
 
-    private static String travel(EntityPlayerMP p, GateDirectory.Entry dest) {
+    private static String travel(EntityPlayerMP p, GateDirectory.Entry dest, boolean mutedJourney) {
         if (!DimensionManager.isDimensionRegistered(dest.dim)) return "unavailable";
         MinecraftServer server = MinecraftServer.getServer();
         WorldServer w = server.worldServerForDimension(dest.dim);
@@ -160,6 +184,7 @@ public final class GateTravel {
         p.motionX = p.motionY = p.motionZ = 0;
         p.fallDistance = 0;
         p.velocityChanged = true;
+        if (!mutedJourney && !target.muteTravel) w.playSoundEffect(x, y, z, "portal.travel", .45f, 1.2f);
         return null;
     }
 }

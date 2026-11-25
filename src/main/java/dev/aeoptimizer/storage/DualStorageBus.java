@@ -27,9 +27,12 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IAEStackType;
 import appeng.api.util.IConfigManager;
 import appeng.core.settings.TickRates;
+import appeng.helpers.DualityInterface;
+import appeng.helpers.IInterfaceHost;
 import appeng.me.GridAccessException;
 import appeng.me.storage.MEInventoryHandler;
 import appeng.parts.misc.PartStorageBus;
+import appeng.util.Platform;
 import appeng.util.target.TileTarget;
 import appeng.util.target.TileTargetCache;
 
@@ -42,6 +45,16 @@ public final class DualStorageBus extends PartStorageBus {
     private final TileTargetCache targets = new TileTargetCache();
     private TileTarget bound;
     private IPart boundFace;
+    private boolean boundToOnlineInterface;
+
+    private boolean exposesGrid(TileTarget target, IPart face) {
+        if (target == null) return false;
+        Object endpoint = face instanceof IInterfaceHost ? face : target.tile();
+        if (!(endpoint instanceof IInterfaceHost)) return false;
+        DualityInterface duality = ((IInterfaceHost) endpoint).getInterfaceDuality();
+        return !duality.hasConfig() && duality.getProxy()
+            .isActive() && Platform.canAccess(duality.getProxy(), source);
+    }
 
     private IPart facingPart(TileTarget target) {
         if (target == null || !(target.tile() instanceof IPartHost)) return null;
@@ -115,6 +128,7 @@ public final class DualStorageBus extends PartStorageBus {
         initialized = true;
         bound = targets.get(getTile(), getSide());
         boundFace = facingPart(bound);
+        boundToOnlineInterface = exposesGrid(bound, boundFace);
         settingsChanged = false;
         items.bind(bound);
         fluids.bind(bound);
@@ -141,7 +155,9 @@ public final class DualStorageBus extends PartStorageBus {
         initialize();
         TileTarget current = targets.get(getTile(), getSide());
         IPart face = facingPart(current);
-        boolean reset = settingsChanged || current != bound || face != boundFace;
+        // On boot AE can expose an interface's local buffer first, then its actual subnet.
+        boolean online = exposesGrid(current, face);
+        boolean reset = settingsChanged || current != bound || face != boundFace || online != boundToOnlineInterface;
         long now = getTile().getWorldObj()
             .getTotalWorldTime();
         // A newly placed GT tile may acquire its capabilities after its first neighbor update.
@@ -149,6 +165,7 @@ public final class DualStorageBus extends PartStorageBus {
         if (reset || probe) {
             bound = current;
             boundFace = face;
+            boundToOnlineInterface = online;
             settingsChanged = false;
             nextProbe = now + 80;
             boolean itemChange = items.refresh(current, reset);

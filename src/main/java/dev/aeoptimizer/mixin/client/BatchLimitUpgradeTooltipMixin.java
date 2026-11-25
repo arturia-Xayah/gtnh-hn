@@ -16,6 +16,8 @@ public abstract class BatchLimitUpgradeTooltipMixin {
 
     @Inject(method = "getUpgradeCardStack", at = @At("HEAD"), cancellable = true)
     private void modernization$tooltip(Upgrades type, CallbackInfoReturnable<ItemStack> cir) {
+        if (type == dev.aeoptimizer.storage.KindLimitCard.TYPE)
+            cir.setReturnValue(new ItemStack(dev.aeoptimizer.storage.KindLimitCard.INSTANCE));
         if (type == ItemBatchLimitCard.TYPE) cir.setReturnValue(new ItemStack(ItemBatchLimitCard.INSTANCE));
     }
 }

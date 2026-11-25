@@ -65,7 +65,7 @@ public abstract class BatchLimitContainerMixin extends AEBaseContainer
         PartP2PInterface part = hn$input();
         if (part == null || !modernization$allowed()) return;
         TunnelPolicy policy = ((TunnelPolicy.Host) part).hn$policy();
-        policy.setMode((policy.mode + 1) % 3);
+        policy.setMode(policy.mode == TunnelPolicy.FIRST_AVAILABLE ? TunnelPolicy.DEFAULT : policy.mode + 1);
         part.getTileEntity()
             .markDirty();
     }

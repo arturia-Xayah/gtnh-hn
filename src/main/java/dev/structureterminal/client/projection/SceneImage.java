@@ -224,7 +224,7 @@ final class SceneImage {
     }
 
     /** Mask the already rendered texture with the same profile used by the luminous rim. */
-    void draw(Projection g, Projection.Path path, boolean back) {
+    void draw(Projection g, Projection.Path path, boolean back, int transparency) {
         if (!rendered) return;
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         try {
@@ -234,14 +234,7 @@ final class SceneImage {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             image.bindFramebufferTexture();
             GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            // Opaque destination pixels occlude farther portals independent of tile rendering order.
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GL11.glDepthFunc(GL11.GL_LEQUAL);
-            GL11.glDepthMask(true);
-            GL11.glColor4f(1, 1, 1, 1);
-            SceneOptics.aperture(g, path, back);
+            SceneOptics.drawDestination(g, path, back, transparency);
         } finally {
             GL11.glPopAttrib();
         }
