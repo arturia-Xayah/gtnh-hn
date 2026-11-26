@@ -24,13 +24,13 @@ AE 套件保留网络按元件启用逻辑，验证循环/多输出报告、子�
 
 ## 原始记录与安装包
 
-[校验清单、SHA-256 与运行时 class 哈希](../../verification/modernization-0.2.0/manifest.json)
+[校验清单、SHA-256 与运行时 class 哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/manifest.json)
 
-- [仓库](../../verification/modernization-0.2.0/vault/vault-tests.json) / [仓库重启](../../verification/modernization-0.2.0/vault/vault-tests-restart.json)
-- [锻炉](../../verification/modernization-0.2.0/forge/forge-power-tests.json)
-- [聚变](../../verification/modernization-0.2.0/fusion/fusion-power-tests.json)
-- [AE](../../verification/modernization-0.2.0/ae/ae-order-report.json)
-- [结构逐阶段](../../verification/modernization-0.2.0/structures/machine-validation/report.json)
+- [仓库](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/vault/vault-tests.json) / [仓库重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/vault/vault-tests-restart.json)
+- [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/forge/forge-power-tests.json)
+- [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/fusion/fusion-power-tests.json)
+- [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/ae/ae-order-report.json)
+- [结构逐阶段](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.0/structures/machine-validation/report.json)
 
 两份夹具仅测试入口隔离方式不同；所有生产 class 均与发行包一致。首次合并运行暴露了历史仓库夹具未正确禁用其他套件入口的问题，修复在测试源集中；没有修改仓库格式、容量算法或功率规则。最终回归分别在新的独立世界运行，仓库重启仅复用自己的测试世界。
 

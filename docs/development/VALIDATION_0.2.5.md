@@ -40,12 +40,12 @@
 
 ## 证据
 
-- [正式包与检查清单](../../verification/modernization-0.2.5/manifest.json)
-- [UI 预览文件哈希](../../verification/modernization-0.2.5/dashboard-preview.json) / [实现与重现方法](VAULT_DASHBOARD.md)
-- [仓库和容器](../../verification/modernization-0.2.5/vault/vault-tests.json) / [仓库重启](../../verification/modernization-0.2.5/vault/vault-tests-restart.json)
-- [输出](../../verification/modernization-0.2.5/vault_io/vault-io-tests.json) / [端口重启](../../verification/modernization-0.2.5/vault_io/vault-io-tests-restart.json)
-- [锻炉](../../verification/modernization-0.2.5/forge/forge-power-tests.json) / [聚变](../../verification/modernization-0.2.5/fusion/fusion-power-tests.json)
-- [AE](../../verification/modernization-0.2.5/ae/ae-order-report.json) / [结构操作](../../verification/modernization-0.2.5/structures/machine-validation/report.json)
+- [正式包与检查清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/manifest.json)
+- [UI 预览文件哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/dashboard-preview.json) / [实现与重现方法](VAULT_DASHBOARD.md)
+- [仓库和容器](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/vault/vault-tests.json) / [仓库重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/vault/vault-tests-restart.json)
+- [输出](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/vault_io/vault-io-tests.json) / [端口重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/vault_io/vault-io-tests-restart.json)
+- [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/forge/forge-power-tests.json) / [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/fusion/fusion-power-tests.json)
+- [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/ae/ae-order-report.json) / [结构操作](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.5/structures/machine-validation/report.json)
 
 ## English
 

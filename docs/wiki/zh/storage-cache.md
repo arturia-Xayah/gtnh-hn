@@ -8,7 +8,7 @@
 
 首次启动后自动生成 `config/gtnh-modernization.cfg`，修改其中的 **`storagecache`** 分类。专用服务器以服务器文件为准，客户端的值不会覆盖服务器；单人游戏使用本地文件。修改后重启**整个游戏或服务端进程**，退出并重进单人存档不等于重新加载 Mod 配置。
 
-[可直接参考的默认配置](../../../examples/config/gtnh-modernization.cfg)
+[可直接参考的默认配置](../../examples/config/gtnh-modernization.cfg)
 
 | 配置项 | 默认值 | 作用范围 |
 |---|---:|---|

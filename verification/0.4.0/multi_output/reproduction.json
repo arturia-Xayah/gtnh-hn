@@ -1,6 +1,0 @@
-{
-  "expected_failure": true,
-  "fixture_sha256": "9bf7394ac9971a04228e805e672aab600d0907b66d07316f8f348362dda59d06",
-  "report": "before.json",
-  "failure": "first optimized output monopolizes completions; second stays empty, allowing new recipes"
-}

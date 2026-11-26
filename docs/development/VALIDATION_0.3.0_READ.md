@@ -11,7 +11,7 @@
 - **102 项单元测试通过**，新增不可变读取快照、独立通道失效、模拟操作不失效、超 long 可见量、随机类型增删、日志与快照重建验证。
 - **3 个独立服务器进程、2880 个有效 tick** 的优化前/后对比通过全部列表与库存守恒断言。另一个后台进程完成四组交错查询与读取一致性检查。
 - 安装包含 **156 个 Java 8 生产类**，与枚举、配对查询及存储回归夹具逐字节一致。相对初次 0.3.0，变动只在仓储模块；其他模块字节码保持一致。
-- **66 项存储后台检查通过**：超大数量与双仓汇总 6+2，AE 原生 IO/优先级/Reshuffle/输出 14+2，原有仓库存取 38+4，包含三组独立进程重启；完整清单见 [本轮验证清单](../../verification/vault-read-optimization/manifest.json) 为准。
+- **66 项存储后台检查通过**：超大数量与双仓汇总 6+2，AE 原生 IO/优先级/Reshuffle/输出 14+2，原有仓库存取 38+4，包含三组独立进程重启；完整清单见 [本轮验证清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/manifest.json) 为准。
 
 最初 0.3.0 的 269 项后台模块检查与 10 个结构操作阶段属于历史整合验证，本轮不把它们重新计为全部重跑。
 
@@ -23,12 +23,12 @@
 
 ## 数据与发布范围
 
-- [本轮生产 JAR 与验证清单](../../verification/vault-read-optimization/manifest.json)
-- [读取性能原始结果](../../verification/vault-read-optimization/summary.md)
-- [初次 BigInteger 实现验证清单](../../verification/modernization-0.3.0/manifest.json)
-- [超大数量与原生 AE](../../verification/modernization-0.3.0/big_quantity/big-quantity-tests.json)
-- [独立进程重启](../../verification/modernization-0.3.0/big_quantity/big-quantity-tests-restart.json)
-- [预评估原始数据](../../verification/quantity-preflight-0.3.0/provenance.json) · [方法及范围](QUANTITY_PREFLIGHT.md)
+- [本轮生产 JAR 与验证清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/manifest.json)
+- [读取性能原始结果](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/summary.md)
+- [初次 BigInteger 实现验证清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/manifest.json)
+- [超大数量与原生 AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/big_quantity/big-quantity-tests.json)
+- [独立进程重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/big_quantity/big-quantity-tests-restart.json)
+- [预评估原始数据](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/provenance.json) · [方法及范围](QUANTITY_PREFLIGHT.md)
 - [0.2.6 正式版适配历史](VALIDATION_0.2.6.md)
 
 本轮安装包为本地 `read-optimized` 开发变体，Mod 内部版本仍为 0.3.0-alpha，尚未发布到 GitHub；初次 BigInteger 版本的 JAR 保留在原目录。

@@ -28,10 +28,10 @@
 
 ## 数据与安装包
 
-- [验证清单、生产与夹具 SHA-256](../../verification/vault-cache-config/manifest.json)
-- [配置首进程](../../verification/vault-cache-config/backend/cache_config/cache-config-tests.json)
-- [关闭缓存后的新进程](../../verification/vault-cache-config/backend/cache_config/cache-config-tests-restart.json)
-- [后台运行汇总](../../verification/vault-cache-config/backend/summary.json)
+- [验证清单、生产与夹具 SHA-256](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cache-config/manifest.json)
+- [配置首进程](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cache-config/backend/cache_config/cache-config-tests.json)
+- [关闭缓存后的新进程](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cache-config/backend/cache_config/cache-config-tests-restart.json)
+- [后台运行汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cache-config/backend/summary.json)
 - [默认配置与修改方法](../features/CACHE_CONFIGURATION.md)
 - 历史本地构建 `cache-configured`（未作为发行附件上传）
 
@@ -39,7 +39,7 @@ JAR 不包含测试入口、基准类、冻结基线或探针；原文件和旧�
 
 ## 复现
 
-`-PmodernizationPackTests=true` 构建显式测试夹具，再使用 `tools/run_modernization_backend.py --suites cache_config big_quantity vault_io vault`，其余参数见 [构建说明](BUILDING.md)。配置套件初始文件由运行器创建为小预算，第二进程读取第一进程写入的全 0 文件；不修改源整合包目录。使用 `tools/verify_vault_cache_config.py` 将最终生产包与执行夹具、111 项单元报告及 79 项后台检查绑定。
+`-PmodernizationPackTests=true` 构建显式测试夹具，再使用 `tools/run_modernization_backend.py --suites cache_config big_quantity vault_io vault`，其余参数见 [构建说明](BUILDING.md)。配置套件初始文件由运行器创建为小预算，第二进程读取第一进程写入的全 0 文件；不修改源整合包目录。使用 [tools/verify_vault_cache_config.py](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/tools/verify_vault_cache_config.py) 将最终生产包与执行夹具、111 项单元报告及 79 项后台检查绑定。
 
 ## English
 

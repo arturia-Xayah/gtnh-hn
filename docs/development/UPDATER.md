@@ -41,4 +41,4 @@ The helper writes `result.properties` and `installer.log`; the next client sessi
 
 Unit coverage includes semantic ordering, exact-server selection, prerelease/pack filtering, untrusted assets/redirects, bounded/cancelled transfers, corrupted/wrong/test JARs, Forge status parsing and a real loopback status exchange. Filesystem and separate-JVM tests exercise delayed installation, backups, duplicate detection and changed source/download rejection. The helper subprocess test starts no Minecraft code.
 
-`tools/check_updater_server.py` starts a disposable official GTNH dedicated server with the normal installation JAR, invokes the production Java status probe, then stops the server. It is not a client handshake/UI test. Evidence is kept under `verification/updater-0.3.2/`.
+`tools/check_updater_server.py` starts a disposable official GTNH dedicated server with the normal installation JAR, invokes the production Java status probe, then stops the server. It is not a client handshake/UI test. Evidence is kept under [verification/updater-0.3.2/](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/verification/updater-0.3.2).

@@ -34,7 +34,7 @@ python3 tools/benchmark_vault_capacity.py \
 
 该微基准为单一类型、无争用、热 JVM 的账本开销，允许 JIT 优化；不包含网络路由、全库遍历、客户端绘制或整包 TPS。表中小幅升降不应当作确定性能提升。大整数极端变长会增加算术成本，但本轮实际日志存取差异很小；磁盘调用成本占主导。真实 AE 后台套件结果另见 [整合验证](VALIDATION.md)。
 
-[原始数据](../../verification/modernization-0.2.4/capacity-benchmark.json)
+[原始数据](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/capacity-benchmark.json)
 
 ## 验证范围
 

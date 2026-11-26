@@ -2,11 +2,11 @@
 
 ## 0.1.4-alpha · 内置 AE 下单优化
 
-日期：2026-10-21。29 项单元测试、33 项合并版 AE 后台用例通过。复测 ID141、1000、15750 的搭建、部分补建、拆除及适用的线圈替换，共10个结构操作阶段全部通过，材料账平衡。不是重新执行336控制器全量扫测。所有服务器使用独立世界与 `nogui`，未启动客户端。详细数据与运行类一致性检查见 [合并验证](../../verification/merged-0.1.4/README.md)；合并前的 [星门速度测量](AE_BENCHMARK.md) 单独保留，未宣称合并版成功从原始原料秒下星门。
+日期：2026-10-21。29 项单元测试、33 项合并版 AE 后台用例通过。复测 ID141、1000、15750 的搭建、部分补建、拆除及适用的线圈替换，共10个结构操作阶段全部通过，材料账平衡。不是重新执行336控制器全量扫测。所有服务器使用独立世界与 `nogui`，未启动客户端。详细数据与运行类一致性检查见 [合并验证](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/merged-0.1.4/README.md)；合并前的 [星门速度测量](AE_BENCHMARK.md) 单独保留，未宣称合并版成功从原始原料秒下星门。
 
 ## 0.1.3-alpha · 蓝白终端图标
 
-日期：2026-10-16。游戏物品改用 128×128 RGBA 蓝白终端贴图，保留透明通道；物品注册路径与 JAR 内资源已核对。完整构建及 21 项单元测试通过。本次未启动游戏；整包结构验证沿用下方 0.1.2-alpha 记录，未重新执行逐机或真实配方测试。资源检查见 `verification/texture-0.1.3.json`。
+日期：2026-10-16。游戏物品改用 128×128 RGBA 蓝白终端贴图，保留透明通道；物品注册路径与 JAR 内资源已核对。完整构建及 21 项单元测试通过。本次未启动游戏；整包结构验证沿用下方 0.1.2-alpha 记录，未重新执行逐机或真实配方测试。资源检查见 [verification/texture-0.1.3.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/texture-0.1.3.json)。
 
 ## 0.1.2-alpha · 结构验证
 
@@ -30,19 +30,19 @@
 
 默认配置下 40 个控制器未实现原生生存搭建方法，69 个虽搭建器报告完成但未成型；另有缺料 / 阻塞、阶段超时、补建或替换后不成型等结果，逐台保留。**没有把全部 336 项称为兼容通过。**
 
-- [逐台可读矩阵](../../verification/full-pack/README.md)
-- [基线与复测合并索引](../../verification/machine-coverage.csv)：336 个 ID 各一行，分别显示两组结果。
-- [CSV 明细](../../verification/full-pack/machines.csv)：包含中文名、ID、类、每个阶段结果、材料差额与原机错误。
-- [原始报告](../../verification/full-pack/report.json)、逐项 JSONL、已加载模组版本、注册表与服务器日志均在 `verification/full-pack/`。
-- [测试方法与参数](../../verification/PACK_TESTING.md)
+- [逐台可读矩阵](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack/README.md)
+- [基线与复测合并索引](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/machine-coverage.csv)：336 个 ID 各一行，分别显示两组结果。
+- [CSV 明细](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack/machines.csv)：包含中文名、ID、类、每个阶段结果、材料差额与原机错误。
+- [原始报告](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack/report.json)、逐项 JSONL、已加载模组版本、注册表与服务器日志均在 [verification/full-pack/](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack)。
+- [测试方法与参数](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/PACK_TESTING.md)
 
 ## 配置复测与测试边界
 
 全量基线启用原生 `gt_hatch=1`，优先供给普通外壳和基础仓室，不为每台机器自动猜测正确电压等级、催化物、特殊模式或专用信道。随后对 30 个条目单独复测：指定所需能源仓等级，通过明确选择仓室验证终端自动启用原生仓室规则，并修正非 GT TileEntity 的测试材料记账。复测结果另外保存，不覆盖基线。30 项中 20 项通过，包含基线未通过的 19 项；能源仓等级相关的 17 项中 16 项通过，蜂业驯化机器仍阻塞。跨这两组已测配置，共 179 个不同控制器至少有一组结构操作完整通过，这不表示默认配置 179 项通过。
 
-[复测矩阵](../../verification/configuration-retry/README.md)、[复测 CSV](../../verification/configuration-retry/machines.csv) 与原始报告保留所有差额和失败。风车的非 GT TileEntity 记账差额已消除，但拆除仍有普通方块残留；电动聚爆压缩机仍有每次搭建 5 个方块的材料差额待查，不能判为材料检查通过。
+[复测矩阵](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/configuration-retry/README.md)、[复测 CSV](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/configuration-retry/machines.csv) 与原始报告保留所有差额和失败。风车的非 GT TileEntity 记账差额已消除，但拆除仍有普通方块残留；电动聚爆压缩机仍有每次搭建 5 个方块的材料差额待查，不能判为材料检查通过。
 
-全量基线使用包含本轮核心修复的 `0.1.1-alpha` 开发快照；最终版本为 `0.1.2-alpha`。两者主代码差异只有版本元数据和 `TerminalSettings` 对 ItemBlock 的直接查询修正；该修正由新版配置复测与单元测试覆盖。版本、SHA-256 与类差异记录在 `verification/full-pack/provenance.json`。
+全量基线使用包含本轮核心修复的 `0.1.1-alpha` 开发快照；最终版本为 `0.1.2-alpha`。两者主代码差异只有版本元数据和 `TerminalSettings` 对 ItemBlock 的直接查询修正；该修正由新版配置复测与单元测试覆盖。版本、SHA-256 与类差异记录在 [verification/full-pack/provenance.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack/provenance.json)。
 
 每个阶段上限 240 tick，原生放置预算 200，扫描预算 5000 ms、位置上限 100000。9 台扫描超过正常默认的 500 ms，18 台扫描含不能枚举的结构元素；原生搭建可能仍可处理这些元素。此轮用于功能排查，不代表正常默认配置性能通过。
 
@@ -62,8 +62,8 @@
 
 21 项 JUnit 单元测试全部通过，覆盖核心状态机、材料标识、NBT、ASM、仓室启用、候选合并及生存接口覆盖检测。Checkstyle、Spotless 和完整 Gradle build 通过。正式 JAR 为 Java 8 字节码，包含 47 个类，没有后台测试夹具。
 
-最终 0.1.2-alpha 的 **30 项基础服务器夹具已重新运行，30 / 30 全部通过**，逐项记录见 `verification/server-tests.json`，日志见 `verification/server-tests.log`。场景说明见 `verification/fixture-validation-0.1.1.md`。这组夹具使用真实 StructureLib 和方块，但用羊毛元数据表示测试线圈，与完整 GTNH 的真实机器结果分别记录。
+最终 0.1.2-alpha 的 **30 项基础服务器夹具已重新运行，30 / 30 全部通过**，逐项记录见 [verification/server-tests.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/server-tests.json)，日志见 [verification/server-tests.log](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/server-tests.log)。场景说明见 [verification/fixture-validation-0.1.1.md](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/fixture-validation-0.1.1.md)。这组夹具使用真实 StructureLib 和方块，但用羊毛元数据表示测试线圈，与完整 GTNH 的真实机器结果分别记录。
 
-正式发布文件的 SHA-256 见 `dist/SHA256SUMS`。工程压缩包不包含游戏整包、存档、JDK 或依赖缓存。
+正式发布文件的 SHA-256 见 [历史校验清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/dist/SHA256SUMS)。工程压缩包不包含游戏整包、存档、JDK 或依赖缓存。
 
 公开仓库中的验证日志仅对本机绝对路径和 JUnit 主机名作隐私替换，测试结果、注册 ID、物品差额及版本记录保留。

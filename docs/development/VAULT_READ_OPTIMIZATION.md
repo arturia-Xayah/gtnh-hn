@@ -45,7 +45,7 @@
 
 **阶段负载中的精确查询没有普遍提速。** 普通 10000 类型的常用查询批量均摊由 6.554 μs 变为 18.831 μs，混合库存由 6.351 μs 变为 20.229 μs；复杂 NBT 常用查询由 9.608 μs 降为 4.417 μs，超过缓存工作集的轮询由 9.481 μs 变为 9.215 μs。保留这些回退结果，不将身份键缓存的局部收益直接当作整条 AE 查询收益。额外交错查询与阶段归因实验见下节。
 
-[全部汇总](../../verification/vault-read-optimization/summary.md) · [原始汇总 CSV](../../verification/vault-read-optimization/comparison.csv) · [JSON](../../verification/vault-read-optimization/aggregate.json) · [第一轮](../../verification/vault-read-optimization/round-0.json) · [反序轮](../../verification/vault-read-optimization/round-1.json) · [第三轮](../../verification/vault-read-optimization/round-2.json)
+[全部汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/summary.md) · [原始汇总 CSV](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/comparison.csv) · [JSON](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/aggregate.json) · [第一轮](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/round-0.json) · [反序轮](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/round-1.json) · [第三轮](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/round-2.json)
 
 
 ## 交错常用查询与耗时分解
@@ -63,7 +63,7 @@
 
 与阶段混合负载的结果不同，说明不能将缓存命中微基准当作所有负载的保证。阶段切换时的 JIT、GC 与负载状态可能参与波动；尚未逐项定因，阶段测试中出现的查询回退保留，不能据本结果抹去。
 
-[配对查询原始数据](../../verification/vault-read-optimization/paired-query.json) · [进程与夹具来源](../../verification/vault-read-optimization/paired-summary.json)
+[配对查询原始数据](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/paired-query.json) · [进程与夹具来源](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/paired-summary.json)
 
 ## 功能回归与安装包
 
@@ -71,7 +71,7 @@
 
 生产包共 156 个 Java 8 class，与三轮枚举夹具、交错查询夹具及本轮功能回归夹具逐字节一致。相对初次大整数开发版，只有仓储模块的生产 class 变化；其他功能沿用当时验证，没有把它们计为本轮全部重跑。
 
-[本轮验证清单](../../verification/vault-read-optimization/manifest.json) · [当前验证说明](VALIDATION.md) · 历史本地构建 `read-optimized`（未作为发行附件上传）
+[本轮验证清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-optimization/manifest.json) · [当前验证说明](VALIDATION.md) · 历史本地构建 `read-optimized`（未作为发行附件上传）
 
 本轮为本地 read-optimized 开发变体，Mod 内部版本仍为 0.3.0-alpha，未推送或发布到 GitHub。初次大整数版本的 JAR 和性能/功能证据保留在原目录，不覆盖历史验证文件。
 

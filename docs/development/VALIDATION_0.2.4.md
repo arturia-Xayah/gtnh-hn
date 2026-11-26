@@ -36,13 +36,13 @@
 
 ## 证据
 
-- [正式文件与检查清单](../../verification/modernization-0.2.4/manifest.json)
-- [输出与选择性目标](../../verification/modernization-0.2.4/vault_io/vault-io-tests.json) / [端口重启](../../verification/modernization-0.2.4/vault_io/vault-io-tests-restart.json)
-- [仓库与容量](../../verification/modernization-0.2.4/vault/vault-tests.json) / [重启](../../verification/modernization-0.2.4/vault/vault-tests-restart.json)
-- [旧世界升级](../../verification/modernization-0.2.4/upgrade/upgrade-1.json) / [再次重启](../../verification/modernization-0.2.4/upgrade/upgrade-2.json) / [文件格式转换](../../verification/modernization-0.2.4/upgrade/formats.json)
-- [锻炉](../../verification/modernization-0.2.4/forge/forge-power-tests.json) / [聚变](../../verification/modernization-0.2.4/fusion/fusion-power-tests.json)
-- [AE](../../verification/modernization-0.2.4/ae/ae-order-report.json) / [结构操作](../../verification/modernization-0.2.4/structures/machine-validation/report.json)
-- [原始容量微基准](../../verification/modernization-0.2.4/capacity-benchmark.json) / [格式](STORAGE_FORMAT.md) / [端口调度](VAULT_IO.md)
+- [正式文件与检查清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/manifest.json)
+- [输出与选择性目标](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/vault_io/vault-io-tests.json) / [端口重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/vault_io/vault-io-tests-restart.json)
+- [仓库与容量](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/vault/vault-tests.json) / [重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/vault/vault-tests-restart.json)
+- [旧世界升级](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/upgrade/upgrade-1.json) / [再次重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/upgrade/upgrade-2.json) / [文件格式转换](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/upgrade/formats.json)
+- [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/forge/forge-power-tests.json) / [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/fusion/fusion-power-tests.json)
+- [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/ae/ae-order-report.json) / [结构操作](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/structures/machine-validation/report.json)
+- [原始容量微基准](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.4/capacity-benchmark.json) / [格式](STORAGE_FORMAT.md) / [端口调度](VAULT_IO.md)
 
 ## English
 

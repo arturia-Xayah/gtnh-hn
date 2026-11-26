@@ -30,10 +30,10 @@
 
 ## 数据与发布范围
 
-- [生产 JAR 与全部验证清单](../../verification/modernization-0.3.0/manifest.json)
-- [超大数量与原生 AE](../../verification/modernization-0.3.0/big_quantity/big-quantity-tests.json)
-- [独立进程重启](../../verification/modernization-0.3.0/big_quantity/big-quantity-tests-restart.json)
-- [预评估原始数据](../../verification/quantity-preflight-0.3.0/provenance.json) · [方法及范围](QUANTITY_PREFLIGHT.md)
+- [生产 JAR 与全部验证清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/manifest.json)
+- [超大数量与原生 AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/big_quantity/big-quantity-tests.json)
+- [独立进程重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0/big_quantity/big-quantity-tests-restart.json)
+- [预评估原始数据](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/provenance.json) · [方法及范围](QUANTITY_PREFLIGHT.md)
 - [0.2.6 正式版适配历史](VALIDATION_0.2.6.md)
 
 普通安装包不包含原型、冻结 long 基线、服务器测试入口或计时探针。所有生产 class 与执行夹具逐字节一致；依赖版本由各套后台直接断言为 GTNH 2.9.0 正式版。新库采用 AVS4，仍需完整世界备份。

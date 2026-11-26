@@ -4,21 +4,21 @@
 
 ## 结果
 
-183 项单元测试通过。后台报告包含 444 项检查／检查组与 3 台结构样本；[汇总和夹具校验值](../../verification/0.4.0/summary.json)。各项使用独立服务端进程，保存恢复项目另启动一次进程。
+183 项单元测试通过。后台报告包含 444 项检查／检查组与 3 台结构样本；[汇总和夹具校验值](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/summary.json)。各项使用独立服务端进程，保存恢复项目另启动一次进程。
 
 | 范围 | 数量 | 原始记录 |
 | --- | ---: | --- |
-| BC 范围、草稿、复制和旋转 | 12 | [BC](../../verification/0.4.0/bc_range/bc-range-tests.json) |
-| 传送、门形、重叠和场景请求 | 15 | [传送门](../../verification/0.4.0/projector/projector-tests.json) |
-| AE 下单、批量发配、集成样板及复制 | 185 | [AE](../../verification/0.4.0/ae/ae-order-report.json) |
-| 等离子锻炉功率 | 26 | [锻炉](../../verification/0.4.0/forge/forge-power-tests.json) |
-| 普通／压缩聚变功率、批处理和热切换 | 131 | [聚变](../../verification/0.4.0/fusion/fusion-power-tests.json) |
-| 聚合器 I/O 与独立进程重启 | 14 + 2 | [I/O](../../verification/0.4.0/vault_io/vault-io-tests.json)、[重启](../../verification/0.4.0/vault_io/vault-io-tests-restart.json) |
-| 结构搭建操作样本 | 3 台 | [结构](../../verification/0.4.0/structures/machine-validation/report.json) |
-| 批量限额、严格／智能阻挡与多流体 | 16 组 | [发配](../../verification/0.4.0/smart_blocking/smart-blocking-tests.json) |
-| 发信器、输出缓冲和二合一输入 | 16 | [ME 自动化](../../verification/0.4.0/emitter/emitter-tests.json) |
-| 二合一输出、位置限制、过滤、存档及性能 | 8 组 | [双通道输出](../../verification/0.4.0/mixed_output/mixed-output-tests.json) |
-| 多输出端分配、200 组组合、大数量恢复与优化器开关 | 19 组 | [多输出端](../../verification/0.4.0/multi_output/multi-output-tests.json) |
+| BC 范围、草稿、复制和旋转 | 12 | [BC](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/bc_range/bc-range-tests.json) |
+| 传送、门形、重叠和场景请求 | 15 | [传送门](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/projector/projector-tests.json) |
+| AE 下单、批量发配、集成样板及复制 | 185 | [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/ae/ae-order-report.json) |
+| 等离子锻炉功率 | 26 | [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/forge/forge-power-tests.json) |
+| 普通／压缩聚变功率、批处理和热切换 | 131 | [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/fusion/fusion-power-tests.json) |
+| 聚合器 I/O 与独立进程重启 | 14 + 2 | [I/O](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/vault_io/vault-io-tests.json)、[重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/vault_io/vault-io-tests-restart.json) |
+| 结构搭建操作样本 | 3 台 | [结构](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/structures/machine-validation/report.json) |
+| 批量限额、严格／智能阻挡与多流体 | 16 组 | [发配](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/smart_blocking/smart-blocking-tests.json) |
+| 发信器、输出缓冲和二合一输入 | 16 | [ME 自动化](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/emitter/emitter-tests.json) |
+| 二合一输出、位置限制、过滤、存档及性能 | 8 组 | [双通道输出](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/mixed_output/mixed-output-tests.json) |
+| 多输出端分配、200 组组合、大数量恢复与优化器开关 | 19 组 | [多输出端](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/multi_output/multi-output-tests.json) |
 
 ## 关键验证与修正
 
@@ -45,7 +45,7 @@
 
 ### 二合一输出与超额缓冲补充验证
 
-[双通道原始记录](../../verification/0.4.0/mixed_output/mixed-output-tests.json)。使用 GTNH 2.9.1 后台服务端，含 8 组检查；并非启动客户端验证界面外观。
+[双通道原始记录](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/mixed_output/mixed-output-tests.json)。使用 GTNH 2.9.1 后台服务端，含 8 组检查；并非启动客户端验证界面外观。
 
 - 原生 StructureLib 位置校验：仅总线／仅仓室均拒绝，同一格同时声明两类输出才接受；支持原生 OR 与不改变添加器的别名。不将同一机器其他位置的权限合并；未知自定义添加器保守拒绝。自动搭建的材料筛选也拒绝单类位置，避免投影仪误放；额外拦截控制器直接收集总线的旧入口和成型后的异常列表。
 - 实际构造大型化学反应釜，成型后经控制器的原生输出流程保存 13 个金锭和 123 mB 岩浆。
@@ -55,7 +55,7 @@
 
 ### 多输出端回归与修复
 
-[修复前复现](../../verification/0.4.0/multi_output/before.json)；[修复后检查](../../verification/0.4.0/multi_output/multi-output-tests.json)。独立的 GTNH 2.9.1 服务端，实际 AE 网络、GT 原生 ItemEjectionHelper / FluidEjectionHelper、原生及二合一输出端。
+[修复前复现](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/multi_output/before.json)；[修复后检查](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/0.4.0/multi_output/multi-output-tests.json)。独立的 GTNH 2.9.1 服务端，实际 AE 网络、GT 原生 ItemEjectionHelper / FluidEjectionHelper、原生及二合一输出端。
 
 | 两个 16k 输出端，四次各 10k 完成产出 | 修复前 | 修复后 |
 | --- | --- | --- |

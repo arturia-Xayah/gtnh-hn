@@ -1,6 +1,6 @@
 # 兼容性
 
-版本：0.1.3-alpha，目标 GTNH 2.9.0-RC-2。验证分为真实 Minecraft / Forge / StructureLib 的合成结构夹具，以及官方 GTNH 完整整包的逐控制器后台测试。两类结果分别记录，见 [VERIFICATION.md](STRUCTURE_VERIFICATION.md) 和 `verification/full-pack/`。
+版本：0.1.3-alpha，目标 GTNH 2.9.0-RC-2。验证分为真实 Minecraft / Forge / StructureLib 的合成结构夹具，以及官方 GTNH 完整整包的逐控制器后台测试。两类结果分别记录，见 [VERIFICATION.md](STRUCTURE_VERIFICATION.md) 和 [verification/full-pack/](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/verification/full-pack)。
 
 | 项目 | 当前实现 | 验证 / 限制 |
 |---|---|---|
@@ -21,4 +21,4 @@
 | 可变尺寸 | 触发物品数量 1..64、独立子信道 1..1000000 | GTNH 每台机器的尺寸语义不同，不等同于 GTO 的结构树尺寸系统 |
 | 大型结构 | 位置 / 时间上限、候选去重、索引、绘制缓存 | 预览最多绘制 24000 个非空气位置，可分层；未做游戏帧率测试 |
 
-具体机器的结构读取、搭建、补建、替换与拆除结果见[逐台测试表](../../verification/machine-coverage.csv)。GUI、真实客户端网络请求、实际 AE 网络与 GT5 多方块运行配方未在本轮测试中验收。
+具体机器的结构读取、搭建、补建、替换与拆除结果见[逐台测试表](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/machine-coverage.csv)。GUI、真实客户端网络请求、实际 AE 网络与 GT5 多方块运行配方未在本轮测试中验收。

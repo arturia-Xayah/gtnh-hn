@@ -15,7 +15,7 @@
 | GTNHLib | 0.11.52 | 0.11.54 |
 | NEI | 2.8.155-GTNH | 2.8.171-GTNH |
 
-旧编译配置中 NEI 为 2.8.110；本次与实际运行版本统一。每套后台夹具直接断言以上六个运行时依赖的版本，避免误用 RC-2 的服务器。服务器 ZIP 和依赖 JAR 哈希见 [依赖清单](../../verification/modernization-0.2.6/dependency-update.json)。
+旧编译配置中 NEI 为 2.8.110；本次与实际运行版本统一。每套后台夹具直接断言以上六个运行时依赖的版本，避免误用 RC-2 的服务器。服务器 ZIP 和依赖 JAR 哈希见 [依赖清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/dependency-update.json)。
 
 上游 AE 更新包含同优先级样板保留、CPU 取消/完成状态及库存观察者修复。本项目通过原有注入点接入，没有覆盖这些上游方法；未安装优化元件的网络继续使用上游计算与发配。原料＋标记的分配点、字段和提示方法以新 AE 字节码验证；锻炉/聚变选择器与原生外壳渲染入口以新 GT 字节码验证。
 
@@ -47,12 +47,12 @@
 
 ## 证据与重现
 
-- [正式包、单元测试与运行清单](../../verification/modernization-0.2.6/manifest.json)
-- [官方整合包清单副本](../../verification/modernization-0.2.6/official-manifest.json) · [依赖和 ZIP 哈希](../../verification/modernization-0.2.6/dependency-update.json)
-- [存储器](../../verification/modernization-0.2.6/vault/vault-tests.json) · [输出](../../verification/modernization-0.2.6/vault_io/vault-io-tests.json)
-- [锻炉](../../verification/modernization-0.2.6/forge/forge-power-tests.json) · [聚变](../../verification/modernization-0.2.6/fusion/fusion-power-tests.json)
-- [AE](../../verification/modernization-0.2.6/ae/ae-order-report.json) · [结构操作](../../verification/modernization-0.2.6/structures/machine-validation/report.json)
-- [旧世界升级及重启](../../verification/modernization-0.2.6/upgrade/summary.json)
+- [正式包、单元测试与运行清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/manifest.json)
+- [官方整合包清单副本](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/official-manifest.json) · [依赖和 ZIP 哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/dependency-update.json)
+- [存储器](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/vault/vault-tests.json) · [输出](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/vault_io/vault-io-tests.json)
+- [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/forge/forge-power-tests.json) · [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/fusion/fusion-power-tests.json)
+- [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/ae/ae-order-report.json) · [结构操作](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/structures/machine-validation/report.json)
+- [旧世界升级及重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.6/upgrade/summary.json)
 
 按 [构建与后台测试](BUILDING.md) 执行，传入官方 2.9.0 服务器目录；运行器默认 `--pack-version 2.9.0`。用 `run_vault_upgrade.py` 的 `--old-run` 指向此前 vault 测试目录。验证器接受 `--version 0.2.6-alpha --target 'GTNH 2.9.0'`，并检查运行器声明、实际依赖和夹具哈希。
 

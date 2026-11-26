@@ -20,7 +20,7 @@
 
 100000 类型的一次类型变化重建，仅这里已分配约 1.2 MB。若每秒发生 1000 次这样的重建，分配速率就约 1.2 GB/s；这是假设频率的算术估计，不是本次服务器实测吞吐。未变化时复用同一个不可变快照。单 JVM 时间受预热、GC 和日志 IO 影响，不据此给出稳定延迟保证。
 
-[原始 CSV](../../verification/vault-read-audit/core-view.csv) · [实验源文件](../../verification/vault-read-audit/ReadViewAudit.java) · [范围与来源](../../verification/vault-read-audit/scope.json)
+[原始 CSV](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-audit/core-view.csv) · [实验源文件](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-audit/ReadViewAudit.java) · [范围与来源](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-read-audit/scope.json)
 
 ## 正确性与线程边界
 

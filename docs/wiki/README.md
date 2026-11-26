@@ -63,4 +63,4 @@
 - [版本下载](https://github.com/arturia-Xayah/gtnh-hn/releases)
 - [开发文档与验证记录](../development/README.md)
 - [许可证](../../LICENSE)
-- [上游与素材鸣谢](../../THIRD_PARTY_NOTICES.md)
+- [上游与素材鸣谢](../licenses/THIRD_PARTY_NOTICES.md)

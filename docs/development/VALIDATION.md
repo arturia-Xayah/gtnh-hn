@@ -42,7 +42,7 @@
 
 ## 生产包与实测夹具的关系
 
-[清单](../../verification/modernization-0.3.0-release/manifest.json) 包含每个生产类、测试夹具的哈希以及所有后台报告。**173/174 个生产类与执行夹具逐字节相同**，所有资源相同。唯一差异为仅客户端的 `ContributionScreen.class`：后台执行后将数量输入框文字从深色改为浅蓝白，以适配原生深色输入框；该显示改动另经正式构建、静态检查及完整单元测试，不称为后台执行过的 GUI 代码。差异双方哈希显式记录在 `fixture_differences`。
+[清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0-release/manifest.json) 包含每个生产类、测试夹具的哈希以及所有后台报告。**173/174 个生产类与执行夹具逐字节相同**，所有资源相同。唯一差异为仅客户端的 `ContributionScreen.class`：后台执行后将数量输入框文字从深色改为浅蓝白，以适配原生深色输入框；该显示改动另经正式构建、静态检查及完整单元测试，不称为后台执行过的 GUI 代码。差异双方哈希显式记录在 `fixture_differences`。
 
 除版本常量在模块入口中内联外，结构终端、AE 下单及功率模块的原有生产类与 0.2.6 一致；本次仍重新跑过这些模块的后台回归。
 
@@ -52,7 +52,7 @@ AVS6 接受此前本地开发版 AVS5，在检查点时升级；不迁移 0.2.x 
 
 未启动游戏客户端；原生 GUI 字体、物品渲染、输入交互及 OpenGL 实际画面未验收。本轮没有重跑读取性能矩阵，旧性能结果仅保留其历史范围，不能当作本发行包的新 MSPT 测量。
 
-[后台汇总](../../verification/modernization-0.3.0-release/summary.json) · [更新日志](../../CHANGELOG.md) · [玩家指南](../features/STORAGE.md) · [存储格式](STORAGE_FORMAT.md)
+[后台汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.3.0-release/summary.json) · [更新日志](../../CHANGELOG.md) · [玩家指南](../features/STORAGE.md) · [存储格式](STORAGE_FORMAT.md)
 
 ## 历史记录
 
@@ -74,19 +74,19 @@ The whole face is one registered sprite, not nine independently stitched/mipmapp
 
 The stock outer 16-pixel guard band is constant on all four edges; normal mip levels 0–4 retain this border. Resource packs replacing the skin should preserve matching edges. Directional/world lighting still affects the appearance; a cube corner is not rounded geometry or PBR. No animated texture, per-tick texture updates or server storage logic was added.
 
-Verification: 142 unit tests pass, including exact UV adjacency, atlas replacement on reload and all four guard bands. Build, Java 8 bytecode and distribution checks pass. Browser preview uses the actual packed skin and native GT overlays; rotation and optional block grid were checked. No Minecraft client or shader compatibility test was run. Full record: [smooth skin verification](../../verification/vault-smooth-skin/manifest.json).
+Verification: 142 unit tests pass, including exact UV adjacency, atlas replacement on reload and all four guard bands. Build, Java 8 bytecode and distribution checks pass. Browser preview uses the actual packed skin and native GT overlays; rotation and optional block grid were checked. No Minecraft client or shader compatibility test was run. Full record: [smooth skin verification](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-smooth-skin/manifest.json).
 
 ## Native-style terminal icon and retired casing removal (local 0.3.2 revision)
 
-The generated 16×16 icon described by this verification was subsequently replaced at the owner’s request with the unchanged GTO terminal texture and animation metadata. The Mod logo and README now use its first frame; obsolete generated variants remain historical artwork only. See THIRD_PARTY_NOTICES.md for provenance.
+The generated 16×16 icon described by this verification was subsequently replaced at the owner’s request with the unchanged GTO terminal texture and animation metadata. The Mod logo and README now use its first frame; obsolete generated variants remain historical artwork only. See docs/licenses/THIRD_PARTY_NOTICES.md for provenance.
 
 The retired casing block and ItemBlock are no longer registered; the unused kind-0 path and localization entries are removed. An exact-name missing-mapping handler discards `aestoragevault:casing` references and logs this intentional removal, without remapping them to an incorrect native GT metadata variant. Old instances are not retained. Other missing mappings keep their default handling.
 
-143 unit tests pass, including a block/item removal scope test. A dedicated GTNH 2.9.0 server on Java 25 passes 59 vault checks and 7 fresh-process restart checks. Registry checks confirm both retired entries are absent; current controllers/ports and native LuV structures remain valid. All 190 production classes match the test fixture; the installable JAR excludes fixture classes and passes Java 8 bytecode validation. No client was launched. [Verification record](../../verification/terminal-native-cleanup/manifest.json).
+143 unit tests pass, including a block/item removal scope test. A dedicated GTNH 2.9.0 server on Java 25 passes 59 vault checks and 7 fresh-process restart checks. Registry checks confirm both retired entries are absent; current controllers/ports and native LuV structures remain valid. All 190 production classes match the test fixture; the installable JAR excludes fixture classes and passes Java 8 bytecode validation. No client was launched. [Verification record](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/terminal-native-cleanup/manifest.json).
 
 ## Optional assembly-line input renaming (GTNH 2.9.0)
 
-Evidence: [AE rename checks](../../verification/ae-assembly-line-rename/manifest.json). Production build: 152 unit tests; dedicated GTNH server with Java 25: 69 AE checks, including the original planner/dispatch regressions. No game client was launched. Client GUI interaction was not exercised; pinned NEE 1.7.50 bytecode checks cover the import injection selector, packet field and tag transport.
+Evidence: [AE rename checks](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-assembly-line-rename/manifest.json). Production build: 152 unit tests; dedicated GTNH server with Java 25: 69 AE checks, including the original planner/dispatch regressions. No game client was launched. Client GUI interaction was not exercised; pinned NEE 1.7.50 bytecode checks cover the import injection selector, packet field and tag transport.
 
 `NEEPatternTerminalHandler.packProcessRecipe` adds a recipe-source field to the packet's input envelope (never to item NBT). NEE already preserves separate assembly-line inputs. The server's `PacketNEIPatternRecipe.Handler.processRecipe` hook reads only the current terminal grid's active optimizer setting before transforming duplicate inputs. Counts remain NEE integer counts. The real server test round-trips NEE packets, writes native AE virtual input/output slots and compares the result with `FormingPressBackend.findRenamingRecipe` and AE item equality. Fluids, other recipe maps, absent/disabled optimizers and pre-existing custom names are excluded; original item metadata/NBT is preserved.
 
@@ -94,7 +94,7 @@ The first backend attempt exposed a test fixture mistake: its full-block placeme
 
 ## Automatic renaming-pattern encoding on import (GTNH 2.9.0)
 
-Evidence: [auto-encoding checks](../../verification/ae-rename-auto-encoding/manifest.json). 158 unit tests and 91 dedicated-server AE checks passed (22 checks specifically cover the new encoder). The final production classes are byte-for-byte identical to their counterparts in the tested fixture; the installation JAR excludes all test fixtures. No Minecraft client was launched.
+Evidence: [auto-encoding checks](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-rename-auto-encoding/manifest.json). 158 unit tests and 91 dedicated-server AE checks passed (22 checks specifically cover the new encoder). The final production classes are byte-for-byte identical to their counterparts in the tested fixture; the installation JAR excludes all test fixtures. No Minecraft client was launched.
 
 The server hook now runs at the head of the typed NEE `onMessage` handler, before NEE changes crafting mode or clears the old matrix. The optional second flag is persisted and synchronized separately, and depends on auto-renaming being enabled. Auxiliary patterns use AE's native generic input/output serialization and processing-pattern item, exact 1:1 quantities, and disabled substitutions. Native AE decoding, precise output identity, absence of consumed mold inputs, installed-pattern/backpack deduplication, different-input rejection, and all three blank sources were exercised on the real GTNH server.
 
@@ -109,14 +109,14 @@ The initial backend run failed because the fixture assumed the extended processi
 - All 201 production classes match the tested fixture byte-for-byte. Runtime test classes are excluded from the installation JAR.
 - Exercised live cable-host restoration, normal/dual interface block and part forms, fluid inventories and native fluid patterns, full NBT package serialization, stored drive cells, custom names/priority/orientation, re-advertised crafting recipes, exactly 64 uses, blocked placement, Forge break/place/drop vetoes, creative package consumption and native AE security denial on removal/placement.
 - Both item textures exactly match ExtendedAE commit `35d6c1030ba8fa791b4b22771443a4e889fe4840`.
-- Evidence: [verification/me-packing-tape](../../verification/me-packing-tape/manifest.json).
+- Evidence: [verification/me-packing-tape](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/me-packing-tape/manifest.json).
 - Only the default five devices are covered. Arbitrary extra whitelist entries, FMP combinations and visual in-client interaction were not tested. Running crafting-job continuity is not promised by a device move.
 - The integrated-pattern request remains analysis only: [feasibility and compatibility boundaries](INTEGRATED_PATTERNS_FEASIBILITY.md).
 
 ## 集成样板 / Integrated Pattern — local 0.3.2 update
 
-161 项单元测试、177 项 GTNH 2.9.0 后台 AE 检查通过；Java 25.0.4.1，未启动客户端。216 个正式代码类与测试夹具逐字节一致，正式包无测试模块。覆盖 36 槽编辑、普通／二合一方块和薄片接口、记忆卡耗材、接口终端、胶带搬运，以及 Standard／Lite／Strict 原料清单。详细范围和限制见 [本次验证](../../verification/integrated-pattern/README.md)。其他功能的历史测试结果仍按对应章节解释，本次没有重新运行全部仓库／聚变套件。
+161 项单元测试、177 项 GTNH 2.9.0 后台 AE 检查通过；Java 25.0.4.1，未启动客户端。216 个正式代码类与测试夹具逐字节一致，正式包无测试模块。覆盖 36 槽编辑、普通／二合一方块和薄片接口、记忆卡耗材、接口终端、胶带搬运，以及 Standard／Lite／Strict 原料清单。详细范围和限制见 [本次验证](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/integrated-pattern/README.md)。其他功能的历史测试结果仍按对应章节解释，本次没有重新运行全部仓库／聚变套件。
 
 ## 0.3.3-alpha 发布验证
 
-正式版本号重新构建后，161 项单元测试和 177 项后台 AE 检查全部通过，216 个正式代码类与测试包一致。[报告与安装包校验值](../../verification/release-0.3.3-alpha/README.md)。未启动客户端，未扩大宣称其他功能的历史测试范围。
+正式版本号重新构建后，161 项单元测试和 177 项后台 AE 检查全部通过，216 个正式代码类与测试包一致。[报告与安装包校验值](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/release-0.3.3-alpha/README.md)。未启动客户端，未扩大宣称其他功能的历史测试范围。

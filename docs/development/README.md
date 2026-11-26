@@ -4,6 +4,8 @@
 
 玩家操作说明位于分类使用手册：[中文](../wiki/README.md) / [English](../wiki/README.en.md)。本目录集中构建、内部规则、实验、兼容性和验证边界。
 
+历史校验工具、逐机报告和测试日志可在整理前的同一份快照中查阅。[原始验证记录](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/verification) · [当时使用的脚本](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/tools)
+
 ## 当前整合版
 
 - [ME 谐振外壳（未发布）](RESONANCE_CASING.md)：专用外壳、九宫格配方、共享成型材质与后台验证。
@@ -22,16 +24,16 @@
 - [结构验证历史](STRUCTURE_VERIFICATION.md)
 - [AE 计算与发配内部规则](AE_ORDER_INTERNALS.md)
 - [星门订单实验与耗时](AE_BENCHMARK.md)
-- [完整整包逐机测试方法](../../verification/PACK_TESTING.md)
-- [历史逐机结果](../../verification/machine-coverage.csv)
-- [原料＋标记的后台验证](../../verification/ae-craftable-0.1.5-dev/README.md)
+- [完整整包逐机测试方法](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/PACK_TESTING.md)
+- [历史逐机结果](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/machine-coverage.csv)
+- [原料＋标记的后台验证](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-craftable-0.1.5-dev/README.md)
 
 ## 功率控制
 
 - [聚变功率及热切换机制](FUSION_INTERNALS.md)
 - [独立版测试方法](POWER_TESTING.md)
 - [独立版验证历史](POWER_VALIDATION.md)
-- [独立版聚变原始数据](../../verification/power-baseline/fusion-0.2.0/fusion-power-tests.json)
+- [独立版聚变原始数据](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/fusion-0.2.0/fusion-power-tests.json)
 
 ## 外部存储
 
@@ -52,7 +54,7 @@
 - [BigInteger 容量与历史性能测量](CAPACITY.md)
 - [存储格式、日志与恢复边界](STORAGE_FORMAT.md)
 - [独立版验证历史](STORAGE_VALIDATION.md)
-- [独立版原始报告](../../verification/storage-baseline/vault-tests.json)
+- [独立版原始报告](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/storage-baseline/vault-tests.json)
 
 历史记录不自动代表当前整合版的验证结果。当前结果以本目录的整合验证为准。客户端界面渲染与交互尚未启动游戏验收。
 

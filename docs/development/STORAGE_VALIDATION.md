@@ -19,7 +19,7 @@
 - 8 个并发工作线程不能超额插入。
 - 5,000 次随机存取与独立参考账本比对，穿插快照、关闭和重开。
 
-原始报告：[core-tests.xml](../../verification/storage-baseline/core-tests.xml)。
+原始报告：[core-tests.xml](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/storage-baseline/core-tests.xml)。
 
 ## GTNH 后台首次运行：22 项
 
@@ -42,7 +42,7 @@
 - 服务端 GUI 暂停控制有效，超距离操作被拒绝。
 - 卸载控制器关闭并释放库存，再放置主机从外部文件恢复全部条目。
 
-原始报告：[vault-tests.json](../../verification/storage-baseline/vault-tests.json)。模拟恢复来源用于验证迁移回执，不等于物理断电故障注入。
+原始报告：[vault-tests.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/storage-baseline/vault-tests.json)。模拟恢复来源用于验证迁移回执，不等于物理断电故障注入。
 
 ## 停服并重新启动：4 项
 
@@ -53,7 +53,7 @@
 3. 物品/流体数量不变。
 4. 真实 AE 网络重新连接并能查询库存。
 
-原始报告：[vault-tests-restart.json](../../verification/storage-baseline/vault-tests-restart.json)。
+原始报告：[vault-tests-restart.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/storage-baseline/vault-tests-restart.json)。
 
 ## 发行文件检查
 
@@ -61,7 +61,7 @@
 - 16 个生产 class，全部 Java 8 字节码（major 52）。
 - 无 `packtest` 测试类。
 - 生产 class 的字节与上述后台测试 JAR 中对应 class **全部一致**。
-- 后台 Java 版本、JAR SHA-256 和 class 哈希见 [distribution.json](../../verification/storage-baseline/distribution.json)。
+- 后台 Java 版本、JAR SHA-256 和 class 哈希见 [distribution.json](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/storage-baseline/distribution.json)。
 
 ## 验证边界
 

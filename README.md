@@ -29,7 +29,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 | [ME 存储](docs/wiki/README.md#me-存储) | <a id="me元件聚合存储器"></a>[ME元件聚合存储器](docs/wiki/zh/storage.md) · <a id="读取缓存配置"></a>[读取缓存配置](docs/wiki/zh/storage-cache.md) |
 | [传送与场景](docs/wiki/README.md#传送与场景) | <a id="传送门投影主机"></a>[传送门投影主机](docs/wiki/zh/portal-projector.md) |
 | [兼容性与配置](docs/wiki/README.md#兼容性与配置) | <a id="兼容性与存档"></a>[兼容性与配置](docs/wiki/zh/compatibility.md) |
-| [项目资料](docs/wiki/README.md#项目资料) | [更新日志](CHANGELOG.md) · <a id="开发者文档"></a>[开发文档](docs/development/README.md) · [许可证](LICENSE) · [鸣谢](THIRD_PARTY_NOTICES.md) |
+| [项目资料](docs/wiki/README.md#项目资料) | [更新日志](CHANGELOG.md) · <a id="开发者文档"></a>[开发文档](docs/development/README.md) · [许可证](LICENSE) · [鸣谢](docs/licenses/THIRD_PARTY_NOTICES.md) |
 
 ## 快速安装
 

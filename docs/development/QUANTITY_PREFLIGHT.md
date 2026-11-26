@@ -60,9 +60,9 @@ AE 可见量为 `min(真实数量, Long.MAX_VALUE)`；在 AE 栈数量正向相�
 
 ## 证据与复现
 
-[原型/基线原始结果](../../verification/quantity-preflight-0.3.0/isolated.json) · [服务器完整结果](../../verification/quantity-preflight-0.3.0/server.json) · [最终账本微基准](../../verification/quantity-preflight-0.3.0/production-ledger.json) · [CSV 汇总](../../verification/quantity-preflight-0.3.0/ledger-summary.csv) · [计时与来源](../../verification/quantity-preflight-0.3.0/provenance.json)
+[原型/基线原始结果](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/isolated.json) · [服务器完整结果](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/server.json) · [最终账本微基准](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/production-ledger.json) · [CSV 汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/ledger-summary.csv) · [计时与来源](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/provenance.json)
 
-`tools/benchmark_vault_quantities.py --java /path/to/java25 --output /new/path` 重现冻结的原型对照；可加入 `--pack /official/2.9.0/server --fixture /explicit-test.jar` 执行后台负载。测试包用 `-PmodernizationPackTests=true` 构建，普通玩家包不包含探针、原型或测试入口。脚本从 Git 读取冻结的 long 基线，无需旧世界数据。增加 `--production --types 1000 100000 --bits 40 127 1023` 可复查最终生产账本；测试当时的源文件另存于 [原始基准源文件](../../verification/quantity-preflight-0.3.0/benchmark-sources/QuantityBenchmark.java)。
+`tools/benchmark_vault_quantities.py --java /path/to/java25 --output /new/path` 重现冻结的原型对照；可加入 `--pack /official/2.9.0/server --fixture /explicit-test.jar` 执行后台负载。测试包用 `-PmodernizationPackTests=true` 构建，普通玩家包不包含探针、原型或测试入口。脚本从 Git 读取冻结的 long 基线，无需旧世界数据。增加 `--production --types 1000 100000 --bits 40 127 1023` 可复查最终生产账本；测试当时的源文件另存于 [原始基准源文件](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/quantity-preflight-0.3.0/benchmark-sources/QuantityBenchmark.java)。
 
 ## English
 

@@ -30,7 +30,7 @@ Client rendering only needs the synchronized `Formed` flag and shell geometry. I
 
 ## Verification scope
 
-The checked installation JAR, fixture digest, production class binding and reports are recorded in [verification/terminal-0.3.1](../../verification/terminal-0.3.1/manifest.json).
+The checked installation JAR, fixture digest, production class binding and reports are recorded in [verification/terminal-0.3.1](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/terminal-0.3.1/manifest.json).
 
 - Dedicated GTNH 2.9.0 servers only, running Java 25; distributable classes remain Java 8 bytecode.
 - Original vault regression and fresh-process restart suite.

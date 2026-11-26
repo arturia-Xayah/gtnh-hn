@@ -12,7 +12,7 @@ Values are non-negative decimal integers. Entry limits are capped at 1000000; by
 
 ## Options and defaults
 
-[Example configuration](../../../examples/config/gtnh-modernization.cfg). Keep the lowercase `storagecache` category and the generated `S:` prefixes.
+[Example configuration](../../examples/config/gtnh-modernization.cfg). Keep the lowercase `storagecache` category and the generated `S:` prefixes.
 
 | Option | Default | Scope |
 | --- | ---: | --- |

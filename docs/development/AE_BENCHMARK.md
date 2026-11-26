@@ -26,7 +26,7 @@ GTNH **2.9.0-RC-2**，AE2 `rv3-beta-1080-GTNH`、AE2FC `1.5.113-gtnh`、Java25�
 
 从同一份完整配方导出表重新选择依赖路径，保留每份原配方输入量及第一产物数量，移除 115 个副产物槽，共 **1,695 个样板**（含汇总样板）。图按类型/NBT 去重，再独立汇总共享依赖，计算整数批次和原料清单；与后台计划逐项核对。
 
-为切断反馈及补足本导出中未找到合格主产物配方的材料，显式新增了 **51 类供应边界**，共 448 类供应物，原有基础供应规则中使用 397 类。例如普朗克电路、部分奇点、高级流体等可在新增边界中；完整清单见 [新增供应 CSV](../../verification/ae-optimizer/stargate/extra-supply-boundary.csv)。**本组是简化供应边界下的星门路径，不能称为原始供应边界下从基础原料成功下单完整星门。**
+为切断反馈及补足本导出中未找到合格主产物配方的材料，显式新增了 **51 类供应边界**，共 448 类供应物，原有基础供应规则中使用 397 类。例如普朗克电路、部分奇点、高级流体等可在新增边界中；完整清单见 [新增供应 CSV](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-optimizer/stargate/extra-supply-boundary.csv)。**本组是简化供应边界下的星门路径，不能称为原始供应边界下从基础原料成功下单完整星门。**
 
 | 计算器 | 累计调用耗时中位数（范围） | 等待计划中位数 | 结果 |
 |---|---:|---:|---|
@@ -41,10 +41,10 @@ GTNH **2.9.0-RC-2**，AE2 `rv3-beta-1080-GTNH`、AE2FC `1.5.113-gtnh`、Java25�
 
 只测服务器端计算，不包含终端客户端网络往返、GUI 绘制或真实星门产线生产。累计调用计时覆盖 `beginCraftingJob` 和 `simulateFor`；等待时间截至结果首次可用。普通计算器保持默认每 tick 5 ms 和 2,000,000 步上限。
 
-- [24次计时 CSV](../../verification/ae-optimizer/stargate/measurements.csv)
-- [分组统计与物料清单检查](../../verification/ae-optimizer/stargate/comparison.json)
-- [原始独立版报告（gzip JSON）](../../verification/ae-optimizer/stargate/standalone-report.json.gz)
-- [新增供应边界](../../verification/ae-optimizer/stargate/extra-supply-boundary.csv)
-- [合并版后台回归](../../verification/merged-0.1.4/README.md)
+- [24次计时 CSV](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-optimizer/stargate/measurements.csv)
+- [分组统计与物料清单检查](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-optimizer/stargate/comparison.json)
+- [原始独立版报告（gzip JSON）](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-optimizer/stargate/standalone-report.json.gz)
+- [新增供应边界](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-optimizer/stargate/extra-supply-boundary.csv)
+- [合并版后台回归](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/merged-0.1.4/README.md)
 
 The timings cover server-side planning only, excluding client networking, rendering and real production. The simplified DAG adds 51 supply types, so it is not a verified complete Stargate plan from the original raw-material boundary. Fast rejection is not a successful order speedup. New merged-build regression tests are reported separately.

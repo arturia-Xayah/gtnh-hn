@@ -39,22 +39,10 @@ layout.json
 .tools/
 *.part
 
-# Superseded local alpha distributions
-/dist/*-0.1.0-alpha*.jar
-/dist/*-0.1.1-alpha*.jar
+# Generated reports and local distributions
+/verification/
+/dist/
 
 # Python verification helpers
 __pycache__/
 *.pyc
-
-# Release JARs are attached to GitHub Releases, not committed
-/dist/0.3.0-alpha-GTNH-2.9.0/
-
-/dist/0.3.1-alpha-GTNH-2.9.0/
-
-/dist/0.3.2-alpha-GTNH-2.9.0/
-
-/dist/0.3.3-alpha-GTNH-2.9.0/
-
-# Local preview and test JARs stay out of source commits.
-/dist/

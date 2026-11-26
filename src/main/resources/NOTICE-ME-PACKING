@@ -9,5 +9,5 @@ The crafting recipe follows GregTech-Odyssey/GTOCore's ME Packing Tape registrat
 
 Port source is included in this project's public source distribution:
 https://github.com/arturia-Xayah/gtnh-hn
-See THIRD_PARTY_NOTICES.md and LICENSES/ExtendedAE-LGPL-3.0.txt in that distribution.
+See docs/licenses/THIRD_PARTY_NOTICES.md and docs/licenses/ExtendedAE-LGPL-3.0.txt in that distribution.
 The upstream license text is also bundled as LICENSE-EXTENDEDAE-LGPL-3.0.txt.

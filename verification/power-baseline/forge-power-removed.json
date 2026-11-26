@@ -1,9 +1,0 @@
-{
-  "mode": "removed",
-  "client_launched": false,
-  "original_controller": "gregtech.common.tileentities.machines.multi.MTEPlasmaForge",
-  "rated_power": 536870912,
-  "structure_forms": true,
-  "custom_settings_ignored": true,
-  "passed": true
-}

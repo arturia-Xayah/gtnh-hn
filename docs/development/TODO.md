@@ -8,7 +8,7 @@
   - 覆盖原生、扩展与共用原生界面的无线样板终端；只标记输入槽，不标记输出槽，不修改样板内容。移除样板、网络更新和切换终端后不能保留过期标记。
   - 独立的客户端显示功能；与 ME 下单优化元件的计算、派发开关分离。客户端类不得被后台服务器加载。
   - Use the terminal's synchronized, unfiltered craftable state and native precise lookup. Items preserve metadata/NBT; this pinned AE version discards custom fluid NBT. Mark stocked inputs too; never alter pattern contents or imply full-chain availability. Keep client classes safe for dedicated servers.
-  - 状态 / Status：已在 0.1.5-alpha 开发源码实现；[33 项自动检查和 51 项后台用例通过](../../verification/ae-craftable-0.1.5-dev/README.md)，客户端 Mixin 与画面尚未启动验证。Implemented and checked headlessly; client Mixin execution and visual validation remain pending.
+  - 状态 / Status：已在 0.1.5-alpha 开发源码实现；[33 项自动检查和 51 项后台用例通过](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/ae-craftable-0.1.5-dev/README.md)，客户端 Mixin 与画面尚未启动验证。Implemented and checked headlessly; client Mixin execution and visual validation remain pending.
 
 ## 调研候选 / Research candidates
 

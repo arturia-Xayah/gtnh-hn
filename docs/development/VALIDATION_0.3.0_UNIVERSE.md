@@ -37,7 +37,7 @@ SHA-256：`d6251a5e01f2311c8f6b02250a7fdfcfdf80d4d443c8563499e87e638185fb7a`
 
 未启动游戏客户端；GUI 字体、物品渲染与 OpenGL 的实际画面未验收。未重跑性能矩阵，不将旧吞吐或查询数据当作本构建实测结果。此前网页记录仍是旧规则下的示例设计，不作为此构建的实际运行画面。
 
-[清单与类哈希](../../verification/vault-universe-full-capacity/manifest.json) · [后台汇总](../../verification/vault-universe-full-capacity/summary.json) · [玩家指南](../features/STORAGE.md) · [存储格式](STORAGE_FORMAT.md)
+[清单与类哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-universe-full-capacity/manifest.json) · [后台汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-universe-full-capacity/summary.json) · [玩家指南](../features/STORAGE.md) · [存储格式](STORAGE_FORMAT.md)
 
 ## Historical validation
 

@@ -63,4 +63,4 @@ Native ME interfaces support bulk inventory insertion and retain their original 
 Workbench crafting, fuzzy substitution, input-only patterns, fake crafting and third-party media without batch support retain native per-craft dispatch. Legacy `ICraftingMachine` plan consumers receive unit plans. Blocking mode remains unit-sized; smart blocking uses original interface rules. Dispatch batching does not increase machine processing parallelism.
 
 
-[星门测量 / Stargate measurements](AE_BENCHMARK.md) · [合并验证 / Merge validation](../../verification/merged-0.1.4/README.md)
+[星门测量 / Stargate measurements](AE_BENCHMARK.md) · [合并验证 / Merge validation](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/merged-0.1.4/README.md)

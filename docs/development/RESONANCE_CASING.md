@@ -14,7 +14,7 @@
 
 ## 验证
 
-[机器可读汇总](../../verification/resonance-casing/summary.json)及同目录的原始报告记录：
+[机器可读汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/resonance-casing/summary.json)及同目录的原始报告记录：
 
 - 正式构建、格式、静态检查、发行检查和 **183 项单元测试**通过。
 - 本地专用服务器运行 `vault`、`vault_io` 两套测试及各自的进程重启，共 **105 项检查组**通过。

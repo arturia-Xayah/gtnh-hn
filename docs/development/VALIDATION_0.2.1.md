@@ -29,12 +29,12 @@
 
 ## 报告
 
-- [安装包、生产 class 哈希及检查清单](../../verification/modernization-0.2.1/manifest.json)
-- [LuV 仓库](../../verification/modernization-0.2.1/vault/vault-tests.json) / [重启](../../verification/modernization-0.2.1/vault/vault-tests-restart.json)
-- [锻炉](../../verification/modernization-0.2.1/forge/forge-power-tests.json)
-- [聚变](../../verification/modernization-0.2.1/fusion/fusion-power-tests.json)
-- [AE](../../verification/modernization-0.2.1/ae/ae-order-report.json)
-- [结构阶段](../../verification/modernization-0.2.1/structures/machine-validation/report.json)
+- [安装包、生产 class 哈希及检查清单](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/manifest.json)
+- [LuV 仓库](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/vault/vault-tests.json) / [重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/vault/vault-tests-restart.json)
+- [锻炉](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/forge/forge-power-tests.json)
+- [聚变](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/fusion/fusion-power-tests.json)
+- [AE](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/ae/ae-order-report.json)
+- [结构阶段](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/modernization-0.2.1/structures/machine-validation/report.json)
 - [材质、配方与旧结构升级机制](VAULT_LUV.md)
 - [0.2.0 整合验证历史](VALIDATION_0.2.0.md)
 

@@ -63,4 +63,4 @@ Changelog, developer documentation, licensing and credits.
 - [Releases](https://github.com/arturia-Xayah/gtnh-hn/releases)
 - [Developer documentation and verification](../development/README.md)
 - [License](../../LICENSE)
-- [Upstream and artwork credits](../../THIRD_PARTY_NOTICES.md)
+- [Upstream and artwork credits](../licenses/THIRD_PARTY_NOTICES.md)

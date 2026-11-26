@@ -22,8 +22,8 @@ Normal and AE2FC block/part interfaces use this shared path. Native dispatch see
 
 ## Validation
 
-See `verification/integrated-pattern/` for the exact build/report evidence and limits. Dedicated-server tests exercise the real GTNH pack; the Minecraft client is not started. Client hook descriptors are checked against the pinned AE bytecode. This does not substitute for in-game visual acceptance or certify arbitrary AE addons.
+See [verification/integrated-pattern/](https://github.com/arturia-Xayah/gtnh-hn/tree/3c213a59158884a5363172369b4d8aefca942a06/verification/integrated-pattern) for the exact build/report evidence and limits. Dedicated-server tests exercise the real GTNH pack; the Minecraft client is not started. Client hook descriptors are checked against the pinned AE bytecode. This does not substitute for in-game visual acceptance or certify arbitrary AE addons.
 
 ## Artwork
 
-AI-generated variation of AE2's encoded-pattern sprite: gray border, cyan pattern marks and a small purple integration badge. Exported at 32×32 by nearest-neighbor resampling. The original AE reference remains LGPL-3.0-or-later; see THIRD_PARTY_NOTICES.md. UI uses vanilla chest panels.
+AI-generated variation of AE2's encoded-pattern sprite: gray border, cyan pattern marks and a small purple integration badge. Exported at 32×32 by nearest-neighbor resampling. The original AE reference remains LGPL-3.0-or-later; see docs/licenses/THIRD_PARTY_NOTICES.md. UI uses vanilla chest panels.

@@ -29,7 +29,7 @@ Minecraft **1.7.10** · GTNH **2.9.1**
 | [ME storage](docs/wiki/README.en.md#me-storage) | <a id="me-cell-aggregation-storage"></a>[ME Cell Aggregation Storage](docs/wiki/en/storage.md) · <a id="read-cache-settings"></a>[Read-cache settings](docs/wiki/en/storage-cache.md) |
 | [Portals and scenes](docs/wiki/README.en.md#portals-and-scenes) | <a id="portal-projector"></a>[Portal Projector](docs/wiki/en/portal-projector.md) |
 | [Compatibility and configuration](docs/wiki/README.en.md#compatibility-and-configuration) | <a id="compatibility-and-saves"></a>[Compatibility and configuration](docs/wiki/en/compatibility.md) |
-| [Project resources](docs/wiki/README.en.md#project-resources) | [Changelog](CHANGELOG.md) · <a id="developer-documentation"></a>[Developer docs](docs/development/README.md) · [License](LICENSE) · [Credits](THIRD_PARTY_NOTICES.md) |
+| [Project resources](docs/wiki/README.en.md#project-resources) | [Changelog](CHANGELOG.md) · <a id="developer-documentation"></a>[Developer docs](docs/development/README.md) · [License](LICENSE) · [Credits](docs/licenses/THIRD_PARTY_NOTICES.md) |
 
 ## Quick installation
 

@@ -26,16 +26,16 @@
 
 报告与安装包校验：
 
-- [聚变 126 项结果](../../verification/power-baseline/fusion-0.2.0/fusion-power-tests.json)
-- [锻炉 26 项回归](../../verification/power-baseline/fusion-0.2.0/forge-power-tests.json)
-- [安装包、Java 8 类及逐字节一致性](../../verification/power-baseline/fusion-0.2.0/artifact-manifest.json)
+- [聚变 126 项结果](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/fusion-0.2.0/fusion-power-tests.json)
+- [锻炉 26 项回归](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/fusion-0.2.0/forge-power-tests.json)
+- [安装包、Java 8 类及逐字节一致性](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/fusion-0.2.0/artifact-manifest.json)
 - [可重复的后台测试方法](POWER_TESTING.md)
 
 本地安装包 SHA-256：`55ef3fd554b04e17277ba94eb555e94a8862ae4b5e95ba84f5b92bbf07310295`。
 
 ## 0.1.1-alpha 界面更新
 
-整机供电上限后新增等效 A 数和电压标注；大数使用约 3 位有效数字的科学计数法，悬停保留精确 EU/t。重新构建及现有 15 项单元测试通过；离线原版字体预览已更新，未启动客户端。本次未重跑后台整合测试，配方处理、功率限制、同步、复制与存储的运行时类均与下述 0.1.0-alpha 测试版本逐字节一致。版本标识及界面类有更新，详见 [0.1.1 安装包校验](../../verification/power-baseline/artifact-manifest-0.1.1.json)。
+整机供电上限后新增等效 A 数和电压标注；大数使用约 3 位有效数字的科学计数法，悬停保留精确 EU/t。重新构建及现有 15 项单元测试通过；离线原版字体预览已更新，未启动客户端。本次未重跑后台整合测试，配方处理、功率限制、同步、复制与存储的运行时类均与下述 0.1.0-alpha 测试版本逐字节一致。版本标识及界面类有更新，详见 [0.1.1 安装包校验](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/artifact-manifest-0.1.1.json)。
 
 ## 0.1.0-alpha 基线结果
 
@@ -85,11 +85,11 @@
 
 ## 报告
 
-- [后台集成测试](../../verification/power-baseline/forge-power-tests.json)
-- [服务器重启](../../verification/power-baseline/forge-power-reload.json)
-- [移除后加载](../../verification/power-baseline/forge-power-removed.json)
-- [测试输出摘录](../../verification/power-baseline/server-test-excerpt.log)
-- [安装包校验与类哈希](../../verification/power-baseline/artifact-manifest.json)
+- [后台集成测试](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/forge-power-tests.json)
+- [服务器重启](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/forge-power-reload.json)
+- [移除后加载](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/forge-power-removed.json)
+- [测试输出摘录](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/server-test-excerpt.log)
+- [安装包校验与类哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/power-baseline/artifact-manifest.json)
 
 0.1.0-alpha 基线安装包 SHA-256：
 

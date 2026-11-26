@@ -22,7 +22,7 @@ SHA-256：`44f9bc064772af60dae38121faac52dfd7d18ec8efe4843e04e9ee4b13357cc1`
 - 网页交互通过静态 DOM 检查：精确容量、分页边界、行选择、总览切换与状态保存。使用示例记录；贴图取自正式包本地模组资源。未做浏览器截图验收，未启动游戏客户端、GUI、字体或 OpenGL 验收。
 - 本轮未重跑性能矩阵；既有查询/遍历性能数据不能作为该构建重新实测的结果。
 
-[机器可读清单与类哈希](../../verification/vault-cell-contributions/manifest.json) · [后台汇总](../../verification/vault-cell-contributions/summary.json) · [玩家指南](../features/STORAGE.md) · [数据格式](STORAGE_FORMAT.md)
+[机器可读清单与类哈希](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cell-contributions/manifest.json) · [后台汇总](https://github.com/arturia-Xayah/gtnh-hn/blob/3c213a59158884a5363172369b4d8aefca942a06/verification/vault-cell-contributions/summary.json) · [玩家指南](../features/STORAGE.md) · [数据格式](STORAGE_FORMAT.md)
 
 ## Historical validation
 
