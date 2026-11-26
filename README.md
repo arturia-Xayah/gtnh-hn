@@ -3,7 +3,7 @@
 <div align="center">
 
 <a id="gtnh-handy--nimble"></a>
-<img src="docs/assets/branding/hn-logo.png" alt="GTNH: Handy & Nimble — HN Logo" width="820">
+<img src="docs/assets/branding/hn-hero.png" alt="GTNH-HN 宣传图，展示多方块机器、AE 自动化与投影传送门" width="100%">
 
 **GTNH-HN** · 顺手，轻巧。
 
